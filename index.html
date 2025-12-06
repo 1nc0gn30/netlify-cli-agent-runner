@@ -7,22 +7,24 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
     rel="stylesheet"
   />
   <style>
     :root {
-      --bg: #08090f;
-      --panel: rgba(255, 255, 255, 0.04);
-      --panel-strong: rgba(255, 255, 255, 0.08);
-      --text: #e8ebf4;
-      --muted: #9ea6c3;
+      --bg: #06070d;
+      --surface: rgba(255, 255, 255, 0.03);
+      --surface-strong: rgba(255, 255, 255, 0.06);
+      --surface-hover: rgba(255, 255, 255, 0.09);
+      --text: #e8eef9;
+      --muted: #9ca8c7;
       --accent: #1ce6b6;
       --accent-2: #42b8ff;
-      --warning: #f6c046;
+      --warning: #f7c65f;
+      --danger: #ff7d7d;
       --border: rgba(255, 255, 255, 0.08);
-      --shadow: 0 20px 80px rgba(0, 0, 0, 0.35);
       --radius: 14px;
+      --shadow: 0 30px 90px rgba(0, 0, 0, 0.4);
     }
 
     * {
@@ -33,12 +35,13 @@
     }
 
     body {
-      background: radial-gradient(circle at 20% 20%, rgba(28, 230, 182, 0.06), transparent 40%),
-        radial-gradient(circle at 80% 0%, rgba(66, 184, 255, 0.08), transparent 35%),
-        var(--bg);
+      background: radial-gradient(circle at 16% 10%, rgba(28, 230, 182, 0.08), transparent 36%),
+        radial-gradient(circle at 78% 8%, rgba(66, 184, 255, 0.12), transparent 30%),
+        linear-gradient(180deg, #05060b, #04060a);
       color: var(--text);
       min-height: 100vh;
-      padding: 32px 20px 48px;
+      padding: 28px 24px 48px;
+      letter-spacing: -0.01em;
     }
 
     header {
@@ -46,65 +49,75 @@
       align-items: center;
       justify-content: space-between;
       gap: 18px;
-      margin-bottom: 24px;
+      margin-bottom: 18px;
     }
 
     .brand {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
     }
 
     .logo {
-      width: 46px;
-      height: 46px;
+      width: 48px;
+      height: 48px;
       border-radius: 12px;
       background: linear-gradient(135deg, #1ce6b6, #42b8ff);
       display: grid;
       place-items: center;
-      color: #04121d;
+      color: #05121d;
       font-weight: 800;
       box-shadow: var(--shadow);
+      letter-spacing: 0.04em;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
 
     nav a {
       color: var(--muted);
       text-decoration: none;
       font-weight: 600;
-      margin-left: 18px;
-      transition: color 0.2s ease, opacity 0.2s ease;
-      opacity: 0.85;
+      padding: 10px 12px;
+      border-radius: 10px;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
     }
 
     nav a:hover {
       color: var(--text);
-      opacity: 1;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 18px;
-    }
-
-    .panel {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 18px 20px;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(6px);
+      background: var(--surface-strong);
+      border-color: var(--border);
     }
 
     .hero {
       display: grid;
-      grid-template-columns: 2fr 1.1fr;
-      gap: 18px;
-      margin-bottom: 18px;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+      transition: border 0.2s ease, transform 0.15s ease, background 0.2s ease;
+    }
+
+    .panel:hover {
+      border-color: rgba(28, 230, 182, 0.4);
+      transform: translateY(-1px);
+      background: var(--surface-strong);
     }
 
     .hero-text h1 {
-      font-size: clamp(2.4rem, 4vw, 3.4rem);
+      font-size: clamp(2.3rem, 4vw, 3.1rem);
       line-height: 1.05;
       margin-bottom: 12px;
     }
@@ -113,6 +126,14 @@
       color: var(--muted);
       max-width: 920px;
       line-height: 1.6;
+      font-weight: 500;
+    }
+
+    .tagline {
+      color: var(--muted);
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      margin-bottom: 8px;
     }
 
     .pill-row {
@@ -123,7 +144,7 @@
     }
 
     .pill {
-      background: var(--panel-strong);
+      background: var(--surface-strong);
       color: var(--text);
       padding: 8px 12px;
       border-radius: 999px;
@@ -132,139 +153,26 @@
       display: inline-flex;
       gap: 6px;
       align-items: center;
+      line-height: 1.2;
     }
 
-    .hint {
-      color: var(--muted);
-      font-size: 0.95rem;
-      line-height: 1.5;
-    }
+    .pill.success { background: rgba(28, 230, 182, 0.12); color: #9ef3d8; border-color: rgba(28,230,182,0.3); }
+    .pill.warning { background: rgba(247, 198, 95, 0.12); color: #ffdca1; border-color: rgba(247,198,95,0.4); }
+    .pill.danger { background: rgba(255, 125, 125, 0.12); color: #ffc2c2; border-color: rgba(255,125,125,0.3); }
+    .pill.info { background: rgba(66, 184, 255, 0.14); color: #a4d8ff; border-color: rgba(66,184,255,0.35); }
 
-    .login {
-      position: relative;
-      overflow: hidden;
-    }
-
-    .login::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(28, 230, 182, 0.08), rgba(66, 184, 255, 0.12));
-      opacity: 0.9;
-      z-index: 0;
-    }
-
-    .login-content {
-      position: relative;
-      z-index: 1;
+    .grid {
       display: grid;
-      gap: 12px;
-    }
-
-    label {
-      font-size: 0.9rem;
-      color: var(--muted);
-    }
-
-    input {
-      width: 100%;
-      padding: 12px 14px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: rgba(255, 255, 255, 0.04);
-      color: var(--text);
-      margin-top: 6px;
-      outline: none;
-    }
-
-    input:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(28, 230, 182, 0.15);
-    }
-
-    button,
-    .ghost-btn {
-      padding: 12px 16px;
-      border-radius: 10px;
-      border: none;
-      font-weight: 700;
-      cursor: pointer;
-      transition: transform 0.15s ease, box-shadow 0.2s ease, filter 0.2s ease;
-    }
-
-    button.primary {
-      background: linear-gradient(135deg, #1ce6b6, #42b8ff);
-      color: #031017;
-      box-shadow: 0 10px 30px rgba(28, 230, 182, 0.3);
-    }
-
-    button.primary:hover {
-      filter: brightness(1.05);
-      transform: translateY(-1px);
-    }
-
-    .ghost-btn {
-      background: transparent;
-      color: var(--text);
-      border: 1px dashed var(--border);
-    }
-
-    .ghost-btn:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-
-    .topline {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 6px;
-    }
-
-    .badge {
-      background: rgba(66, 184, 255, 0.14);
-      color: #8dd7ff;
-      padding: 4px 8px;
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: 0.8rem;
-      letter-spacing: 0.4px;
-    }
-
-    .portal-selector {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 12px;
-      margin-top: 12px;
-    }
-
-    .portal-card {
-      background: var(--panel-strong);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 14px;
-      display: grid;
-      gap: 10px;
-      cursor: pointer;
-      transition: border 0.2s ease, transform 0.15s ease;
-    }
-
-    .portal-card:hover {
-      border-color: var(--accent);
-      transform: translateY(-1px);
-    }
-
-    .portal-card.active {
-      border-color: var(--accent);
-      box-shadow: 0 8px 40px rgba(28, 230, 182, 0.15);
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 14px;
     }
 
     .section-title {
-      font-size: 1.2rem;
+      font-size: 1.15rem;
       margin-bottom: 8px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
 
     .section-title span {
@@ -273,101 +181,36 @@
       font-weight: 600;
     }
 
-    .subgrid {
+    .subtext { color: var(--muted); font-size: 0.95rem; line-height: 1.5; }
+
+    .portal-selector {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 12px;
+      margin-top: 12px;
     }
 
-    .list-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: var(--panel-strong);
-      border-radius: 10px;
-      padding: 12px;
+    .portal-card {
+      background: var(--surface-strong);
       border: 1px solid var(--border);
-    }
-
-    .chip {
-      padding: 4px 10px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--text);
-      border: 1px solid var(--border);
-      font-size: 0.85rem;
-    }
-
-    .mini {
-      font-size: 0.9rem;
-      color: var(--muted);
-      line-height: 1.5;
-    }
-
-    .mini-strong {
-      color: #d7e2ff;
-      font-weight: 700;
-    }
-
-    .actions {
-      display: grid;
-      gap: 12px;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    }
-
-    .action-btn {
-      background: var(--panel-strong);
-      padding: 14px 16px;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      text-align: left;
-      color: var(--text);
-      cursor: pointer;
-      transition: border 0.2s ease, transform 0.15s ease;
-    }
-
-    .action-btn strong {
-      display: block;
-      margin-bottom: 6px;
-    }
-
-    .action-btn:hover {
-      border-color: var(--accent);
-      transform: translateY(-1px);
-    }
-
-    .two-col {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 12px;
-    }
-
-    .terminal {
-      background: #05060a;
       border-radius: var(--radius);
-      border: 1px solid var(--border);
       padding: 14px;
-      height: 240px;
-      overflow-y: auto;
-      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-      font-size: 0.95rem;
-      box-shadow: var(--shadow);
+      display: grid;
+      gap: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
     }
 
-    .terminal .line {
-      margin-bottom: 8px;
-      color: #b2c6ff;
-    }
+    .portal-card:hover { border-color: rgba(66, 184, 255, 0.5); transform: translateY(-1px); }
+    .portal-card.active { border-color: var(--accent); box-shadow: 0 14px 60px rgba(28, 230, 182, 0.18); }
 
-    .terminal .meta {
-      color: #6ea7ff;
-    }
-
-    .avatar {
-      width: 42px;
-      height: 42px;
-      border-radius: 10px;
-      background: var(--panel-strong);
+    .portal-card .avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: var(--surface);
       display: grid;
       place-items: center;
       font-weight: 800;
@@ -375,28 +218,79 @@
       border: 1px solid var(--border);
     }
 
-    .portal {
-      margin-top: 20px;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    .callout {
+    .list-item {
+      background: var(--surface-strong);
+      border-radius: 12px;
+      padding: 12px 12px;
       border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 14px;
-      background: rgba(28, 230, 182, 0.06);
-      color: #d4fff2;
+      display: grid;
+      gap: 8px;
+      transition: background 0.2s ease, border 0.2s ease;
     }
 
-    footer {
-      text-align: center;
-      margin-top: 30px;
+    .list-item:hover { background: var(--surface-hover); border-color: rgba(66, 184, 255, 0.35); }
+
+    .meta-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+
+    .hint {
       color: var(--muted);
       font-size: 0.95rem;
+      line-height: 1.55;
     }
+
+    .actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
+
+    .action-btn {
+      background: var(--surface-strong);
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      text-align: left;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .action-btn:hover { border-color: rgba(28,230,182,0.35); transform: translateY(-1px); background: var(--surface-hover); }
+    .action-btn:active { transform: translateY(0); }
+
+    .two-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+
+    .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-top: 12px; }
+
+    .summary-card { background: var(--surface-strong); border: 1px solid var(--border); border-radius: 12px; padding: 12px; }
+
+    .summary-card strong { font-size: 1.2rem; }
+
+    label { font-size: 0.92rem; color: var(--muted); display: block; margin-bottom: 4px; }
+    input { width: 100%; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--border); background: rgba(255,255,255,0.04); color: var(--text); outline: none; margin-bottom: 10px; }
+    input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(28, 230, 182, 0.16); }
+
+    button { padding: 12px 16px; border-radius: 10px; border: none; font-weight: 700; cursor: pointer; transition: transform 0.15s ease, box-shadow 0.2s ease, filter 0.2s ease; }
+    button.primary { background: linear-gradient(135deg, #1ce6b6, #42b8ff); color: #031017; box-shadow: 0 12px 40px rgba(28, 230, 182, 0.26); }
+    button.primary:hover { filter: brightness(1.05); transform: translateY(-1px); }
+    button.secondary { background: transparent; color: var(--text); border: 1px solid var(--border); }
+    button.secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+    .terminal { background: #04050a; border-radius: var(--radius); border: 1px solid var(--border); padding: 14px; height: 260px; overflow-y: auto; font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; font-size: 0.95rem; box-shadow: var(--shadow); }
+    .terminal .line { margin-bottom: 10px; color: #c3d4ff; }
+    .terminal .meta { color: #86c7ff; }
+
+    .badge { background: rgba(66, 184, 255, 0.14); color: #9dd9ff; padding: 4px 8px; border-radius: 8px; font-weight: 700; font-size: 0.78rem; letter-spacing: 0.4px; }
+
+    .status-dot { width: 10px; height: 10px; border-radius: 999px; display: inline-block; margin-right: 6px; }
+    .dot-healthy { background: #2cf0c7; box-shadow: 0 0 0 4px rgba(44, 240, 199, 0.14); }
+    .dot-building { background: #f7c65f; box-shadow: 0 0 0 4px rgba(247, 198, 95, 0.18); }
+    .dot-failed { background: #ff7d7d; box-shadow: 0 0 0 4px rgba(255, 125, 125, 0.16); }
+    .dot-watching { background: #7bbcff; box-shadow: 0 0 0 4px rgba(123, 188, 255, 0.16); }
+
+    .profile-card { background: var(--surface-strong); border: 1px solid var(--border); border-radius: 12px; padding: 12px; }
+
+    footer { text-align: center; margin-top: 30px; color: var(--muted); font-size: 0.95rem; }
+
+    .hidden { display: none; }
   </style>
 </head>
 <body>
@@ -416,395 +310,427 @@
   </header>
 
   <section class="hero">
-    <div class="hero-text panel">
-      <div class="topline">
-        <span class="badge">Dual Portal Concept</span>
-        <span class="mini">Pick the right workspace after sign-in</span>
-      </div>
-      <h1>Split Client & Developer portals that mediate every Netlify Agent Runner action.</h1>
+    <div class="panel hero-text">
+      <div class="tagline">Dual portal, single source of trust</div>
+      <h1>Modern Netlify surfaces for clients and developers — safer than sharing the CLI.</h1>
       <p>
-        After login, users choose a role-specific portal. Clients trigger curated AI actions without seeing the CLI, while
-        developers approve, extend, and observe runner-powered workflows. Each portal keeps permissions and context scoped to
-        the user’s projects.
+        Each action is mediated by an Agent Runner, keeping Netlify CLI server-side while applying policy, approvals, and context.
+        Clients ship confidently, developers stay in control. This is Netlify vNext: calm, clear, and ready for production.
       </p>
       <div class="pill-row">
-        <div class="pill">🔒 Role-separated surfaces</div>
-        <div class="pill">🤖 Executed by Netlify AI Agent Runners</div>
-        <div class="pill">🛡️ CLI stays server-side</div>
-        <div class="pill">🚀 Deploy + rollback on rails</div>
+        <div class="pill success">🔒 Scoped identities per portal</div>
+        <div class="pill info">🤖 AI & human runners with receipts</div>
+        <div class="pill">📈 Deploy previews routed automatically</div>
+        <div class="pill warning">🛡️ Guardrails before any CLI call</div>
       </div>
-      <div class="portal-selector" id="portal-selector">
-        <div class="portal-card" data-portal="client" tabindex="0">
-          <div class="topline">
-            <div class="avatar">C</div>
-            <div>
-              <strong>Client Portal</strong>
-              <div class="mini">Manage sites and trigger safe presets.</div>
-            </div>
+      <div class="summary-grid">
+        <div class="summary-card">
+          <div class="meta-row">
+            <span class="pill success">Live</span>
+            <span class="badge">Agent Runner</span>
           </div>
-          <div class="mini">
-            “I want to manage my site.” AI Agents execute deploy, content, and diagnostics presets that are approved by the
-            developer’s guardrails.
-          </div>
+          <strong id="live-active-count">--</strong>
+          <div class="subtext">Active client requests</div>
         </div>
-        <div class="portal-card" data-portal="developer" tabindex="0">
-          <div class="topline">
-            <div class="avatar" style="color: var(--accent-2);">D</div>
-            <div>
-              <strong>Developer Portal</strong>
-              <div class="mini">Curate runner policies and client presets.</div>
-            </div>
+        <div class="summary-card">
+          <div class="meta-row">
+            <span class="pill info">Preview ready</span>
+            <span class="badge">Deploys</span>
           </div>
-          <div class="mini">
-            “I need a developer.” Configure which presets clients can run, expose safe CLI macros, and monitor request queues
-            across projects.
+          <strong id="live-deploy-count">--</strong>
+          <div class="subtext">Deploys today (prod + previews)</div>
+        </div>
+        <div class="summary-card">
+          <div class="meta-row">
+            <span class="pill">Trust</span>
+            <span class="badge">Audit</span>
           </div>
+          <strong>100%</strong>
+          <div class="subtext">CLI kept server-side. Every action logged.</div>
         </div>
       </div>
     </div>
-    <div class="panel login">
-      <div class="login-content">
-        <div class="topline">
-          <span class="badge">Login (concept)</span>
-          <span class="mini">Auth ties identity to runner policies</span>
-        </div>
-        <div>
-          <label for="email">Work email</label>
-          <input type="email" id="email" placeholder="user@team.com" />
-        </div>
-        <div>
-          <label for="password">Password</label>
-          <input type="password" id="password" placeholder="••••••••" />
-        </div>
-        <div class="hint">Federated SSO maps to Netlify roles. Portal selection happens after the session is issued.</div>
-        <div style="display: flex; gap: 10px; align-items: center;">
-          <button class="primary" id="simulate-login">Sign in</button>
-          <button class="ghost-btn" id="simulate-logout">Logout</button>
-        </div>
-        <div class="callout">Policies flow from identity → portal choice → allowed Netlify CLI and AI Agent Runner actions.</div>
+    <div class="panel" style="position: relative; overflow: hidden;">
+      <div class="tagline">Sign-in (concept)</div>
+      <h3 style="margin-bottom: 8px;">Identity binds to runner policies</h3>
+      <div class="subtext" style="margin-bottom: 12px;">SSO or team login determines which portal opens and what presets are visible.</div>
+      <label for="email">Work email</label>
+      <input type="email" id="email" placeholder="user@team.com" />
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="••••••••" />
+      <div style="display: flex; gap: 10px; align-items: center; margin-top: 4px;">
+        <button class="primary" id="simulate-login">Sign in</button>
+        <button class="secondary" id="simulate-logout">Logout</button>
       </div>
+      <div class="hint" style="margin-top: 10px;">Portal selection happens post-auth. Agent Runners enforce role separation and prevent raw CLI exposure.</div>
     </div>
   </section>
 
-  <section class="portal" id="portal-selection">
-    <div class="panel">
-      <div class="section-title">Choose your workspace <span>Pick Client or Developer to continue</span></div>
-      <div class="portal-selector" style="margin-top: 0;">
-        <button class="portal-card" data-portal-button="client">Enter Client Portal</button>
-        <button class="portal-card" data-portal-button="developer">Enter Developer Portal</button>
+  <section class="panel" id="portal-selection">
+    <div class="section-title">Choose your workspace <span>Client or Developer view</span></div>
+    <div class="portal-selector" id="portal-selector">
+      <div class="portal-card" data-portal="client" tabindex="0">
+        <div class="meta-row">
+          <div class="avatar">C</div>
+          <div>
+            <strong>Client Portal</strong>
+            <div class="subtext">Trigger safe presets, view previews, request help.</div>
+          </div>
+          <span class="pill info">Guided</span>
+        </div>
+        <div class="subtext">AI and pre-approved macros execute via Agent Runners. No CLI tokens ever leave the server.</div>
       </div>
-      <div class="mini" style="margin-top: 10px;">Portal selection happens after login. This demo auto-selects Client Portal for
-        read-only views if you haven’t signed in.</div>
+      <div class="portal-card" data-portal="developer" tabindex="0">
+        <div class="meta-row">
+          <div class="avatar" style="color: var(--accent-2);">D</div>
+          <div>
+            <strong>Developer Portal</strong>
+            <div class="subtext">Approve, configure, and monitor every request.</div>
+          </div>
+          <span class="pill warning">Governed</span>
+        </div>
+        <div class="subtext">Publish presets, set approvals, and watch Agent Runner activity without juggling terminals.</div>
+      </div>
     </div>
+    <div class="hint" style="margin-top: 8px;">Tip: choose Developer when logged in to view editable controls. Clients see curated tasks only.</div>
   </section>
 
-  <section class="portal hidden" id="client-portal">
-    <div class="topline" style="margin-bottom: 8px;">
+  <section class="portal hidden" id="client-portal" aria-label="Client Portal">
+    <div class="topline" style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
       <span class="badge">Client Portal</span>
-      <span class="mini">Non-technical view for content and site owners</span>
+      <span class="pill success">Safe presets</span>
+      <span class="hint">Non-technical view for content and site owners.</span>
     </div>
     <div class="grid">
       <div class="panel">
-        <div class="section-title">My Projects <span>Connected Netlify sites</span></div>
-        <div class="list-item">
-          <div>
-            <strong>brand-site</strong>
-            <div class="mini">Environment: production • Git connected</div>
-          </div>
-          <span class="chip">Healthy</span>
-        </div>
-        <div class="list-item">
-          <div>
-            <strong>feature-preview</strong>
-            <div class="mini">Environment: preview branch • PR gated</div>
-          </div>
-          <span class="chip" style="background: rgba(66, 184, 255, 0.14); color: #9ad6ff;">Watching</span>
-        </div>
+        <div class="section-title">Projects <span>Connected Netlify sites</span></div>
+        <div class="hint" style="margin-bottom: 8px;">Status badges track live deploy health. Previews link back to the right branch.</div>
+        <div id="client-projects" class="grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px;"></div>
       </div>
+
       <div class="panel">
-        <div class="section-title">My Agent Runners <span>Preset, safe actions</span></div>
-        <div class="actions">
-          <button class="action-btn" data-action="deploy" onclick="runClientAgent('Deploy site')">
-            <strong>🚀 Deploy site</strong>
-            <div class="mini">Executed by Netlify AI Agent Runners</div>
-          </button>
-          <button class="action-btn" data-action="content" onclick="runClientAgent('Update content')">
-            <strong>📝 Update content</strong>
-            <div class="mini">Executed by Netlify AI Agent Runners</div>
-          </button>
-          <button class="action-btn" data-action="diagnose" onclick="runClientAgent('Diagnose issue')">
-            <strong>🔍 Diagnose issue</strong>
-            <div class="mini">Executed by Netlify AI Agent Runners</div>
-          </button>
-          <button class="action-btn" data-action="rollback" onclick="runClientAgent('Rollback')">
-            <strong>⏪ Rollback</strong>
-            <div class="mini">Executed by Netlify AI Agent Runners</div>
-          </button>
-        </div>
-        <div class="hint" style="margin-top: 10px;">Presets keep the CLI server-side. Runner policies enforce branch, env,
-          and approval steps before execution.</div>
+        <div class="section-title">Client Requests <span>AI + human tasks</span></div>
+        <div class="hint" style="margin-bottom: 8px;">Requests are executed by Agent Runners with approvals baked in.</div>
+        <div id="client-requests" class="grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px;"></div>
       </div>
+
       <div class="panel">
-        <div class="section-title">Need a Developer? <span>Route to people or AI</span></div>
-        <div class="actions">
-          <button class="action-btn" onclick="requestDeveloper('human')">
-            <strong>✅ Request Human Developer</strong>
-            <div class="mini">Escalate to your assigned agency or dev team.</div>
-          </button>
-          <button class="action-btn" onclick="requestDeveloper('ai')">
-            <strong>🤖 Request AI Agent</strong>
-            <div class="mini">AI triages logs and suggests fixes before humans step in.</div>
-          </button>
-        </div>
-        <div class="callout" style="margin-top: 12px;">
-          Choosing a pathway explains who responds, what is automated, and how approvals work. Agent Runners mediate all steps.
-        </div>
+        <div class="section-title">Quick Actions <span>One-click presets</span></div>
+        <div class="actions" id="client-actions"></div>
+        <div class="hint" style="margin-top: 10px;">Buttons trigger curated flows. Agent Runners keep CLI server-side and log identity.</div>
       </div>
+
       <div class="panel">
-        <div class="section-title">Client Information <span>Netlify usage snapshot</span></div>
+        <div class="section-title">Profile Snapshot <span>Routes requests to the right runner</span></div>
         <div class="two-col">
-          <div class="list-item">
-            <div>
-              <strong>Site usage</strong>
-              <div class="mini">Bandwidth steady at 65% of plan.</div>
-            </div>
-            <span class="chip">concept</span>
-          </div>
-          <div class="list-item">
-            <div>
-              <strong>Deploy activity</strong>
-              <div class="mini">2 deploys today, 6 previews awaiting review.</div>
-            </div>
-            <span class="chip">concept</span>
-          </div>
-          <div class="list-item">
-            <div>
-              <strong>Support</strong>
-              <div class="mini">Access docs, chat, or AI troubleshooting guides.</div>
-            </div>
-            <span class="chip">help</span>
+          <div class="profile-card" id="client-profile"></div>
+          <div class="profile-card">
+            <div class="section-title" style="margin-bottom: 4px;">Access guardrails <span>Safety story</span></div>
+            <div class="hint">Clients never receive CLI credentials. Every run is signed, logged, and scoped. Developers gate risky presets and monitor deviations.</div>
           </div>
         </div>
       </div>
+
       <div class="panel">
-        <div class="section-title">Client Profile <span>Controls access to agent actions</span></div>
-        <div class="two-col">
-          <div>
-            <label>Name</label>
-            <input type="text" placeholder="Jordan Client" />
-            <label>Company</label>
-            <input type="text" placeholder="Brightside Co." />
-            <label>Role</label>
-            <input type="text" placeholder="Marketing lead" />
-            <label>Contact info</label>
-            <input type="text" placeholder="jordan@brightside.co" />
-            <button class="primary" style="margin-top: 10px;" onclick="viewClientProfile()">Save profile</button>
-          </div>
-          <div class="panel" style="background: var(--panel-strong);">
-            <div class="mini-strong">Linked sites</div>
-            <div class="mini">brand-site, feature-preview</div>
-            <div class="mini-strong" style="margin-top: 12px;">Access level</div>
-            <div class="mini">Client presets only • Cannot run arbitrary CLI • Requires approval for rollbacks</div>
-            <div class="callout" style="margin-top: 12px;">
-              Your profile controls what Agent actions you can access. Dev teams map roles to allowed presets and approval flows.
-            </div>
-          </div>
-        </div>
+        <div class="section-title">Agent Runner Activity <span>Live feed</span></div>
+        <div class="terminal" id="client-terminal"></div>
       </div>
     </div>
   </section>
 
-  <section class="portal hidden" id="developer-portal">
-    <div class="topline" style="margin-bottom: 8px;">
-      <span class="badge" style="background: rgba(28,230,182,0.14); color: #7cf0d3;">Developer Portal</span>
-      <span class="mini">Configure runner governance and monitor requests</span>
+  <section class="portal hidden" id="developer-portal" aria-label="Developer Portal">
+    <div class="topline" style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
+      <span class="badge" style="background: rgba(28,230,182,0.16); color: #a4f5df;">Developer Portal</span>
+      <span class="pill warning">Approvals required</span>
+      <span class="hint">Configure governance, manage queues, and publish presets.</span>
     </div>
     <div class="grid">
       <div class="panel">
-        <div class="section-title">Projects <span>Same visibility as Netlify dashboard</span></div>
-        <div class="list-item">
-          <div>
-            <strong>brand-site</strong>
-            <div class="mini">Status: healthy • Recent: deploy #214 (approved)</div>
-          </div>
-          <span class="chip">Production</span>
-        </div>
-        <div class="list-item">
-          <div>
-            <strong>feature-preview</strong>
-            <div class="mini">Status: watching • Recent: AI diagnostics queued</div>
-          </div>
-          <span class="chip" style="background: rgba(66, 184, 255, 0.14); color: #9ad6ff;">Preview</span>
-        </div>
+        <div class="section-title">Projects <span>Environment health</span></div>
+        <div id="developer-projects" class="grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px;"></div>
       </div>
+
       <div class="panel">
-        <div class="section-title">Clients & Tasks <span>Requested via AI or humans</span></div>
-        <div class="list-item">
-          <div>
-            <strong>Rollback preset</strong>
-            <div class="mini">Requested via AI Agent • Status: pending approval</div>
-          </div>
-          <span class="chip">feature-preview</span>
-        </div>
-        <div class="list-item">
-          <div>
-            <strong>Deploy site</strong>
-            <div class="mini">Requested by Human Dev • Status: running</div>
-          </div>
-          <span class="chip">brand-site</span>
-        </div>
-        <div class="list-item">
-          <div>
-            <strong>Content update</strong>
-            <div class="mini">Requested via AI Agent • Status: completed</div>
-          </div>
-          <span class="chip">brand-site</span>
-        </div>
+        <div class="section-title">Queues <span>Client + AI requests</span></div>
+        <div id="developer-queue" class="grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px;"></div>
       </div>
+
       <div class="panel">
-        <div class="section-title">Agent Runner Controls <span>Define what clients can trigger</span></div>
-        <div class="actions">
-          <div class="action-btn" onclick="runNetlifyCLI('status')">
-            <strong>Toggle client presets</strong>
-            <div class="mini">Enable deploy, content, diagnostics, rollback.</div>
-          </div>
-          <div class="action-btn" onclick="runNetlifyCLI('open:preview')">
-            <strong>Expose Netlify CLI macros</strong>
-            <div class="mini">Approve safe commands for clients and AI prompts.</div>
-          </div>
-          <div class="action-btn" onclick="runNetlifyCLI('deploy')">
-            <strong>Set approvals</strong>
-            <div class="mini">Require developer sign-off for risky presets.</div>
-          </div>
-        </div>
-        <div class="hint" style="margin-top: 10px;">Permission checks would occur here before any CLI call. Agent Runners log every
-          execution with identity and context.</div>
+        <div class="section-title">Runner Controls <span>Publish presets</span></div>
+        <div class="actions" id="developer-actions"></div>
+        <div class="hint" style="margin-top: 10px;">Approvals, rollout scopes, and environment protections apply before Agent Runners invoke Netlify CLI.</div>
       </div>
+
       <div class="panel">
-        <div class="section-title">Developer Tools <span>Netlify + collaboration</span></div>
-        <div class="subgrid">
-          <div class="list-item">
-            <div>
-              <strong>AI-assisted diagnostics</strong>
-              <div class="mini">Analyze logs and recommend fixes with runner guardrails.</div>
-            </div>
-            <span class="chip">New</span>
-          </div>
-          <div class="list-item">
-            <div>
-              <strong>Safe deploy approvals</strong>
-              <div class="mini">Approve client deploys with branch and env checks.</div>
-            </div>
-            <span class="chip">Trusted</span>
-          </div>
-          <div class="list-item">
-            <div>
-              <strong>Preview review flows</strong>
-              <div class="mini">Route preview links to clients with AI summaries.</div>
-            </div>
-            <span class="chip">Collab</span>
-          </div>
-        </div>
-      </div>
-      <div class="panel">
-        <div class="section-title">Developer Profile <span>Routes client requests</span></div>
+        <div class="section-title">Developer Profile <span>Routing</span></div>
         <div class="two-col">
-          <div>
-            <label>Name</label>
-            <input type="text" placeholder="Avery Dev" />
-            <label>Role</label>
-            <input type="text" placeholder="Senior Engineer" />
-            <label>Expertise / skills</label>
-            <input type="text" placeholder="Next.js, Astro, API performance" />
-            <label>Availability</label>
-            <input type="text" placeholder="Weekdays 9–5 PST" />
-            <button class="primary" style="margin-top: 10px;" onclick="viewDeveloperProfile()">Update profile</button>
-          </div>
-          <div class="panel" style="background: var(--panel-strong);">
-            <div class="mini-strong">Linked projects</div>
-            <div class="mini">brand-site, feature-preview</div>
-            <div class="mini-strong" style="margin-top: 12px;">Assigned clients</div>
-            <div class="mini">Brightside Co., Future Foods</div>
-            <div class="callout" style="margin-top: 12px;">
-              Your developer profile helps route client requests to the right workflows and Agent Runner policies.
-            </div>
+          <div class="profile-card" id="developer-profile"></div>
+          <div class="profile-card">
+            <div class="section-title" style="margin-bottom: 4px;">Collaboration <span>Why two portals</span></div>
+            <div class="hint">Clients see the actions they should. Developers expand capability with safety nets and can jump in when AI asks for help.</div>
           </div>
         </div>
       </div>
+
       <div class="panel">
         <div class="section-title">Activity Stream <span>Runner + CLI logs</span></div>
-        <div class="terminal" id="terminal-log">
-          <div class="line">[09:15] client-lp → AI updated hero copy → <span class="meta">netlify deploy --prod</span> approved</div>
-          <div class="line">[08:40] feature-preview → status check → <span class="meta">netlify status</span> ok</div>
-          <div class="line">[07:55] brand-site → rollback preset requested → awaiting dev approval</div>
-        </div>
+        <div class="terminal" id="developer-terminal"></div>
       </div>
     </div>
   </section>
 
   <footer>
-    Concept portal — imagine this living inside Netlify Dashboard as an add-on that routes Client vs Developer workflows through
-    Agent Runners.
+    Concept portal — imagine this inside the Netlify Dashboard: calm, governed, and ready for Agent Runner automation.
   </footer>
 
   <script>
     const portalSelection = document.getElementById('portal-selection');
     const clientPortal = document.getElementById('client-portal');
     const developerPortal = document.getElementById('developer-portal');
-    const terminal = document.getElementById('terminal-log');
     const loginButton = document.getElementById('simulate-login');
     const logoutButton = document.getElementById('simulate-logout');
     const selectorCards = document.querySelectorAll('[data-portal]');
-    const selectorButtons = document.querySelectorAll('[data-portal-button]');
     let isAuthenticated = false;
 
+    const projectsData = [
+      { name: 'brightside-marketing', env: 'Production', status: 'Healthy', desc: 'Static marketing site with A/B routing.', branch: 'main', lastDeploy: '14m ago', owner: 'Marketing Ops' },
+      { name: 'feature-preview', env: 'Preview', status: 'Building', desc: 'PR-driven previews with AI summaries.', branch: 'feature/mercury', lastDeploy: '4m ago', owner: 'Product QA' },
+      { name: 'launchpad-app', env: 'Production', status: 'Failed', desc: 'Next.js storefront with scheduled drops.', branch: 'main', lastDeploy: '32m ago', owner: 'Ecomm' },
+      { name: 'docs-hub', env: 'Preview', status: 'Watching', desc: 'Docs hub with AI support macros.', branch: 'docs/revamp', lastDeploy: 'Just now', owner: 'DevRel' }
+    ];
+
+    const clientTasks = [
+      { title: 'Regenerate homepage copy', project: 'brightside-marketing', status: 'Completed', actor: 'AI Runner', time: '09:15', detail: 'Synced tone with brand guidelines.' },
+      { title: 'Ship hero fix to preview', project: 'feature-preview', status: 'Running', actor: 'AI Runner', time: '09:11', detail: 'Deploying preview with lint fixes.' },
+      { title: 'Request rollback', project: 'launchpad-app', status: 'Pending', actor: 'Client', time: '08:58', detail: 'Rollback last drop until payment issue resolved.' },
+      { title: 'Uptime sweep', project: 'docs-hub', status: 'Completed', actor: 'AI Runner', time: '08:47', detail: 'Verified edge functions and redirects.' }
+    ];
+
+    const developerQueue = [
+      { title: 'Approve rollback', project: 'launchpad-app', status: 'Awaiting approval', type: 'Human', time: '2m ago', detail: 'AI suggested rollback after failing health checks.' },
+      { title: 'Promote preview to prod', project: 'feature-preview', status: 'Running', type: 'AI', time: '6m ago', detail: 'Deploying preview with tests enforced.' },
+      { title: 'Content refresh', project: 'brightside-marketing', status: 'Completed', type: 'AI', time: '18m ago', detail: 'Published new CMS entries and purged cache.' },
+      { title: 'Diagnostics report', project: 'docs-hub', status: 'Pending', type: 'AI', time: '29m ago', detail: 'Awaiting dev review for edge latency spikes.' }
+    ];
+
+    const agentRuns = [
+      '[09:15] client-lp → AI updated hero copy → netlify deploy --prod approved',
+      '[09:12] feature-preview → Running: netlify status (pre-flight checks)',
+      '[09:10] docs-hub → Preview generated → netlify open --url preview',
+      '[08:55] launchpad-app → Failed deploy → reverted via preset, awaiting human review',
+      '[08:40] feature-preview → Status check → netlify status ok'
+    ];
+
+    const liveCounts = { active: 0, deploys: 0 };
+
+    const clientProfile = {
+      name: 'Jordan Client',
+      company: 'Brightside Co.',
+      role: 'Marketing lead',
+      contact: 'jordan@brightside.co',
+      linkedSites: ['brightside-marketing', 'feature-preview'],
+      access: 'Client presets only • Requires approval for rollbacks'
+    };
+
+    const developerProfile = {
+      name: 'Avery Dev',
+      role: 'Senior Engineer',
+      skills: 'Next.js, Astro, API performance, Netlify Edge',
+      availability: 'Weekdays 9–5 PST',
+      linkedProjects: ['brightside-marketing', 'feature-preview', 'launchpad-app'],
+      clients: ['Brightside Co.', 'Future Foods', 'Nova Labs']
+    };
+
+    const quickActions = [
+      { label: 'Deploy to production', detail: 'Runs build, tests, and deploy via runner.', command: 'netlify deploy --prod', target: 'Production' },
+      { label: 'Generate preview', detail: 'Spin up preview with AI summary.', command: 'netlify open --url preview', target: 'Preview' },
+      { label: 'Run diagnostics', detail: 'Inspect logs and performance.', command: 'netlify status', target: 'Observability' }
+    ];
+
+    const developerActions = [
+      { label: 'Publish client presets', detail: 'Toggle which macros clients see.', command: 'Update preset policy' },
+      { label: 'Require approvals', detail: 'Gate rollbacks and prod deploys.', command: 'Approval rules' },
+      { label: 'Audit runner scopes', detail: 'Review CLI macros and secrets.', command: 'Audit log export' }
+    ];
+
+    function statusClass(status) {
+      const normalized = status.toLowerCase();
+      if (normalized.includes('healthy') || normalized.includes('completed')) return 'success';
+      if (normalized.includes('pending') || normalized.includes('awaiting')) return 'warning';
+      if (normalized.includes('running') || normalized.includes('building')) return 'info';
+      if (normalized.includes('failed')) return 'danger';
+      return '';
+    }
+
+    function statusDot(status) {
+      const normalized = status.toLowerCase();
+      if (normalized.includes('healthy')) return 'dot-healthy';
+      if (normalized.includes('building') || normalized.includes('running')) return 'dot-building';
+      if (normalized.includes('failed')) return 'dot-failed';
+      return 'dot-watching';
+    }
+
+    function renderProjects(containerId, data) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
+      data.forEach((project) => {
+        const card = document.createElement('div');
+        card.className = 'list-item';
+        card.innerHTML = `
+          <div class="meta-row">
+            <div>
+              <strong>${project.name}</strong>
+              <div class="hint">${project.desc}</div>
+            </div>
+            <span class="pill ${statusClass(project.status)}"><span class="status-dot ${statusDot(project.status)}"></span>${project.status}</span>
+          </div>
+          <div class="meta-row">
+            <div class="subtext">Env: ${project.env} • Branch: ${project.branch}</div>
+            <div class="subtext">Last deploy: ${project.lastDeploy}</div>
+          </div>
+          <div class="subtext">Owner: ${project.owner}</div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function renderTasks(containerId, data) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
+      data.forEach((task) => {
+        const card = document.createElement('div');
+        card.className = 'list-item';
+        card.innerHTML = `
+          <div class="meta-row">
+            <div>
+              <strong>${task.title}</strong>
+              <div class="hint">${task.detail}</div>
+            </div>
+            <span class="pill ${statusClass(task.status)}">${task.status}</span>
+          </div>
+          <div class="meta-row">
+            <div class="subtext">Project: ${task.project}</div>
+            <div class="subtext">${task.actor} • ${task.time}</div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function renderActions(containerId, actions, clickHandler) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
+      actions.forEach((action) => {
+        const btn = document.createElement('button');
+        btn.className = 'action-btn';
+        btn.innerHTML = `<strong>${action.label}</strong><div class="hint">${action.detail}</div><div class="subtext">${action.command}</div>`;
+        btn.addEventListener('click', () => clickHandler(action));
+        container.appendChild(btn);
+      });
+    }
+
+    function renderProfile(containerId, profile, extras = []) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = `
+        <div class="meta-row" style="margin-bottom: 6px;">
+          <div>
+            <div class="pill info">Live profile</div>
+            <strong style="display:block; margin-top:4px;">${profile.name}</strong>
+          </div>
+          <div class="badge">${profile.role}</div>
+        </div>
+        ${profile.company ? `<div class="subtext">${profile.company}</div>` : ''}
+        ${profile.skills ? `<div class="subtext">${profile.skills}</div>` : ''}
+        <div class="subtext">${profile.availability ? profile.availability : profile.contact}</div>
+        <div class="pill-row" style="margin-top:8px;">
+          ${extras.map((item) => `<span class="pill">${item}</span>`).join('')}
+        </div>
+      `;
+      if (profile.linkedSites) {
+        container.innerHTML += `<div class="hint" style="margin-top: 8px;">Linked: ${profile.linkedSites.join(', ')}</div>`;
+      }
+      if (profile.access) {
+        container.innerHTML += `<div class="hint">Access: ${profile.access}</div>`;
+      }
+      if (profile.clients) {
+        container.innerHTML += `<div class="hint" style="margin-top: 6px;">Clients: ${profile.clients.join(', ')}</div>`;
+      }
+    }
+
+    function renderTerminal(containerId, logs) {
+      const terminal = document.getElementById(containerId);
+      terminal.innerHTML = '';
+      logs.forEach((line) => {
+        const entry = document.createElement('div');
+        entry.className = 'line';
+        const [timestamp, rest] = line.split('] ');
+        entry.innerHTML = `[${timestamp.replace('[', '')}] <span class="meta">${rest}</span>`;
+        terminal.appendChild(entry);
+      });
+      terminal.scrollTop = terminal.scrollHeight;
+    }
+
+    function simulateAction(action) {
+      const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      agentRuns.unshift(`[${timestamp}] ${action.label} → ${action.command}`);
+      renderTerminal('client-terminal', agentRuns.slice(0, 12));
+      renderTerminal('developer-terminal', agentRuns.slice(0, 12));
+
+      liveCounts.active += 1;
+      liveCounts.deploys += action.command.includes('deploy') ? 1 : 0;
+      updateLiveCounts();
+
+      setTimeout(() => {
+        const doneStamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        agentRuns.unshift(`[${doneStamp}] ${action.label} → Completed`);
+        renderTerminal('client-terminal', agentRuns.slice(0, 12));
+        renderTerminal('developer-terminal', agentRuns.slice(0, 12));
+        liveCounts.active = Math.max(liveCounts.active - 1, 0);
+        updateLiveCounts();
+      }, 1800 + Math.random() * 1200);
+    }
+
+    function simulateQueueAction(action) {
+      const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      agentRuns.unshift(`[${timestamp}] ${action.label} policy updated`);
+      renderTerminal('developer-terminal', agentRuns.slice(0, 12));
+    }
+
+    function updateLiveCounts() {
+      document.getElementById('live-active-count').textContent = `${liveCounts.active + clientTasks.filter(t => ['Running', 'Pending'].includes(t.status)).length}`;
+      document.getElementById('live-deploy-count').textContent = `${liveCounts.deploys + 6}`;
+    }
+
     loginButton.addEventListener('click', () => {
-      login();
+      isAuthenticated = true;
+      agentRuns.unshift(`[${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}] ✔ Authenticated → select a portal`);
+      renderTerminal('client-terminal', agentRuns.slice(0, 12));
+      renderTerminal('developer-terminal', agentRuns.slice(0, 12));
       portalSelection.scrollIntoView({ behavior: 'smooth' });
     });
 
     logoutButton.addEventListener('click', () => {
       isAuthenticated = false;
-      appendLine('👋 Session ended. CLI and Agent Runner actions locked.');
       showPortal(null);
+      agentRuns.unshift(`[${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}] Session ended → runner actions locked`);
+      renderTerminal('client-terminal', agentRuns.slice(0, 12));
+      renderTerminal('developer-terminal', agentRuns.slice(0, 12));
     });
 
     selectorCards.forEach((card) => {
       card.addEventListener('click', () => selectPortal(card.dataset.portal));
-      card.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') selectPortal(card.dataset.portal);
-      });
+      card.addEventListener('keypress', (e) => { if (e.key === 'Enter') selectPortal(card.dataset.portal); });
     });
-
-    selectorButtons.forEach((btn) => {
-      btn.addEventListener('click', () => selectPortal(btn.dataset.portalButton));
-    });
-
-    function appendLine(text) {
-      if (!terminal) return;
-      const line = document.createElement('div');
-      line.className = 'line';
-      line.textContent = text;
-      terminal.appendChild(line);
-      terminal.scrollTop = terminal.scrollHeight;
-    }
-
-    function login() {
-      // In production, authentication would bind identity to Agent Runner policy scopes.
-      isAuthenticated = true;
-      appendLine('✔ Authenticated: choose Client or Developer portal to continue.');
-    }
 
     function selectPortal(type) {
-      if (!isAuthenticated) {
-        appendLine('ℹ️ Viewing read-only mode. Login to execute actions.');
-      }
-
       selectorCards.forEach((card) => card.classList.toggle('active', card.dataset.portal === type));
+      if (!isAuthenticated) {
+        agentRuns.unshift(`[${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}] Read-only preview → login to execute actions`);
+        renderTerminal('client-terminal', agentRuns.slice(0, 12));
+      }
       showPortal(type);
-
-      // Permission checks would occur here before exposing runner actions.
-      appendLine(`🛂 Portal selected: ${type}. Runner policies refreshed.`);
+      agentRuns.unshift(`[${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}] Portal selected: ${type} → runner policies refreshed`);
+      renderTerminal('developer-terminal', agentRuns.slice(0, 12));
     }
 
     function showPortal(type) {
@@ -812,40 +738,17 @@
       developerPortal.classList.toggle('hidden', type !== 'developer');
     }
 
-    function runClientAgent(action) {
-      // Here an Agent Runner would validate policy + environment, then execute the curated Netlify CLI flow.
-      appendLine(`🤖 Client preset executed: ${action}`);
-      appendLine('   → Validating scope & approvals...');
-      appendLine('   → Executing Netlify CLI server-side (never exposed to the browser).');
-    }
-
-    function requestDeveloper(type) {
-      // This would route to a queue or messaging surface depending on SLA and account settings.
-      appendLine(`📨 Request sent: ${type === 'human' ? 'Human developer' : 'AI agent'} engagement.`);
-    }
-
-    function viewClientProfile() {
-      // Placeholder: profile updates would persist and alter accessible presets.
-      appendLine('🧾 Client profile saved. Updating accessible Agent Runner actions.');
-    }
-
-    function viewDeveloperProfile() {
-      // Placeholder: saves developer metadata to route requests and approvals.
-      appendLine('👤 Developer profile updated. Routing rules recalculated.');
-    }
-
-    function runNetlifyCLI(action) {
-      // Backend proxy would run Netlify CLI here with runner safeguards.
-      const map = {
-        status: 'netlify status',
-        'open:preview': 'netlify open --url preview',
-        deploy: 'netlify deploy --prod',
-      };
-      appendLine(`$ ${map[action] || 'netlify status'}`);
-      appendLine('   [agent] Command approved, executed within runner sandbox.');
-    }
-
-    // Default to showing the selection screen on load.
+    renderProjects('client-projects', projectsData);
+    renderProjects('developer-projects', projectsData);
+    renderTasks('client-requests', clientTasks);
+    renderTasks('developer-queue', developerQueue);
+    renderActions('client-actions', quickActions, simulateAction);
+    renderActions('developer-actions', developerActions, simulateQueueAction);
+    renderProfile('client-profile', clientProfile, ['Owner', 'Trusted']);
+    renderProfile('developer-profile', developerProfile, ['Approver', 'Reviewer']);
+    renderTerminal('client-terminal', agentRuns);
+    renderTerminal('developer-terminal', agentRuns);
+    updateLiveCounts();
     showPortal(null);
   </script>
 </body>
