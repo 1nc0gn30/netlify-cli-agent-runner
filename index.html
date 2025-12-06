@@ -19,6 +19,7 @@
       --muted: #9ea6c3;
       --accent: #1ce6b6;
       --accent-2: #42b8ff;
+      --warning: #f6c046;
       --border: rgba(255, 255, 255, 0.08);
       --shadow: 0 20px 80px rgba(0, 0, 0, 0.35);
       --radius: 14px;
@@ -82,7 +83,7 @@
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       gap: 18px;
     }
 
@@ -110,7 +111,7 @@
 
     .hero-text p {
       color: var(--muted);
-      max-width: 720px;
+      max-width: 820px;
       line-height: 1.6;
     }
 
@@ -181,6 +182,15 @@
       box-shadow: 0 0 0 3px rgba(28, 230, 182, 0.15);
     }
 
+    .supporting-copy {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
     button, .ghost-btn {
       padding: 12px 16px;
       border-radius: 10px;
@@ -221,6 +231,14 @@
       margin-top: 10px;
     }
 
+    .site-meta {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
     .status {
       display: inline-flex;
       align-items: center;
@@ -240,7 +258,7 @@
     .actions {
       display: grid;
       gap: 12px;
-      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     }
 
     .action-btn {
@@ -262,6 +280,12 @@
     .action-btn strong {
       display: block;
       margin-bottom: 6px;
+    }
+
+    .action-btn[data-locked="true"] {
+      opacity: 0.55;
+      cursor: not-allowed;
+      border-style: dashed;
     }
 
     .terminal {
@@ -307,6 +331,12 @@
       margin: 14px 0;
     }
 
+    .subgrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 12px;
+    }
+
     .badge {
       background: rgba(66, 184, 255, 0.14);
       color: #8dd7ff;
@@ -315,6 +345,64 @@
       font-weight: 700;
       font-size: 0.8rem;
       letter-spacing: 0.4px;
+    }
+
+    .toggle {
+      display: inline-flex;
+      align-items: center;
+      background: var(--panel-strong);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 6px;
+      gap: 6px;
+    }
+
+    .toggle button {
+      background: transparent;
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 8px 14px;
+      border: 1px solid transparent;
+    }
+
+    .toggle button.active {
+      background: linear-gradient(135deg, #1ce6b6, #42b8ff);
+      color: #031017;
+      border-color: transparent;
+      box-shadow: 0 10px 30px rgba(28, 230, 182, 0.3);
+    }
+
+    .list-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--panel-strong);
+      border-radius: 10px;
+      padding: 12px;
+      border: 1px solid var(--border);
+    }
+
+    .chip {
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      border: 1px solid var(--border);
+      font-size: 0.85rem;
+    }
+
+    .mini-strong {
+      color: #d7e2ff;
+      font-weight: 700;
+    }
+
+    .note {
+      background: rgba(246, 192, 70, 0.08);
+      border: 1px dashed rgba(246, 192, 70, 0.5);
+      padding: 10px;
+      border-radius: 10px;
+      color: #f7e7b0;
+      font-size: 0.9rem;
     }
 
     footer {
@@ -364,7 +452,7 @@
       </div>
       <h1>Programmable workflow guards for Netlify CLI and AI Agent Runners.</h1>
       <p>
-        Prototype portal where developers expose curated Netlify workflows and AI prompts while keeping production guardrails. 
+        Prototype portal where developers expose curated Netlify workflows and AI prompts while keeping production guardrails.
         Agent Runners mediate every CLI call, so clients trigger safe actions and teams ship faster with confidence.
       </p>
       <div class="pill-row">
@@ -372,6 +460,11 @@
         <div class="pill">🛡️ Role-based approvals</div>
         <div class="pill">🚀 Safer deploy flows</div>
         <div class="pill">📡 Netlify Add-on concept</div>
+      </div>
+      <div class="supporting-copy">
+        <div>Agent Runners act as a safe execution layer that proxies Netlify CLI. Clients never see tokens, flags, or raw shell.</div>
+        <div>Developers configure allowed flows, mapping identities to Netlify sites, environments, and approval steps.</div>
+        <div>Agencies unlock client self-service: curated AI prompts deliver content changes, deploys, and rollbacks on rails.</div>
       </div>
     </div>
     <div class="panel login">
@@ -391,8 +484,9 @@
         <div class="hint">Federated SSO ties identity to the Agent Runner policy that determines which Netlify CLI operations are exposed.</div>
         <div style="display: flex; gap: 10px; align-items: center;">
           <button class="primary" id="simulate-login">Sign in & view dashboard</button>
-          <span class="mini">No backend here — this is a UX proof-of-concept.</span>
+          <button class="ghost-btn" id="simulate-logout">Logout</button>
         </div>
+        <div class="note">Authentication gates access to Netlify CLI actions and AI Agent Runners. Policies travel with the session.</div>
       </div>
     </div>
   </section>
@@ -406,16 +500,32 @@
       <div class="site-card">
         <div>
           <strong>brand-site</strong>
-          <div class="mini">Environment: production • Git connected</div>
+          <div class="site-meta">
+            <span class="chip">Environment: production</span>
+            <span class="chip">Git connected</span>
+          </div>
         </div>
         <div class="status"><span class="status-dot"></span>Healthy</div>
       </div>
       <div class="site-card" style="border-left-color: #42b8ff;">
         <div>
           <strong>feature-preview</strong>
-          <div class="mini">Environment: preview branch • gated deploys</div>
+          <div class="site-meta">
+            <span class="chip">Environment: preview branch</span>
+            <span class="chip">PR gated</span>
+          </div>
         </div>
         <div class="status"><span class="status-dot" style="background: #42b8ff; box-shadow: 0 0 8px #42b8ff;"></span>Watching</div>
+      </div>
+      <div class="site-card" style="border-left-color: #f6c046;">
+        <div>
+          <strong>client-lp</strong>
+          <div class="site-meta">
+            <span class="chip">Environment: production</span>
+            <span class="chip">Content-only</span>
+          </div>
+        </div>
+        <div class="status" style="color: #f6c046;"><span class="status-dot" style="background: #f6c046; box-shadow: 0 0 8px #f6c046;"></span>Guarded</div>
       </div>
       <div class="divider"></div>
       <div class="callout">
@@ -424,9 +534,15 @@
     </div>
 
     <div class="panel">
-      <div class="topline">
-        <span class="badge">AI Agent Runner Actions</span>
-        <span class="mini">Buttons trigger prompts that mediate Netlify CLI commands</span>
+      <div class="topline" style="justify-content: space-between;">
+        <div>
+          <span class="badge">AI Agent Runner Presets</span>
+          <span class="mini">Buttons trigger prompts that mediate Netlify CLI commands</span>
+        </div>
+        <div class="toggle" aria-label="Role switcher">
+          <button id="role-client" class="active" onclick="switchRole('client')">Client</button>
+          <button id="role-developer" onclick="switchRole('developer')">Developer</button>
+        </div>
       </div>
       <div class="actions">
         <button class="action-btn" data-action="deploy" onclick="runAgent('Deploy production via Agent Runner')">
@@ -445,7 +561,16 @@
           <strong>Open preview URL</strong>
           <span class="mini">Client-safe shortcut that only returns approved preview links.</span>
         </button>
+        <button class="action-btn" data-action="rollback" data-locked="true" onclick="runAgent('Rollback to last stable build')">
+          <strong>Rollback to last stable deploy</strong>
+          <span class="mini">Developer-only by default. Unlock for clients once approvals and time windows are configured.</span>
+        </button>
+        <button class="action-btn" data-action="content" onclick="runAgent('Update homepage headline with provided copy pack')">
+          <strong>Update content / copy</strong>
+          <span class="mini">Agent runs structured content updates and triggers <code>netlify deploy</code> only after diff review.</span>
+        </button>
       </div>
+      <div class="note" style="margin-top: 10px;">CLI commands are executed by AI Agent Runners in a sandbox — not by users. Buttons are the only surface area clients see.</div>
     </div>
 
     <div class="panel">
@@ -462,9 +587,37 @@
 
     <div class="panel">
       <div class="topline">
-        <span class="badge">Client vs. Developer Roles</span>
-        <span class="mini">Governance layer defines who can do what</span>
+        <span class="badge">Role Controls & Permissions</span>
+        <span class="mini">Client vs. Developer views are enforced at the runner layer</span>
       </div>
+      <div class="subgrid">
+        <div class="list-item">
+          <div>
+            <strong>Allowed CLI commands</strong>
+            <div class="mini">Developers publish an allowlist. Clients only see curated macros.</div>
+          </div>
+          <div style="text-align: right;">
+            <div class="chip">netlify status</div>
+            <div class="chip">netlify deploy --prod</div>
+            <div class="chip">netlify rollback</div>
+          </div>
+        </div>
+        <div class="list-item">
+          <div>
+            <strong>Guarded AI prompts</strong>
+            <div class="mini">Prompts bind to policies: env scope, flags, approval levels.</div>
+          </div>
+          <div class="chip">Signed + audited</div>
+        </div>
+        <div class="list-item">
+          <div>
+            <strong>Client sandbox</strong>
+            <div class="mini">No raw shell, no secrets. Runners execute server-side with RBAC.</div>
+          </div>
+          <div class="chip" style="background: rgba(28, 230, 182, 0.15); color: #9cf1d8;">Safe surface</div>
+        </div>
+      </div>
+      <div class="divider"></div>
       <div class="role-grid">
         <div class="role-card">
           <h4>Client / Stakeholder</h4>
@@ -494,6 +647,51 @@
       <div class="divider"></div>
       <div class="mini">This add-on vision extends Netlify beyond “deploy + host” into governed automation: AI agents orchestrate, Netlify enforces.</div>
     </div>
+
+    <div class="panel">
+      <div class="topline">
+        <span class="badge">Developer Console</span>
+        <span class="mini">Design workflows that clients can safely trigger</span>
+      </div>
+      <div class="subgrid">
+        <div class="list-item">
+          <div>
+            <strong>Define allowed agent actions</strong>
+            <div class="mini">Preset includes prompt + CLI macro + rollback rule.</div>
+          </div>
+          <button class="ghost-btn" onclick="appendLine('Dev added new preset: Lighthouse audit with budget policy');">+ New preset</button>
+        </div>
+        <div class="list-item">
+          <div>
+            <strong>Toggle CLI exposure</strong>
+            <div class="mini">Expose <code>netlify deploy</code> to clients only after approvals configured.</div>
+          </div>
+          <div class="chip">Audited change</div>
+        </div>
+        <div class="list-item">
+          <div>
+            <strong>Access control</strong>
+            <div class="mini">Link users to policies via SSO groups. Client view updates instantly.</div>
+          </div>
+          <div class="chip">SSO enforced</div>
+        </div>
+      </div>
+      <div class="note" style="margin-top: 12px;">Guardrails reduce developer toil: pre-approved flows mean fewer ad-hoc deploy requests and safer client autonomy.</div>
+    </div>
+
+    <div class="panel">
+      <div class="topline">
+        <span class="badge">Workflow Timeline</span>
+        <span class="mini">Recent Agent Runner executions with Netlify context</span>
+      </div>
+      <div class="terminal" style="height: 220px;">
+        <div class="line">[09:15] client-lp → AI updated hero copy → <span class="meta">netlify deploy --prod</span> approved</div>
+        <div class="line">[08:40] feature-preview → status check → <span class="meta">netlify status</span> ok</div>
+        <div class="line">[07:55] brand-site → rollback preset requested → awaiting dev approval</div>
+        <div class="line">[Yesterday] brand-site → AI explained build failure; developer reopened PR</div>
+      </div>
+      <div class="hint" style="margin-top: 10px;">Every run is signed, associated with an identity, and scoped to a site + environment.</div>
+    </div>
   </section>
 
   <footer>
@@ -504,11 +702,20 @@
     const dashboard = document.getElementById('dashboard');
     const terminal = document.getElementById('terminal-log');
     const loginButton = document.getElementById('simulate-login');
+    const logoutButton = document.getElementById('simulate-logout');
+    const roleButtons = {
+      client: document.getElementById('role-client'),
+      developer: document.getElementById('role-developer'),
+    };
+    let currentRole = 'client';
 
     loginButton.addEventListener('click', () => {
-      // In a real product, authentication would issue a session tied to runner policies.
-      appendLine('✔ Authenticated: policy applied for developer role. Ready for safe actions.');
+      login();
       dashboard.scrollIntoView({ behavior: 'smooth' });
+    });
+
+    logoutButton.addEventListener('click', () => {
+      logout();
     });
 
     function appendLine(text) {
@@ -519,7 +726,44 @@
       terminal.scrollTop = terminal.scrollHeight;
     }
 
+    function login() {
+      // In a real product, authentication would issue a session tied to runner policies.
+      appendLine('✔ Authenticated: policy applied for developer role. Ready for safe actions.');
+      currentRole = 'developer';
+      switchRole('developer');
+    }
+
+    function logout() {
+      // Placeholder: logout would revoke tokens and clear policy grants.
+      appendLine('👋 Session ended. CLI and Agent Runner actions locked.');
+      currentRole = 'client';
+      switchRole('client');
+    }
+
+    function switchRole(role) {
+      currentRole = role;
+      Object.keys(roleButtons).forEach((key) => {
+        roleButtons[key].classList.toggle('active', key === role);
+      });
+
+      const lockedActions = document.querySelectorAll('[data-locked="true"]');
+      lockedActions.forEach((btn) => {
+        btn.disabled = role === 'client';
+        btn.setAttribute('aria-disabled', role === 'client');
+      });
+
+      appendLine(role === 'client'
+        ? '🔒 Client view: only curated presets exposed. CLI stays server-side.'
+        : '🛠 Developer view: define prompts, approve rollbacks, expose new CLI macros.');
+    }
+
     function runAgent(prompt) {
+      const target = event?.currentTarget;
+      if (target?.dataset.locked === 'true' && currentRole === 'client') {
+        appendLine('⚠️ Permission denied: clients cannot trigger this preset without developer approval.');
+        return;
+      }
+
       // Placeholder: here an Agent Runner would validate intent + policy, then call Netlify CLI server-side.
       appendLine(`🤖 Agent Runner: ${prompt}`);
       appendLine('   → Validating policy, branch, and environment...');
@@ -535,6 +779,9 @@
       appendLine(`$ ${map[action] || 'netlify deploy --prod'}`);
       appendLine('   [agent] Command approved, executed within runner sandbox.');
     }
+
+    // Initialize the interface to reflect client-safe defaults.
+    switchRole('client');
   </script>
 </body>
 </html>
