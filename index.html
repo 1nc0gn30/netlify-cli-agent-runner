@@ -240,9 +240,9 @@
 
     .actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
 
-    .action-btn {
+    .action-option {
       background: var(--surface-strong);
-      padding: 14px 16px;
+      padding: 12px 12px;
       border-radius: 12px;
       border: 1px solid var(--border);
       text-align: left;
@@ -253,8 +253,8 @@
       overflow: hidden;
     }
 
-    .action-btn:hover { border-color: rgba(28,230,182,0.35); transform: translateY(-1px); background: var(--surface-hover); }
-    .action-btn:active { transform: translateY(0); }
+    .action-option:hover { border-color: rgba(28, 230, 182, 0.35); background: var(--surface-hover); transform: translateY(-1px); }
+    .action-option.active { border-color: rgba(66, 184, 255, 0.8); box-shadow: 0 10px 40px rgba(66, 184, 255, 0.18); }
 
     .two-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
 
@@ -287,6 +287,81 @@
     .dot-watching { background: #7bbcff; box-shadow: 0 0 0 4px rgba(123, 188, 255, 0.16); }
 
     .profile-card { background: var(--surface-strong); border: 1px solid var(--border); border-radius: 12px; padding: 12px; }
+
+    .stack { display: grid; gap: 10px; }
+
+    .guidance-drawer {
+      background: linear-gradient(145deg, rgba(66, 184, 255, 0.07), rgba(28, 230, 182, 0.06));
+      border: 1px solid rgba(66, 184, 255, 0.24);
+      padding: 14px;
+      border-radius: 12px;
+      box-shadow: 0 10px 50px rgba(0, 0, 0, 0.35);
+    }
+
+    .step-label { color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.75rem; }
+    .step-title { font-size: 1.02rem; font-weight: 700; margin-top: 4px; }
+    .drawer-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 12px; align-items: start; }
+    .drawer-grid .panel { box-shadow: none; border-color: rgba(255,255,255,0.08); background: rgba(255,255,255,0.03); }
+
+    .reasoning-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 8px; }
+    .reasoning-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 10px; }
+
+    .segmented {
+      display: inline-grid;
+      grid-template-columns: repeat(2, minmax(110px, 1fr));
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .segmented button {
+      border: none;
+      background: transparent;
+      padding: 10px 12px;
+      color: var(--text);
+      font-weight: 700;
+    }
+    .segmented button.active { background: linear-gradient(120deg, rgba(28,230,182,0.16), rgba(66,184,255,0.18)); color: #e6fff9; }
+
+    .inline-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--surface-strong);
+    }
+
+    .toggle-switch {
+      width: 46px;
+      height: 26px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 999px;
+      position: relative;
+      border: 1px solid var(--border);
+      transition: background 0.2s ease;
+    }
+    .toggle-switch::after {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 18px;
+      height: 18px;
+      background: #fff;
+      border-radius: 50%;
+      transition: transform 0.2s ease;
+    }
+    .toggle-switch.on { background: rgba(28, 230, 182, 0.18); border-color: rgba(28,230,182,0.6); }
+    .toggle-switch.on::after { transform: translateX(18px); background: #031017; }
+
+    .callout {
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 12px;
+      padding: 12px;
+      background: rgba(255,255,255,0.03);
+    }
 
     footer { text-align: center; margin-top: 30px; color: var(--muted); font-size: 0.95rem; }
 
@@ -415,9 +490,16 @@
       </div>
 
       <div class="panel">
-        <div class="section-title">Quick Actions <span>One-click presets</span></div>
-        <div class="actions" id="client-actions"></div>
-        <div class="hint" style="margin-top: 10px;">Buttons trigger curated flows. Agent Runners keep CLI server-side and log identity.</div>
+        <div class="section-title">Guided Actions <span>Trust-first flow</span></div>
+        <div class="stack">
+          <div class="hint">Step 1 — Pick a preset, Step 2 — Agent explains scope, Step 3 — You confirm or route to a human.</div>
+          <div class="actions" id="client-action-options"></div>
+          <div class="guidance-drawer" id="client-guidance">
+            <div class="step-label">Awaiting selection</div>
+            <div class="step-title">Choose an action to see the plan</div>
+            <div class="hint">Agent Runners narrate intent before touching anything. Safety defaults keep clients from breaking prod.</div>
+          </div>
+        </div>
       </div>
 
       <div class="panel">
@@ -456,9 +538,9 @@
       </div>
 
       <div class="panel">
-        <div class="section-title">Runner Controls <span>Publish presets</span></div>
-        <div class="actions" id="developer-actions"></div>
-        <div class="hint" style="margin-top: 10px;">Approvals, rollout scopes, and environment protections apply before Agent Runners invoke Netlify CLI.</div>
+        <div class="section-title">Guardrails <span>Developer control center</span></div>
+        <div class="stack" id="developer-guardrails"></div>
+        <div class="callout" style="margin-top: 10px;">Approvals, rollout scopes, and environment protections apply before Agent Runners invoke Netlify CLI. You set the blast radius.</div>
       </div>
 
       <div class="panel">
@@ -491,6 +573,8 @@
     const logoutButton = document.getElementById('simulate-logout');
     const selectorCards = document.querySelectorAll('[data-portal]');
     let isAuthenticated = false;
+    let selectedAction = null;
+    let runMode = 'dry';
 
     const projectsData = [
       { name: 'brightside-marketing', env: 'Production', status: 'Healthy', desc: 'Static marketing site with A/B routing.', branch: 'main', lastDeploy: '14m ago', owner: 'Marketing Ops' },
@@ -542,15 +626,69 @@
     };
 
     const quickActions = [
-      { label: 'Deploy to production', detail: 'Runs build, tests, and deploy via runner.', command: 'netlify deploy --prod', target: 'Production' },
-      { label: 'Generate preview', detail: 'Spin up preview with AI summary.', command: 'netlify open --url preview', target: 'Preview' },
-      { label: 'Run diagnostics', detail: 'Inspect logs and performance.', command: 'netlify status', target: 'Observability' }
+      {
+        id: 'prod-deploy',
+        label: 'Deploy to production',
+        detail: 'Runner executes build + tests before promoting.',
+        command: 'netlify deploy --prod',
+        target: 'Production',
+        plan: 'Agent will build, test, and promote the current main branch. If any checks fail, the deploy is halted.',
+        changes: 'Only promotes /dist assets and serverless functions from main.',
+        boundaries: 'Will not alter DNS, environment variables, or secrets.',
+        safety: 'Uses signed runner identity and preserves current prod snapshot until verification passes.',
+        rollback: 'If metrics regress, agent reverts to prior deploy and notifies developer queue.',
+        scope: 'Prod guarded • Requires approval or dry run first.'
+      },
+      {
+        id: 'preview',
+        label: 'Generate preview',
+        detail: 'Safe preview with AI summary for stakeholders.',
+        command: 'netlify open --url preview',
+        target: 'Preview',
+        plan: 'Agent builds from feature branch, generates preview link, and drafts a changelog.',
+        changes: 'Creates preview artifact and summary only.',
+        boundaries: 'No production routing or DNS updates.',
+        safety: 'Runs in isolated preview runner with read-only env vars.',
+        rollback: 'Simply expires preview; prod remains untouched.',
+        scope: 'Preview-only • Can auto-expire in 24h.'
+      },
+      {
+        id: 'diagnostics',
+        label: 'Run diagnostics',
+        detail: 'Health sweep before anyone ships.',
+        command: 'netlify status',
+        target: 'Observability',
+        plan: 'Agent checks build logs, edge functions, and CDN latency then suggests remediation.',
+        changes: 'Read-only checks; no deploys triggered.',
+        boundaries: 'Will not mutate configs or repos.',
+        safety: 'Executes in monitoring scope with throttled permissions.',
+        rollback: 'No rollback needed; results shared to developer stream.',
+        scope: 'Read-only • Ideal before approvals.'
+      }
     ];
 
-    const developerActions = [
-      { label: 'Publish client presets', detail: 'Toggle which macros clients see.', command: 'Update preset policy' },
-      { label: 'Require approvals', detail: 'Gate rollbacks and prod deploys.', command: 'Approval rules' },
-      { label: 'Audit runner scopes', detail: 'Review CLI macros and secrets.', command: 'Audit log export' }
+    const guardrails = [
+      {
+        id: 'prod-access',
+        title: 'Prod vs preview access',
+        detail: 'Restrict client presets to preview environments unless explicitly approved.',
+        status: true,
+        note: 'Prod locked unless developer adds an approver.'
+      },
+      {
+        id: 'human-approval',
+        title: 'Require human approval',
+        detail: 'Prod deploys and rollbacks require a named reviewer in the runner queue.',
+        status: true,
+        note: 'AI can stage changes but waits for a human signature.'
+      },
+      {
+        id: 'deploy-locks',
+        title: 'Lock deploys by time/environment',
+        detail: 'Freeze production after 5pm PT and during incident modes.',
+        status: false,
+        note: 'Preview deploys stay open for experimentation.'
+      }
     ];
 
     function statusClass(status) {
@@ -617,15 +755,44 @@
       });
     }
 
-    function renderActions(containerId, actions, clickHandler) {
-      const container = document.getElementById(containerId);
+    function renderClientActions(actions) {
+      const container = document.getElementById('client-action-options');
       container.innerHTML = '';
       actions.forEach((action) => {
         const btn = document.createElement('button');
-        btn.className = 'action-btn';
-        btn.innerHTML = `<strong>${action.label}</strong><div class="hint">${action.detail}</div><div class="subtext">${action.command}</div>`;
-        btn.addEventListener('click', () => clickHandler(action));
+        btn.className = 'action-option';
+        btn.setAttribute('data-action', action.id);
+        btn.innerHTML = `
+          <div class="meta-row">
+            <div>
+              <strong>${action.label}</strong>
+              <div class="hint">${action.detail}</div>
+            </div>
+            <span class="pill info">${action.target}</span>
+          </div>
+          <div class="subtext">${action.command}</div>
+        `;
+        btn.addEventListener('click', () => selectAction(action.id));
         container.appendChild(btn);
+      });
+    }
+
+    function renderGuardrails() {
+      const container = document.getElementById('developer-guardrails');
+      container.innerHTML = '';
+      guardrails.forEach((rule) => {
+        const row = document.createElement('div');
+        row.className = 'inline-toggle';
+        row.innerHTML = `
+          <div>
+            <strong>${rule.title}</strong>
+            <div class="hint">${rule.detail}</div>
+            <div class="subtext">${rule.note}</div>
+          </div>
+          <div class="toggle-switch ${rule.status ? 'on' : ''}" role="switch" aria-checked="${rule.status}" data-guardrail="${rule.id}"></div>
+        `;
+        row.querySelector('.toggle-switch').addEventListener('click', () => toggleGuardrail(rule.id));
+        container.appendChild(row);
       });
     }
 
@@ -670,24 +837,106 @@
       terminal.scrollTop = terminal.scrollHeight;
     }
 
-    function simulateAction(action) {
+    function selectAction(id) {
+      selectedAction = quickActions.find((item) => item.id === id);
+      document.querySelectorAll('[data-action]').forEach((btn) => {
+        btn.classList.toggle('active', btn.getAttribute('data-action') === id);
+      });
+      updateGuidance();
+    }
+
+    function updateGuidance() {
+      const drawer = document.getElementById('client-guidance');
+      if (!selectedAction) {
+        drawer.innerHTML = `
+          <div class="step-label">Awaiting selection</div>
+          <div class="step-title">Choose an action to see the plan</div>
+          <div class="hint">Agent Runners narrate intent before touching anything. Safety defaults keep clients from breaking prod.</div>
+        `;
+        return;
+      }
+
+      drawer.innerHTML = `
+        <div class="drawer-grid">
+          <div>
+            <div class="step-label">Step 2 · Agent explains</div>
+            <div class="step-title">${selectedAction.label}</div>
+            <div class="hint" style="margin-top:6px;">${selectedAction.plan}</div>
+            <div class="reasoning-grid">
+              <div class="reasoning-card"><strong>What I will change</strong><div class="subtext">${selectedAction.changes}</div></div>
+              <div class="reasoning-card"><strong>What I will not touch</strong><div class="subtext">${selectedAction.boundaries}</div></div>
+              <div class="reasoning-card"><strong>Why this is safe</strong><div class="subtext">${selectedAction.safety}</div></div>
+              <div class="reasoning-card"><strong>Rollback plan</strong><div class="subtext">${selectedAction.rollback}</div></div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="step-label">Step 3 · Confidence check</div>
+            <div class="step-title">Confirm or ask for a human</div>
+            <div class="hint" style="margin: 6px 0;">Signature choice: Dry run vs Real run. Clients see impact, developers control blast radius.</div>
+            <div class="segmented" aria-label="Run mode">
+              <button data-mode="dry" class="${runMode === 'dry' ? 'active' : ''}">Dry run</button>
+              <button data-mode="real" class="${runMode === 'real' ? 'active' : ''}">Real run</button>
+            </div>
+            <div class="pill-row" style="margin: 10px 0;">
+              <span class="pill success">${selectedAction.scope}</span>
+              <span class="pill info">${selectedAction.command}</span>
+            </div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+              <button class="primary" id="confirm-action">${runMode === 'dry' ? 'Simulate safely' : 'Run with runner'}</button>
+              <button class="secondary" id="human-action">Request human help</button>
+            </div>
+            <div class="hint" style="margin-top: 8px;">AI explains every step and attaches logs to the activity stream.</div>
+          </div>
+        </div>
+      `;
+
+      drawer.querySelectorAll('[data-mode]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          runMode = btn.dataset.mode;
+          updateGuidance();
+        });
+      });
+
+      drawer.querySelector('#confirm-action').addEventListener('click', () => simulateAction(selectedAction, runMode));
+      drawer.querySelector('#human-action').addEventListener('click', () => routeToHuman(selectedAction));
+    }
+
+    function toggleGuardrail(id) {
+      const guardrail = guardrails.find((rule) => rule.id === id);
+      guardrail.status = !guardrail.status;
+      renderGuardrails();
+      simulateQueueAction({ label: guardrail.title });
+    }
+
+    function simulateAction(action, mode = 'dry') {
       const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      agentRuns.unshift(`[${timestamp}] ${action.label} → ${action.command}`);
+      const prefix = mode === 'dry' ? 'Dry run scheduled' : 'Executing via runner';
+      agentRuns.unshift(`[${timestamp}] ${action.label} → ${prefix} (${action.command})`);
       renderTerminal('client-terminal', agentRuns.slice(0, 12));
       renderTerminal('developer-terminal', agentRuns.slice(0, 12));
 
-      liveCounts.active += 1;
-      liveCounts.deploys += action.command.includes('deploy') ? 1 : 0;
-      updateLiveCounts();
+      if (mode === 'real') {
+        liveCounts.active += 1;
+        liveCounts.deploys += action.command.includes('deploy') ? 1 : 0;
+        updateLiveCounts();
+      }
 
       setTimeout(() => {
         const doneStamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        agentRuns.unshift(`[${doneStamp}] ${action.label} → Completed`);
+        const outcome = mode === 'dry' ? 'Dry run report ready' : 'Completed';
+        agentRuns.unshift(`[${doneStamp}] ${action.label} → ${outcome}`);
         renderTerminal('client-terminal', agentRuns.slice(0, 12));
         renderTerminal('developer-terminal', agentRuns.slice(0, 12));
         liveCounts.active = Math.max(liveCounts.active - 1, 0);
         updateLiveCounts();
-      }, 1800 + Math.random() * 1200);
+      }, 1600 + Math.random() * 1200);
+    }
+
+    function routeToHuman(action) {
+      const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      agentRuns.unshift(`[${timestamp}] ${action.label} → Routed to human reviewer`);
+      renderTerminal('client-terminal', agentRuns.slice(0, 12));
+      renderTerminal('developer-terminal', agentRuns.slice(0, 12));
     }
 
     function simulateQueueAction(action) {
@@ -742,12 +991,13 @@
     renderProjects('developer-projects', projectsData);
     renderTasks('client-requests', clientTasks);
     renderTasks('developer-queue', developerQueue);
-    renderActions('client-actions', quickActions, simulateAction);
-    renderActions('developer-actions', developerActions, simulateQueueAction);
+    renderClientActions(quickActions);
+    renderGuardrails();
     renderProfile('client-profile', clientProfile, ['Owner', 'Trusted']);
     renderProfile('developer-profile', developerProfile, ['Approver', 'Reviewer']);
     renderTerminal('client-terminal', agentRuns);
     renderTerminal('developer-terminal', agentRuns);
+    updateGuidance();
     updateLiveCounts();
     showPortal(null);
   </script>
