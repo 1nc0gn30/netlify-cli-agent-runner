@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Netlify Agent Runner Portal</title>
+  <title>Netlify Agent Runner Portals</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -98,7 +98,7 @@
 
     .hero {
       display: grid;
-      grid-template-columns: 2fr 1.2fr;
+      grid-template-columns: 2fr 1.1fr;
       gap: 18px;
       margin-bottom: 18px;
     }
@@ -111,7 +111,7 @@
 
     .hero-text p {
       color: var(--muted);
-      max-width: 820px;
+      max-width: 920px;
       line-height: 1.6;
     }
 
@@ -182,16 +182,8 @@
       box-shadow: 0 0 0 3px rgba(28, 230, 182, 0.15);
     }
 
-    .supporting-copy {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 12px;
-      margin-top: 10px;
-      color: var(--muted);
-      font-size: 0.95rem;
-    }
-
-    button, .ghost-btn {
+    button,
+    .ghost-btn {
       padding: 12px 16px;
       border-radius: 10px;
       border: none;
@@ -222,43 +214,105 @@
       color: var(--accent);
     }
 
-    .site-card {
-      border-left: 4px solid var(--accent);
-      padding-left: 12px;
+    .topline {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .badge {
+      background: rgba(66, 184, 255, 0.14);
+      color: #8dd7ff;
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.8rem;
+      letter-spacing: 0.4px;
+    }
+
+    .portal-selector {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .portal-card {
+      background: var(--panel-strong);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      display: grid;
+      gap: 10px;
+      cursor: pointer;
+      transition: border 0.2s ease, transform 0.15s ease;
+    }
+
+    .portal-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .portal-card.active {
+      border-color: var(--accent);
+      box-shadow: 0 8px 40px rgba(28, 230, 182, 0.15);
+    }
+
+    .section-title {
+      font-size: 1.2rem;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-title span {
+      color: var(--muted);
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .subgrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 12px;
+    }
+
+    .list-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: 10px;
+      background: var(--panel-strong);
+      border-radius: 10px;
+      padding: 12px;
+      border: 1px solid var(--border);
     }
 
-    .site-meta {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      color: var(--muted);
+    .chip {
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      border: 1px solid var(--border);
+      font-size: 0.85rem;
+    }
+
+    .mini {
       font-size: 0.9rem;
-    }
-
-    .status {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.9rem;
       color: var(--muted);
+      line-height: 1.5;
     }
 
-    .status-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: #3cf7c2;
-      box-shadow: 0 0 8px #3cf7c2;
+    .mini-strong {
+      color: #d7e2ff;
+      font-weight: 700;
     }
 
     .actions {
       display: grid;
       gap: 12px;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     }
 
     .action-btn {
@@ -272,20 +326,20 @@
       transition: border 0.2s ease, transform 0.15s ease;
     }
 
-    .action-btn:hover {
-      border-color: var(--accent);
-      transform: translateY(-1px);
-    }
-
     .action-btn strong {
       display: block;
       margin-bottom: 6px;
     }
 
-    .action-btn[data-locked="true"] {
-      opacity: 0.55;
-      cursor: not-allowed;
-      border-style: dashed;
+    .action-btn:hover {
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 12px;
     }
 
     .terminal {
@@ -309,107 +363,24 @@
       color: #6ea7ff;
     }
 
-    .role-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 14px;
-    }
-
-    .role-card h4 {
-      margin-bottom: 6px;
-    }
-
-    .mini {
-      font-size: 0.9rem;
-      color: var(--muted);
-      line-height: 1.5;
-    }
-
-    .divider {
-      height: 1px;
-      background: var(--border);
-      margin: 14px 0;
-    }
-
-    .subgrid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 12px;
-    }
-
-    .badge {
-      background: rgba(66, 184, 255, 0.14);
-      color: #8dd7ff;
-      padding: 4px 8px;
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: 0.8rem;
-      letter-spacing: 0.4px;
-    }
-
-    .toggle {
-      display: inline-flex;
-      align-items: center;
-      background: var(--panel-strong);
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      padding: 6px;
-      gap: 6px;
-    }
-
-    .toggle button {
-      background: transparent;
-      color: var(--muted);
-      border-radius: 999px;
-      padding: 8px 14px;
-      border: 1px solid transparent;
-    }
-
-    .toggle button.active {
-      background: linear-gradient(135deg, #1ce6b6, #42b8ff);
-      color: #031017;
-      border-color: transparent;
-      box-shadow: 0 10px 30px rgba(28, 230, 182, 0.3);
-    }
-
-    .list-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: var(--panel-strong);
+    .avatar {
+      width: 42px;
+      height: 42px;
       border-radius: 10px;
-      padding: 12px;
+      background: var(--panel-strong);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      color: var(--accent);
       border: 1px solid var(--border);
     }
 
-    .chip {
-      padding: 4px 10px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--text);
-      border: 1px solid var(--border);
-      font-size: 0.85rem;
+    .portal {
+      margin-top: 20px;
     }
 
-    .mini-strong {
-      color: #d7e2ff;
-      font-weight: 700;
-    }
-
-    .note {
-      background: rgba(246, 192, 70, 0.08);
-      border: 1px dashed rgba(246, 192, 70, 0.5);
-      padding: 10px;
-      border-radius: 10px;
-      color: #f7e7b0;
-      font-size: 0.9rem;
-    }
-
-    footer {
-      text-align: center;
-      margin-top: 30px;
-      color: var(--muted);
-      font-size: 0.95rem;
+    .hidden {
+      display: none;
     }
 
     .callout {
@@ -420,11 +391,11 @@
       color: #d4fff2;
     }
 
-    .topline {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 6px;
+    footer {
+      text-align: center;
+      margin-top: 30px;
+      color: var(--muted);
+      font-size: 0.95rem;
     }
   </style>
 </head>
@@ -434,11 +405,11 @@
       <div class="logo">NL</div>
       <div>
         <strong>Netlify Agent Runners</strong><br />
-        <small style="color: var(--muted)">Guarded automation between people and the Netlify CLI.</small>
+        <small style="color: var(--muted)">Client + Developer portals on governed automation rails.</small>
       </div>
     </div>
     <nav>
-      <a href="#">Product Idea</a>
+      <a href="#">Portal Concept</a>
       <a href="#">Platform Docs</a>
       <a href="#">Security Notes</a>
     </nav>
@@ -447,278 +418,370 @@
   <section class="hero">
     <div class="hero-text panel">
       <div class="topline">
-        <span class="badge">Concept</span>
-        <span class="mini">Agent Runner Portal → AI + CLI with governance</span>
+        <span class="badge">Dual Portal Concept</span>
+        <span class="mini">Pick the right workspace after sign-in</span>
       </div>
-      <h1>Programmable workflow guards for Netlify CLI and AI Agent Runners.</h1>
+      <h1>Split Client & Developer portals that mediate every Netlify Agent Runner action.</h1>
       <p>
-        Prototype portal where developers expose curated Netlify workflows and AI prompts while keeping production guardrails.
-        Agent Runners mediate every CLI call, so clients trigger safe actions and teams ship faster with confidence.
+        After login, users choose a role-specific portal. Clients trigger curated AI actions without seeing the CLI, while
+        developers approve, extend, and observe runner-powered workflows. Each portal keeps permissions and context scoped to
+        the user’s projects.
       </p>
       <div class="pill-row">
-        <div class="pill">🤖 AI mediates CLI access</div>
-        <div class="pill">🛡️ Role-based approvals</div>
-        <div class="pill">🚀 Safer deploy flows</div>
-        <div class="pill">📡 Netlify Add-on concept</div>
+        <div class="pill">🔒 Role-separated surfaces</div>
+        <div class="pill">🤖 Executed by Netlify AI Agent Runners</div>
+        <div class="pill">🛡️ CLI stays server-side</div>
+        <div class="pill">🚀 Deploy + rollback on rails</div>
       </div>
-      <div class="supporting-copy">
-        <div>Agent Runners act as a safe execution layer that proxies Netlify CLI. Clients never see tokens, flags, or raw shell.</div>
-        <div>Developers configure allowed flows, mapping identities to Netlify sites, environments, and approval steps.</div>
-        <div>Agencies unlock client self-service: curated AI prompts deliver content changes, deploys, and rollbacks on rails.</div>
+      <div class="portal-selector" id="portal-selector">
+        <div class="portal-card" data-portal="client" tabindex="0">
+          <div class="topline">
+            <div class="avatar">C</div>
+            <div>
+              <strong>Client Portal</strong>
+              <div class="mini">Manage sites and trigger safe presets.</div>
+            </div>
+          </div>
+          <div class="mini">
+            “I want to manage my site.” AI Agents execute deploy, content, and diagnostics presets that are approved by the
+            developer’s guardrails.
+          </div>
+        </div>
+        <div class="portal-card" data-portal="developer" tabindex="0">
+          <div class="topline">
+            <div class="avatar" style="color: var(--accent-2);">D</div>
+            <div>
+              <strong>Developer Portal</strong>
+              <div class="mini">Curate runner policies and client presets.</div>
+            </div>
+          </div>
+          <div class="mini">
+            “I need a developer.” Configure which presets clients can run, expose safe CLI macros, and monitor request queues
+            across projects.
+          </div>
+        </div>
       </div>
     </div>
     <div class="panel login">
       <div class="login-content">
         <div class="topline">
           <span class="badge">Login (concept)</span>
-          <span class="mini">Authentication gates Netlify CLI + AI Agent access</span>
+          <span class="mini">Auth ties identity to runner policies</span>
         </div>
         <div>
           <label for="email">Work email</label>
-          <input type="email" id="email" placeholder="dev@agency.com" />
+          <input type="email" id="email" placeholder="user@team.com" />
         </div>
         <div>
           <label for="password">Password</label>
           <input type="password" id="password" placeholder="••••••••" />
         </div>
-        <div class="hint">Federated SSO ties identity to the Agent Runner policy that determines which Netlify CLI operations are exposed.</div>
+        <div class="hint">Federated SSO maps to Netlify roles. Portal selection happens after the session is issued.</div>
         <div style="display: flex; gap: 10px; align-items: center;">
-          <button class="primary" id="simulate-login">Sign in & view dashboard</button>
+          <button class="primary" id="simulate-login">Sign in</button>
           <button class="ghost-btn" id="simulate-logout">Logout</button>
         </div>
-        <div class="note">Authentication gates access to Netlify CLI actions and AI Agent Runners. Policies travel with the session.</div>
+        <div class="callout">Policies flow from identity → portal choice → allowed Netlify CLI and AI Agent Runner actions.</div>
       </div>
     </div>
   </section>
 
-  <section class="grid" id="dashboard">
+  <section class="portal" id="portal-selection">
     <div class="panel">
-      <div class="topline">
-        <span class="badge">Connected Netlify Sites</span>
-        <span class="mini">AI agents run approved Netlify CLI actions for each site</span>
+      <div class="section-title">Choose your workspace <span>Pick Client or Developer to continue</span></div>
+      <div class="portal-selector" style="margin-top: 0;">
+        <button class="portal-card" data-portal-button="client">Enter Client Portal</button>
+        <button class="portal-card" data-portal-button="developer">Enter Developer Portal</button>
       </div>
-      <div class="site-card">
-        <div>
-          <strong>brand-site</strong>
-          <div class="site-meta">
-            <span class="chip">Environment: production</span>
-            <span class="chip">Git connected</span>
+      <div class="mini" style="margin-top: 10px;">Portal selection happens after login. This demo auto-selects Client Portal for
+        read-only views if you haven’t signed in.</div>
+    </div>
+  </section>
+
+  <section class="portal hidden" id="client-portal">
+    <div class="topline" style="margin-bottom: 8px;">
+      <span class="badge">Client Portal</span>
+      <span class="mini">Non-technical view for content and site owners</span>
+    </div>
+    <div class="grid">
+      <div class="panel">
+        <div class="section-title">My Projects <span>Connected Netlify sites</span></div>
+        <div class="list-item">
+          <div>
+            <strong>brand-site</strong>
+            <div class="mini">Environment: production • Git connected</div>
+          </div>
+          <span class="chip">Healthy</span>
+        </div>
+        <div class="list-item">
+          <div>
+            <strong>feature-preview</strong>
+            <div class="mini">Environment: preview branch • PR gated</div>
+          </div>
+          <span class="chip" style="background: rgba(66, 184, 255, 0.14); color: #9ad6ff;">Watching</span>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="section-title">My Agent Runners <span>Preset, safe actions</span></div>
+        <div class="actions">
+          <button class="action-btn" data-action="deploy" onclick="runClientAgent('Deploy site')">
+            <strong>🚀 Deploy site</strong>
+            <div class="mini">Executed by Netlify AI Agent Runners</div>
+          </button>
+          <button class="action-btn" data-action="content" onclick="runClientAgent('Update content')">
+            <strong>📝 Update content</strong>
+            <div class="mini">Executed by Netlify AI Agent Runners</div>
+          </button>
+          <button class="action-btn" data-action="diagnose" onclick="runClientAgent('Diagnose issue')">
+            <strong>🔍 Diagnose issue</strong>
+            <div class="mini">Executed by Netlify AI Agent Runners</div>
+          </button>
+          <button class="action-btn" data-action="rollback" onclick="runClientAgent('Rollback')">
+            <strong>⏪ Rollback</strong>
+            <div class="mini">Executed by Netlify AI Agent Runners</div>
+          </button>
+        </div>
+        <div class="hint" style="margin-top: 10px;">Presets keep the CLI server-side. Runner policies enforce branch, env,
+          and approval steps before execution.</div>
+      </div>
+      <div class="panel">
+        <div class="section-title">Need a Developer? <span>Route to people or AI</span></div>
+        <div class="actions">
+          <button class="action-btn" onclick="requestDeveloper('human')">
+            <strong>✅ Request Human Developer</strong>
+            <div class="mini">Escalate to your assigned agency or dev team.</div>
+          </button>
+          <button class="action-btn" onclick="requestDeveloper('ai')">
+            <strong>🤖 Request AI Agent</strong>
+            <div class="mini">AI triages logs and suggests fixes before humans step in.</div>
+          </button>
+        </div>
+        <div class="callout" style="margin-top: 12px;">
+          Choosing a pathway explains who responds, what is automated, and how approvals work. Agent Runners mediate all steps.
+        </div>
+      </div>
+      <div class="panel">
+        <div class="section-title">Client Information <span>Netlify usage snapshot</span></div>
+        <div class="two-col">
+          <div class="list-item">
+            <div>
+              <strong>Site usage</strong>
+              <div class="mini">Bandwidth steady at 65% of plan.</div>
+            </div>
+            <span class="chip">concept</span>
+          </div>
+          <div class="list-item">
+            <div>
+              <strong>Deploy activity</strong>
+              <div class="mini">2 deploys today, 6 previews awaiting review.</div>
+            </div>
+            <span class="chip">concept</span>
+          </div>
+          <div class="list-item">
+            <div>
+              <strong>Support</strong>
+              <div class="mini">Access docs, chat, or AI troubleshooting guides.</div>
+            </div>
+            <span class="chip">help</span>
           </div>
         </div>
-        <div class="status"><span class="status-dot"></span>Healthy</div>
       </div>
-      <div class="site-card" style="border-left-color: #42b8ff;">
-        <div>
-          <strong>feature-preview</strong>
-          <div class="site-meta">
-            <span class="chip">Environment: preview branch</span>
-            <span class="chip">PR gated</span>
+      <div class="panel">
+        <div class="section-title">Client Profile <span>Controls access to agent actions</span></div>
+        <div class="two-col">
+          <div>
+            <label>Name</label>
+            <input type="text" placeholder="Jordan Client" />
+            <label>Company</label>
+            <input type="text" placeholder="Brightside Co." />
+            <label>Role</label>
+            <input type="text" placeholder="Marketing lead" />
+            <label>Contact info</label>
+            <input type="text" placeholder="jordan@brightside.co" />
+            <button class="primary" style="margin-top: 10px;" onclick="viewClientProfile()">Save profile</button>
+          </div>
+          <div class="panel" style="background: var(--panel-strong);">
+            <div class="mini-strong">Linked sites</div>
+            <div class="mini">brand-site, feature-preview</div>
+            <div class="mini-strong" style="margin-top: 12px;">Access level</div>
+            <div class="mini">Client presets only • Cannot run arbitrary CLI • Requires approval for rollbacks</div>
+            <div class="callout" style="margin-top: 12px;">
+              Your profile controls what Agent actions you can access. Dev teams map roles to allowed presets and approval flows.
+            </div>
           </div>
         </div>
-        <div class="status"><span class="status-dot" style="background: #42b8ff; box-shadow: 0 0 8px #42b8ff;"></span>Watching</div>
-      </div>
-      <div class="site-card" style="border-left-color: #f6c046;">
-        <div>
-          <strong>client-lp</strong>
-          <div class="site-meta">
-            <span class="chip">Environment: production</span>
-            <span class="chip">Content-only</span>
-          </div>
-        </div>
-        <div class="status" style="color: #f6c046;"><span class="status-dot" style="background: #f6c046; box-shadow: 0 0 8px #f6c046;"></span>Guarded</div>
-      </div>
-      <div class="divider"></div>
-      <div class="callout">
-        Clients see status + limited actions. Developers expand the allowlist by updating Agent Runner policies and CLI macros.
       </div>
     </div>
+  </section>
 
-    <div class="panel">
-      <div class="topline" style="justify-content: space-between;">
-        <div>
-          <span class="badge">AI Agent Runner Presets</span>
-          <span class="mini">Buttons trigger prompts that mediate Netlify CLI commands</span>
-        </div>
-        <div class="toggle" aria-label="Role switcher">
-          <button id="role-client" class="active" onclick="switchRole('client')">Client</button>
-          <button id="role-developer" onclick="switchRole('developer')">Developer</button>
-        </div>
-      </div>
-      <div class="actions">
-        <button class="action-btn" data-action="deploy" onclick="runAgent('Deploy production via Agent Runner')">
-          <strong>Ask AI Agent to deploy site</strong>
-          <span class="mini">Agent validates branch, env vars, and approved flags before calling <code>netlify deploy --prod</code>.</span>
-        </button>
-        <button class="action-btn" data-action="status" onclick="runNetlifyCLI('status')">
-          <strong>Run safe Netlify CLI check</strong>
-          <span class="mini">Permissioned users request <code>netlify status</code> through the runner with audit logging.</span>
-        </button>
-        <button class="action-btn" data-action="explain" onclick="runAgent('Explain last deploy failure')">
-          <strong>Explain last deploy failure</strong>
-          <span class="mini">Agent summarizes build logs and suggests fixes without exposing raw credentials.</span>
-        </button>
-        <button class="action-btn" data-action="preview" onclick="runNetlifyCLI('open:preview')">
-          <strong>Open preview URL</strong>
-          <span class="mini">Client-safe shortcut that only returns approved preview links.</span>
-        </button>
-        <button class="action-btn" data-action="rollback" data-locked="true" onclick="runAgent('Rollback to last stable build')">
-          <strong>Rollback to last stable deploy</strong>
-          <span class="mini">Developer-only by default. Unlock for clients once approvals and time windows are configured.</span>
-        </button>
-        <button class="action-btn" data-action="content" onclick="runAgent('Update homepage headline with provided copy pack')">
-          <strong>Update content / copy</strong>
-          <span class="mini">Agent runs structured content updates and triggers <code>netlify deploy</code> only after diff review.</span>
-        </button>
-      </div>
-      <div class="note" style="margin-top: 10px;">CLI commands are executed by AI Agent Runners in a sandbox — not by users. Buttons are the only surface area clients see.</div>
+  <section class="portal hidden" id="developer-portal">
+    <div class="topline" style="margin-bottom: 8px;">
+      <span class="badge" style="background: rgba(28,230,182,0.14); color: #7cf0d3;">Developer Portal</span>
+      <span class="mini">Configure runner governance and monitor requests</span>
     </div>
-
-    <div class="panel">
-      <div class="topline">
-        <span class="badge">Netlify CLI Proxy</span>
-        <span class="mini">Terminal output shown as Agent-approved operations</span>
-      </div>
-      <div class="terminal" id="terminal-log">
-        <div class="line">$ Agent Runner ready — all CLI commands are proxied and audited.</div>
-        <div class="line"><span class="meta">[agent]</span> Waiting for safe action...</div>
-      </div>
-      <div class="hint" style="margin-top: 10px;">Commands run server-side through Agent Runners. Users never receive direct CLI tokens.</div>
-    </div>
-
-    <div class="panel">
-      <div class="topline">
-        <span class="badge">Role Controls & Permissions</span>
-        <span class="mini">Client vs. Developer views are enforced at the runner layer</span>
-      </div>
-      <div class="subgrid">
+    <div class="grid">
+      <div class="panel">
+        <div class="section-title">Projects <span>Same visibility as Netlify dashboard</span></div>
         <div class="list-item">
           <div>
-            <strong>Allowed CLI commands</strong>
-            <div class="mini">Developers publish an allowlist. Clients only see curated macros.</div>
+            <strong>brand-site</strong>
+            <div class="mini">Status: healthy • Recent: deploy #214 (approved)</div>
           </div>
-          <div style="text-align: right;">
-            <div class="chip">netlify status</div>
-            <div class="chip">netlify deploy --prod</div>
-            <div class="chip">netlify rollback</div>
-          </div>
+          <span class="chip">Production</span>
         </div>
         <div class="list-item">
           <div>
-            <strong>Guarded AI prompts</strong>
-            <div class="mini">Prompts bind to policies: env scope, flags, approval levels.</div>
+            <strong>feature-preview</strong>
+            <div class="mini">Status: watching • Recent: AI diagnostics queued</div>
           </div>
-          <div class="chip">Signed + audited</div>
+          <span class="chip" style="background: rgba(66, 184, 255, 0.14); color: #9ad6ff;">Preview</span>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="section-title">Clients & Tasks <span>Requested via AI or humans</span></div>
+        <div class="list-item">
+          <div>
+            <strong>Rollback preset</strong>
+            <div class="mini">Requested via AI Agent • Status: pending approval</div>
+          </div>
+          <span class="chip">feature-preview</span>
         </div>
         <div class="list-item">
           <div>
-            <strong>Client sandbox</strong>
-            <div class="mini">No raw shell, no secrets. Runners execute server-side with RBAC.</div>
+            <strong>Deploy site</strong>
+            <div class="mini">Requested by Human Dev • Status: running</div>
           </div>
-          <div class="chip" style="background: rgba(28, 230, 182, 0.15); color: #9cf1d8;">Safe surface</div>
-        </div>
-      </div>
-      <div class="divider"></div>
-      <div class="role-grid">
-        <div class="role-card">
-          <h4>Client / Stakeholder</h4>
-          <div class="mini">
-            • Trigger approved deploys and status checks.<br />
-            • See curated prompts only — no shell access.<br />
-            • Receive human-readable AI summaries instead of raw logs.
-          </div>
-        </div>
-        <div class="role-card">
-          <h4>Developer / Admin</h4>
-          <div class="mini">
-            • Define allowed Netlify CLI commands and flags.<br />
-            • Decide which AI prompts appear as buttons.<br />
-            • Map identities to Agent Runner policies and audit trails.
-          </div>
-        </div>
-        <div class="role-card">
-          <h4>Agent Runner Policy</h4>
-          <div class="mini">
-            • Acts as programmable guardrail between user intent and CLI.<br />
-            • Enforces environment scoping (prod vs preview).<br />
-            • Logs every invocation for compliance-ready traceability.
-          </div>
-        </div>
-      </div>
-      <div class="divider"></div>
-      <div class="mini">This add-on vision extends Netlify beyond “deploy + host” into governed automation: AI agents orchestrate, Netlify enforces.</div>
-    </div>
-
-    <div class="panel">
-      <div class="topline">
-        <span class="badge">Developer Console</span>
-        <span class="mini">Design workflows that clients can safely trigger</span>
-      </div>
-      <div class="subgrid">
-        <div class="list-item">
-          <div>
-            <strong>Define allowed agent actions</strong>
-            <div class="mini">Preset includes prompt + CLI macro + rollback rule.</div>
-          </div>
-          <button class="ghost-btn" onclick="appendLine('Dev added new preset: Lighthouse audit with budget policy');">+ New preset</button>
+          <span class="chip">brand-site</span>
         </div>
         <div class="list-item">
           <div>
-            <strong>Toggle CLI exposure</strong>
-            <div class="mini">Expose <code>netlify deploy</code> to clients only after approvals configured.</div>
+            <strong>Content update</strong>
+            <div class="mini">Requested via AI Agent • Status: completed</div>
           </div>
-          <div class="chip">Audited change</div>
+          <span class="chip">brand-site</span>
         </div>
-        <div class="list-item">
+      </div>
+      <div class="panel">
+        <div class="section-title">Agent Runner Controls <span>Define what clients can trigger</span></div>
+        <div class="actions">
+          <div class="action-btn" onclick="runNetlifyCLI('status')">
+            <strong>Toggle client presets</strong>
+            <div class="mini">Enable deploy, content, diagnostics, rollback.</div>
+          </div>
+          <div class="action-btn" onclick="runNetlifyCLI('open:preview')">
+            <strong>Expose Netlify CLI macros</strong>
+            <div class="mini">Approve safe commands for clients and AI prompts.</div>
+          </div>
+          <div class="action-btn" onclick="runNetlifyCLI('deploy')">
+            <strong>Set approvals</strong>
+            <div class="mini">Require developer sign-off for risky presets.</div>
+          </div>
+        </div>
+        <div class="hint" style="margin-top: 10px;">Permission checks would occur here before any CLI call. Agent Runners log every
+          execution with identity and context.</div>
+      </div>
+      <div class="panel">
+        <div class="section-title">Developer Tools <span>Netlify + collaboration</span></div>
+        <div class="subgrid">
+          <div class="list-item">
+            <div>
+              <strong>AI-assisted diagnostics</strong>
+              <div class="mini">Analyze logs and recommend fixes with runner guardrails.</div>
+            </div>
+            <span class="chip">New</span>
+          </div>
+          <div class="list-item">
+            <div>
+              <strong>Safe deploy approvals</strong>
+              <div class="mini">Approve client deploys with branch and env checks.</div>
+            </div>
+            <span class="chip">Trusted</span>
+          </div>
+          <div class="list-item">
+            <div>
+              <strong>Preview review flows</strong>
+              <div class="mini">Route preview links to clients with AI summaries.</div>
+            </div>
+            <span class="chip">Collab</span>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="section-title">Developer Profile <span>Routes client requests</span></div>
+        <div class="two-col">
           <div>
-            <strong>Access control</strong>
-            <div class="mini">Link users to policies via SSO groups. Client view updates instantly.</div>
+            <label>Name</label>
+            <input type="text" placeholder="Avery Dev" />
+            <label>Role</label>
+            <input type="text" placeholder="Senior Engineer" />
+            <label>Expertise / skills</label>
+            <input type="text" placeholder="Next.js, Astro, API performance" />
+            <label>Availability</label>
+            <input type="text" placeholder="Weekdays 9–5 PST" />
+            <button class="primary" style="margin-top: 10px;" onclick="viewDeveloperProfile()">Update profile</button>
           </div>
-          <div class="chip">SSO enforced</div>
+          <div class="panel" style="background: var(--panel-strong);">
+            <div class="mini-strong">Linked projects</div>
+            <div class="mini">brand-site, feature-preview</div>
+            <div class="mini-strong" style="margin-top: 12px;">Assigned clients</div>
+            <div class="mini">Brightside Co., Future Foods</div>
+            <div class="callout" style="margin-top: 12px;">
+              Your developer profile helps route client requests to the right workflows and Agent Runner policies.
+            </div>
+          </div>
         </div>
       </div>
-      <div class="note" style="margin-top: 12px;">Guardrails reduce developer toil: pre-approved flows mean fewer ad-hoc deploy requests and safer client autonomy.</div>
-    </div>
-
-    <div class="panel">
-      <div class="topline">
-        <span class="badge">Workflow Timeline</span>
-        <span class="mini">Recent Agent Runner executions with Netlify context</span>
+      <div class="panel">
+        <div class="section-title">Activity Stream <span>Runner + CLI logs</span></div>
+        <div class="terminal" id="terminal-log">
+          <div class="line">[09:15] client-lp → AI updated hero copy → <span class="meta">netlify deploy --prod</span> approved</div>
+          <div class="line">[08:40] feature-preview → status check → <span class="meta">netlify status</span> ok</div>
+          <div class="line">[07:55] brand-site → rollback preset requested → awaiting dev approval</div>
+        </div>
       </div>
-      <div class="terminal" style="height: 220px;">
-        <div class="line">[09:15] client-lp → AI updated hero copy → <span class="meta">netlify deploy --prod</span> approved</div>
-        <div class="line">[08:40] feature-preview → status check → <span class="meta">netlify status</span> ok</div>
-        <div class="line">[07:55] brand-site → rollback preset requested → awaiting dev approval</div>
-        <div class="line">[Yesterday] brand-site → AI explained build failure; developer reopened PR</div>
-      </div>
-      <div class="hint" style="margin-top: 10px;">Every run is signed, associated with an identity, and scoped to a site + environment.</div>
     </div>
   </section>
 
   <footer>
-    Concept portal — imagine this inside <strong>Netlify Dashboard → Add-Ons → Agent Runners</strong>. Governed AI meets Netlify CLI.
+    Concept portal — imagine this living inside Netlify Dashboard as an add-on that routes Client vs Developer workflows through
+    Agent Runners.
   </footer>
 
   <script>
-    const dashboard = document.getElementById('dashboard');
+    const portalSelection = document.getElementById('portal-selection');
+    const clientPortal = document.getElementById('client-portal');
+    const developerPortal = document.getElementById('developer-portal');
     const terminal = document.getElementById('terminal-log');
     const loginButton = document.getElementById('simulate-login');
     const logoutButton = document.getElementById('simulate-logout');
-    const roleButtons = {
-      client: document.getElementById('role-client'),
-      developer: document.getElementById('role-developer'),
-    };
-    let currentRole = 'client';
+    const selectorCards = document.querySelectorAll('[data-portal]');
+    const selectorButtons = document.querySelectorAll('[data-portal-button]');
+    let isAuthenticated = false;
 
     loginButton.addEventListener('click', () => {
       login();
-      dashboard.scrollIntoView({ behavior: 'smooth' });
+      portalSelection.scrollIntoView({ behavior: 'smooth' });
     });
 
     logoutButton.addEventListener('click', () => {
-      logout();
+      isAuthenticated = false;
+      appendLine('👋 Session ended. CLI and Agent Runner actions locked.');
+      showPortal(null);
+    });
+
+    selectorCards.forEach((card) => {
+      card.addEventListener('click', () => selectPortal(card.dataset.portal));
+      card.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') selectPortal(card.dataset.portal);
+      });
+    });
+
+    selectorButtons.forEach((btn) => {
+      btn.addEventListener('click', () => selectPortal(btn.dataset.portalButton));
     });
 
     function appendLine(text) {
+      if (!terminal) return;
       const line = document.createElement('div');
       line.className = 'line';
       line.textContent = text;
@@ -727,61 +790,63 @@
     }
 
     function login() {
-      // In a real product, authentication would issue a session tied to runner policies.
-      appendLine('✔ Authenticated: policy applied for developer role. Ready for safe actions.');
-      currentRole = 'developer';
-      switchRole('developer');
+      // In production, authentication would bind identity to Agent Runner policy scopes.
+      isAuthenticated = true;
+      appendLine('✔ Authenticated: choose Client or Developer portal to continue.');
     }
 
-    function logout() {
-      // Placeholder: logout would revoke tokens and clear policy grants.
-      appendLine('👋 Session ended. CLI and Agent Runner actions locked.');
-      currentRole = 'client';
-      switchRole('client');
-    }
-
-    function switchRole(role) {
-      currentRole = role;
-      Object.keys(roleButtons).forEach((key) => {
-        roleButtons[key].classList.toggle('active', key === role);
-      });
-
-      const lockedActions = document.querySelectorAll('[data-locked="true"]');
-      lockedActions.forEach((btn) => {
-        btn.disabled = role === 'client';
-        btn.setAttribute('aria-disabled', role === 'client');
-      });
-
-      appendLine(role === 'client'
-        ? '🔒 Client view: only curated presets exposed. CLI stays server-side.'
-        : '🛠 Developer view: define prompts, approve rollbacks, expose new CLI macros.');
-    }
-
-    function runAgent(prompt) {
-      const target = event?.currentTarget;
-      if (target?.dataset.locked === 'true' && currentRole === 'client') {
-        appendLine('⚠️ Permission denied: clients cannot trigger this preset without developer approval.');
-        return;
+    function selectPortal(type) {
+      if (!isAuthenticated) {
+        appendLine('ℹ️ Viewing read-only mode. Login to execute actions.');
       }
 
-      // Placeholder: here an Agent Runner would validate intent + policy, then call Netlify CLI server-side.
-      appendLine(`🤖 Agent Runner: ${prompt}`);
-      appendLine('   → Validating policy, branch, and environment...');
-      appendLine('   → Executing curated Netlify CLI flow on behalf of user.');
+      selectorCards.forEach((card) => card.classList.toggle('active', card.dataset.portal === type));
+      showPortal(type);
+
+      // Permission checks would occur here before exposing runner actions.
+      appendLine(`🛂 Portal selected: ${type}. Runner policies refreshed.`);
+    }
+
+    function showPortal(type) {
+      clientPortal.classList.toggle('hidden', type !== 'client');
+      developerPortal.classList.toggle('hidden', type !== 'developer');
+    }
+
+    function runClientAgent(action) {
+      // Here an Agent Runner would validate policy + environment, then execute the curated Netlify CLI flow.
+      appendLine(`🤖 Client preset executed: ${action}`);
+      appendLine('   → Validating scope & approvals...');
+      appendLine('   → Executing Netlify CLI server-side (never exposed to the browser).');
+    }
+
+    function requestDeveloper(type) {
+      // This would route to a queue or messaging surface depending on SLA and account settings.
+      appendLine(`📨 Request sent: ${type === 'human' ? 'Human developer' : 'AI agent'} engagement.`);
+    }
+
+    function viewClientProfile() {
+      // Placeholder: profile updates would persist and alter accessible presets.
+      appendLine('🧾 Client profile saved. Updating accessible Agent Runner actions.');
+    }
+
+    function viewDeveloperProfile() {
+      // Placeholder: saves developer metadata to route requests and approvals.
+      appendLine('👤 Developer profile updated. Routing rules recalculated.');
     }
 
     function runNetlifyCLI(action) {
-      // Placeholder: backend service proxies the Netlify CLI; never exposed to the browser.
+      // Backend proxy would run Netlify CLI here with runner safeguards.
       const map = {
         status: 'netlify status',
         'open:preview': 'netlify open --url preview',
+        deploy: 'netlify deploy --prod',
       };
-      appendLine(`$ ${map[action] || 'netlify deploy --prod'}`);
+      appendLine(`$ ${map[action] || 'netlify status'}`);
       appendLine('   [agent] Command approved, executed within runner sandbox.');
     }
 
-    // Initialize the interface to reflect client-safe defaults.
-    switchRole('client');
+    // Default to showing the selection screen on load.
+    showPortal(null);
   </script>
 </body>
 </html>
