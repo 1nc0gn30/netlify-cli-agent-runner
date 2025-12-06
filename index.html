@@ -3,124 +3,538 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Netlify Agent Runners</title>
+  <title>Netlify Agent Runner Portal</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap"
     rel="stylesheet"
   />
   <style>
     :root {
-      --bg: #0c0c0f;
-      --text: #e7e7ee;
-      --accent: #00e3a8;
+      --bg: #08090f;
+      --panel: rgba(255, 255, 255, 0.04);
+      --panel-strong: rgba(255, 255, 255, 0.08);
+      --text: #e8ebf4;
+      --muted: #9ea6c3;
+      --accent: #1ce6b6;
+      --accent-2: #42b8ff;
+      --border: rgba(255, 255, 255, 0.08);
+      --shadow: 0 20px 80px rgba(0, 0, 0, 0.35);
+      --radius: 14px;
     }
 
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: "Inter", sans-serif;
+      font-family: "Inter", system-ui, -apple-system, sans-serif;
     }
 
     body {
-      background: var(--bg);
+      background: radial-gradient(circle at 20% 20%, rgba(28, 230, 182, 0.06), transparent 40%),
+        radial-gradient(circle at 80% 0%, rgba(66, 184, 255, 0.08), transparent 35%),
+        var(--bg);
       color: var(--text);
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+      padding: 32px 20px 48px;
     }
 
     header {
-      padding: 1.5rem 2rem;
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #1ce6b6, #42b8ff);
+      display: grid;
+      place-items: center;
+      color: #04121d;
+      font-weight: 800;
+      box-shadow: var(--shadow);
     }
 
     nav a {
-      margin-left: 2rem;
+      color: var(--muted);
       text-decoration: none;
-      color: var(--text);
       font-weight: 600;
-      opacity: 0.7;
+      margin-left: 18px;
+      transition: color 0.2s ease, opacity 0.2s ease;
+      opacity: 0.85;
     }
 
     nav a:hover {
+      color: var(--text);
       opacity: 1;
     }
 
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 18px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(6px);
+    }
+
     .hero {
-      flex: 1;
+      display: grid;
+      grid-template-columns: 2fr 1.2fr;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .hero-text h1 {
+      font-size: clamp(2.4rem, 4vw, 3.4rem);
+      line-height: 1.05;
+      margin-bottom: 12px;
+    }
+
+    .hero-text p {
+      color: var(--muted);
+      max-width: 720px;
+      line-height: 1.6;
+    }
+
+    .pill-row {
       display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 4rem 2rem;
-      max-width: 900px;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
     }
 
-    .hero h1 {
-      font-size: clamp(2.5rem, 6vw, 4.5rem);
-      line-height: 1.1;
-      margin-bottom: 1rem;
+    .pill {
+      background: var(--panel-strong);
+      color: var(--text);
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      font-size: 0.9rem;
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
     }
 
-    .hero p {
-      max-width: 650px;
-      opacity: 0.85;
-      margin-bottom: 2rem;
-      font-size: 1.15rem;
+    .hint {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.5;
     }
 
-    .btn {
-      display: inline-block;
-      padding: 0.9rem 2rem;
-      border-radius: 6px;
-      background: var(--accent);
-      color: black;
+    .login {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(28, 230, 182, 0.08), rgba(66, 184, 255, 0.12));
+      opacity: 0.9;
+      z-index: 0;
+    }
+
+    .login-content {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 12px;
+    }
+
+    label {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      margin-top: 6px;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(28, 230, 182, 0.15);
+    }
+
+    button, .ghost-btn {
+      padding: 12px 16px;
+      border-radius: 10px;
+      border: none;
       font-weight: 700;
-      text-decoration: none;
-      transition: 0.2s ease;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.2s ease, filter 0.2s ease;
     }
 
-    .btn:hover {
-      filter: brightness(1.15);
+    button.primary {
+      background: linear-gradient(135deg, #1ce6b6, #42b8ff);
+      color: #031017;
+      box-shadow: 0 10px 30px rgba(28, 230, 182, 0.3);
+    }
+
+    button.primary:hover {
+      filter: brightness(1.05);
+      transform: translateY(-1px);
+    }
+
+    .ghost-btn {
+      background: transparent;
+      color: var(--text);
+      border: 1px dashed var(--border);
+    }
+
+    .ghost-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .site-card {
+      border-left: 4px solid var(--accent);
+      padding-left: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #3cf7c2;
+      box-shadow: 0 0 8px #3cf7c2;
+    }
+
+    .actions {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    }
+
+    .action-btn {
+      background: var(--panel-strong);
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      text-align: left;
+      color: var(--text);
+      cursor: pointer;
+      transition: border 0.2s ease, transform 0.15s ease;
+    }
+
+    .action-btn:hover {
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .action-btn strong {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .terminal {
+      background: #05060a;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 14px;
+      height: 240px;
+      overflow-y: auto;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-size: 0.95rem;
+      box-shadow: var(--shadow);
+    }
+
+    .terminal .line {
+      margin-bottom: 8px;
+      color: #b2c6ff;
+    }
+
+    .terminal .meta {
+      color: #6ea7ff;
+    }
+
+    .role-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+    }
+
+    .role-card h4 {
+      margin-bottom: 6px;
+    }
+
+    .mini {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 14px 0;
+    }
+
+    .badge {
+      background: rgba(66, 184, 255, 0.14);
+      color: #8dd7ff;
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.8rem;
+      letter-spacing: 0.4px;
     }
 
     footer {
-      padding: 1rem;
       text-align: center;
-      opacity: 0.6;
-      font-size: 0.9rem;
+      margin-top: 30px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .callout {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      background: rgba(28, 230, 182, 0.06);
+      color: #d4fff2;
+    }
+
+    .topline {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
     }
   </style>
 </head>
-
 <body>
-
   <header>
-    <h2>Netlify</h2>
+    <div class="brand">
+      <div class="logo">NL</div>
+      <div>
+        <strong>Netlify Agent Runners</strong><br />
+        <small style="color: var(--muted)">Guarded automation between people and the Netlify CLI.</small>
+      </div>
+    </div>
     <nav>
-      <a href="#">Agents</a>
-      <a href="#">Docs</a>
-      <a href="#">Examples</a>
+      <a href="#">Product Idea</a>
+      <a href="#">Platform Docs</a>
+      <a href="#">Security Notes</a>
     </nav>
   </header>
 
   <section class="hero">
-    <h1>This is how Netlify Agent Runners work.</h1>
-    <p>
-      Lightweight execution nodes that securely run your AI workflows, background jobs, and custom logic — directly from your Netlify project, without servers or infrastructure management.
-      Perfect for AI agents, automation, dynamic compute, and high-frequency tasks.
-    </p>
+    <div class="hero-text panel">
+      <div class="topline">
+        <span class="badge">Concept</span>
+        <span class="mini">Agent Runner Portal → AI + CLI with governance</span>
+      </div>
+      <h1>Programmable workflow guards for Netlify CLI and AI Agent Runners.</h1>
+      <p>
+        Prototype portal where developers expose curated Netlify workflows and AI prompts while keeping production guardrails. 
+        Agent Runners mediate every CLI call, so clients trigger safe actions and teams ship faster with confidence.
+      </p>
+      <div class="pill-row">
+        <div class="pill">🤖 AI mediates CLI access</div>
+        <div class="pill">🛡️ Role-based approvals</div>
+        <div class="pill">🚀 Safer deploy flows</div>
+        <div class="pill">📡 Netlify Add-on concept</div>
+      </div>
+    </div>
+    <div class="panel login">
+      <div class="login-content">
+        <div class="topline">
+          <span class="badge">Login (concept)</span>
+          <span class="mini">Authentication gates Netlify CLI + AI Agent access</span>
+        </div>
+        <div>
+          <label for="email">Work email</label>
+          <input type="email" id="email" placeholder="dev@agency.com" />
+        </div>
+        <div>
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="••••••••" />
+        </div>
+        <div class="hint">Federated SSO ties identity to the Agent Runner policy that determines which Netlify CLI operations are exposed.</div>
+        <div style="display: flex; gap: 10px; align-items: center;">
+          <button class="primary" id="simulate-login">Sign in & view dashboard</button>
+          <span class="mini">No backend here — this is a UX proof-of-concept.</span>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    <a href="#" class="btn">View Workflow</a>
+  <section class="grid" id="dashboard">
+    <div class="panel">
+      <div class="topline">
+        <span class="badge">Connected Netlify Sites</span>
+        <span class="mini">AI agents run approved Netlify CLI actions for each site</span>
+      </div>
+      <div class="site-card">
+        <div>
+          <strong>brand-site</strong>
+          <div class="mini">Environment: production • Git connected</div>
+        </div>
+        <div class="status"><span class="status-dot"></span>Healthy</div>
+      </div>
+      <div class="site-card" style="border-left-color: #42b8ff;">
+        <div>
+          <strong>feature-preview</strong>
+          <div class="mini">Environment: preview branch • gated deploys</div>
+        </div>
+        <div class="status"><span class="status-dot" style="background: #42b8ff; box-shadow: 0 0 8px #42b8ff;"></span>Watching</div>
+      </div>
+      <div class="divider"></div>
+      <div class="callout">
+        Clients see status + limited actions. Developers expand the allowlist by updating Agent Runner policies and CLI macros.
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="topline">
+        <span class="badge">AI Agent Runner Actions</span>
+        <span class="mini">Buttons trigger prompts that mediate Netlify CLI commands</span>
+      </div>
+      <div class="actions">
+        <button class="action-btn" data-action="deploy" onclick="runAgent('Deploy production via Agent Runner')">
+          <strong>Ask AI Agent to deploy site</strong>
+          <span class="mini">Agent validates branch, env vars, and approved flags before calling <code>netlify deploy --prod</code>.</span>
+        </button>
+        <button class="action-btn" data-action="status" onclick="runNetlifyCLI('status')">
+          <strong>Run safe Netlify CLI check</strong>
+          <span class="mini">Permissioned users request <code>netlify status</code> through the runner with audit logging.</span>
+        </button>
+        <button class="action-btn" data-action="explain" onclick="runAgent('Explain last deploy failure')">
+          <strong>Explain last deploy failure</strong>
+          <span class="mini">Agent summarizes build logs and suggests fixes without exposing raw credentials.</span>
+        </button>
+        <button class="action-btn" data-action="preview" onclick="runNetlifyCLI('open:preview')">
+          <strong>Open preview URL</strong>
+          <span class="mini">Client-safe shortcut that only returns approved preview links.</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="topline">
+        <span class="badge">Netlify CLI Proxy</span>
+        <span class="mini">Terminal output shown as Agent-approved operations</span>
+      </div>
+      <div class="terminal" id="terminal-log">
+        <div class="line">$ Agent Runner ready — all CLI commands are proxied and audited.</div>
+        <div class="line"><span class="meta">[agent]</span> Waiting for safe action...</div>
+      </div>
+      <div class="hint" style="margin-top: 10px;">Commands run server-side through Agent Runners. Users never receive direct CLI tokens.</div>
+    </div>
+
+    <div class="panel">
+      <div class="topline">
+        <span class="badge">Client vs. Developer Roles</span>
+        <span class="mini">Governance layer defines who can do what</span>
+      </div>
+      <div class="role-grid">
+        <div class="role-card">
+          <h4>Client / Stakeholder</h4>
+          <div class="mini">
+            • Trigger approved deploys and status checks.<br />
+            • See curated prompts only — no shell access.<br />
+            • Receive human-readable AI summaries instead of raw logs.
+          </div>
+        </div>
+        <div class="role-card">
+          <h4>Developer / Admin</h4>
+          <div class="mini">
+            • Define allowed Netlify CLI commands and flags.<br />
+            • Decide which AI prompts appear as buttons.<br />
+            • Map identities to Agent Runner policies and audit trails.
+          </div>
+        </div>
+        <div class="role-card">
+          <h4>Agent Runner Policy</h4>
+          <div class="mini">
+            • Acts as programmable guardrail between user intent and CLI.<br />
+            • Enforces environment scoping (prod vs preview).<br />
+            • Logs every invocation for compliance-ready traceability.
+          </div>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="mini">This add-on vision extends Netlify beyond “deploy + host” into governed automation: AI agents orchestrate, Netlify enforces.</div>
+    </div>
   </section>
 
   <footer>
-    © 2025 Netlify Agent Runners — Example Page
+    Concept portal — imagine this inside <strong>Netlify Dashboard → Add-Ons → Agent Runners</strong>. Governed AI meets Netlify CLI.
   </footer>
 
+  <script>
+    const dashboard = document.getElementById('dashboard');
+    const terminal = document.getElementById('terminal-log');
+    const loginButton = document.getElementById('simulate-login');
+
+    loginButton.addEventListener('click', () => {
+      // In a real product, authentication would issue a session tied to runner policies.
+      appendLine('✔ Authenticated: policy applied for developer role. Ready for safe actions.');
+      dashboard.scrollIntoView({ behavior: 'smooth' });
+    });
+
+    function appendLine(text) {
+      const line = document.createElement('div');
+      line.className = 'line';
+      line.textContent = text;
+      terminal.appendChild(line);
+      terminal.scrollTop = terminal.scrollHeight;
+    }
+
+    function runAgent(prompt) {
+      // Placeholder: here an Agent Runner would validate intent + policy, then call Netlify CLI server-side.
+      appendLine(`🤖 Agent Runner: ${prompt}`);
+      appendLine('   → Validating policy, branch, and environment...');
+      appendLine('   → Executing curated Netlify CLI flow on behalf of user.');
+    }
+
+    function runNetlifyCLI(action) {
+      // Placeholder: backend service proxies the Netlify CLI; never exposed to the browser.
+      const map = {
+        status: 'netlify status',
+        'open:preview': 'netlify open --url preview',
+      };
+      appendLine(`$ ${map[action] || 'netlify deploy --prod'}`);
+      appendLine('   [agent] Command approved, executed within runner sandbox.');
+    }
+  </script>
 </body>
 </html>
