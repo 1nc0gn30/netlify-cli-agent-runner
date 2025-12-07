@@ -1,151 +1,119 @@
-import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded'
-import ShieldMoonIcon from '@mui/icons-material/ShieldMoon'
-import { Box, Card, CardActionArea, Chip, Divider, Stack, Typography } from '@mui/material'
-import Grid from '@mui/material/Grid'
+import AutoAwesomeRoundedIcon from '@mui/icons-material/AutoAwesomeRounded'
+import SecurityRoundedIcon from '@mui/icons-material/SecurityRounded'
+import SettingsSuggestRoundedIcon from '@mui/icons-material/SettingsSuggestRounded'
+import TuneRoundedIcon from '@mui/icons-material/TuneRounded'
+import { Box, Card, CardActionArea, Stack, Typography } from '@mui/material'
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { usePortal } from '../app/PortalContext'
 
 const cards = [
   {
     id: 'client',
     title: 'Client Portal',
-    tone: 'Guided workspace',
-    summary: 'Non-technical control with guardrails always on.',
-    accent: 'linear-gradient(135deg, #e8f5e9, #f8fbff)',
-    chips: ['Preview safe', 'Rollback ready', 'Human-friendly'],
+    hint: 'Guided actions · Safe by default',
+    icon: <AutoAwesomeRoundedIcon sx={{ fontSize: 44 }} color="success" />,
+    accent: 'linear-gradient(145deg, rgba(129, 199, 132, 0.15), rgba(255,255,255,0.9))',
   },
   {
     id: 'developer',
     title: 'Developer Portal',
-    tone: 'Control + governance',
-    summary: 'Queues, guardrails, and publishing controls in one place.',
-    accent: 'linear-gradient(135deg, #f3e8ff, #f9f5ff)',
-    chips: ['Full visibility', 'Guardrails', 'Ship presets'],
+    hint: 'Controls · Guardrails · Approvals',
+    icon: <TuneRoundedIcon sx={{ fontSize: 44 }} color="secondary" />,
+    accent: 'linear-gradient(145deg, rgba(103, 58, 183, 0.14), rgba(255,255,255,0.9))',
   },
 ]
 
 function PortalSelector() {
-  const [selected, setSelected] = useState(null)
-  const navigate = useNavigate()
   const { setPortalMode } = usePortal()
+  const [hovered, setHovered] = useState(null)
 
   const handleSelect = (mode) => {
-    setSelected(mode)
     setPortalMode(mode)
-    window.setTimeout(() => {
-      navigate(`/${mode}`)
-    }, 200)
   }
 
   return (
     <Box
       sx={{
         minHeight: '100vh',
-        bgcolor: 'background.default',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
+        bgcolor: 'background.default',
         p: { xs: 3, md: 6 },
         backgroundImage:
-          'radial-gradient(circle at 20% 20%, rgba(63, 81, 181, 0.06), transparent 28%), radial-gradient(circle at 80% 0%, rgba(0, 150, 136, 0.05), transparent 30%)',
+          'radial-gradient(circle at 20% 20%, rgba(129,199,132,0.12), transparent 34%), radial-gradient(circle at 80% 0%, rgba(103,58,183,0.12), transparent 36%)',
       }}
     >
-      <Stack spacing={3} sx={{ width: '100%', maxWidth: 1100 }}>
-        <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} alignItems={{ xs: 'flex-start', md: 'center' }}>
-          <Stack spacing={0.5} flex={1}>
-            <Typography variant="overline" color="text.secondary" sx={{ letterSpacing: 2 }}>
-              Choose your workspace
-            </Typography>
-            <Typography variant="h3" fontWeight={800} sx={{ lineHeight: 1.1 }}>
-              Netlify Agent Portals
-            </Typography>
-            <Typography variant="body1" color="text.secondary">
-              Step into the space that matches your role. Switch anytime without losing context.
-            </Typography>
-          </Stack>
-          <Stack direction="row" spacing={1} alignItems="center" sx={{ color: 'primary.main' }}>
-            <ShieldMoonIcon />
-            <Typography variant="body2" fontWeight={700} color="text.secondary">
-              Calm. Guided. Safe.
-            </Typography>
-          </Stack>
+      <Stack spacing={3} alignItems="center" sx={{ width: '100%', maxWidth: 960 }}>
+        <Stack direction="row" spacing={1} alignItems="center" sx={{ color: 'text.secondary' }}>
+          <SecurityRoundedIcon color="primary" />
+          <Typography variant="overline" sx={{ letterSpacing: 2 }}>
+            Choose your portal
+          </Typography>
         </Stack>
 
-        <Grid container spacing={2} columns={{ xs: 1, md: 12 }}>
+        <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} sx={{ width: '100%' }} justifyContent="center">
           {cards.map((card) => {
-            const isActive = selected === card.id
+            const isActive = hovered === card.id
             return (
-              <Grid key={card.id} size={{ xs: 12, md: 6 }}>
-                <Card
-                  elevation={0}
+              <Card
+                key={card.id}
+                elevation={isActive ? 10 : 0}
+                sx={{
+                  flex: 1,
+                  borderRadius: 4,
+                  backgroundImage: card.accent,
+                  transition: 'transform 200ms ease, box-shadow 200ms ease',
+                  transform: isActive ? 'scale(1.015)' : 'scale(1)',
+                }}
+              >
+                <CardActionArea
+                  onMouseEnter={() => setHovered(card.id)}
+                  onMouseLeave={() => setHovered(null)}
+                  onClick={() => handleSelect(card.id)}
                   sx={{
-                    height: '100%',
-                    backgroundImage: card.accent,
-                    borderRadius: 3,
-                    transition: 'transform 200ms ease, box-shadow 200ms ease',
-                    transform: isActive ? 'scale(0.99)' : 'scale(1)',
-                    boxShadow: isActive ? 6 : 1,
+                    p: { xs: 3, md: 4 },
+                    minHeight: 220,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: 2,
                   }}
                 >
-                  <CardActionArea
-                    onClick={() => handleSelect(card.id)}
-                    sx={{ height: '100%', p: { xs: 3, md: 4 } }}
-                  >
-                    <Stack spacing={2.5} alignItems="flex-start">
-                      <Stack direction="row" spacing={1} alignItems="center">
-                        <Chip
-                          label={card.id === 'client' ? 'Client' : 'Developer'}
-                          color={card.id === 'client' ? 'success' : 'secondary'}
-                          variant="filled"
-                          size="small"
-                          sx={{ fontWeight: 700, borderRadius: 2 }}
-                        />
-                        <Typography variant="body2" color="text.secondary">
-                          {card.tone}
-                        </Typography>
-                      </Stack>
-                      <Stack spacing={0.5}>
-                        <Typography variant="h4" fontWeight={800}>
-                          {card.title}
-                        </Typography>
-                        <Typography variant="body1" color="text.secondary">
-                          {card.summary}
-                        </Typography>
-                      </Stack>
-                      <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-                        {card.chips.map((chip) => (
-                          <Chip key={chip} label={chip} variant="outlined" sx={{ borderRadius: 2 }} />
-                        ))}
-                      </Stack>
-                      <Divider flexItem />
-                      <Stack direction="row" spacing={1} alignItems="center" sx={{ color: 'primary.main' }}>
-                        <ArrowForwardRoundedIcon />
-                        <Typography variant="body2" fontWeight={700}>
-                          {card.id === 'client' ? 'Try Client Portal' : 'Try Developer Portal'}
-                        </Typography>
-                      </Stack>
+                  <Stack spacing={1.5} alignItems="flex-start">
+                    <Stack direction="row" spacing={1} alignItems="center">
+                      {card.icon}
+                      <Typography variant="h4" fontWeight={800}>
+                        {card.title}
+                      </Typography>
                     </Stack>
-                  </CardActionArea>
-                </Card>
-              </Grid>
+                    <Typography variant="subtitle1" color="text.secondary">
+                      {card.hint}
+                    </Typography>
+                  </Stack>
+                  <Stack
+                    sx={{
+                      width: 64,
+                      height: 64,
+                      borderRadius: '50%',
+                      bgcolor: 'background.paper',
+                      border: 1,
+                      borderColor: 'divider',
+                      display: 'grid',
+                      placeItems: 'center',
+                      boxShadow: isActive ? 4 : 1,
+                      transform: isActive ? 'scale(1.05)' : 'scale(1)',
+                      transition: 'transform 200ms ease, box-shadow 200ms ease',
+                    }}
+                  >
+                    <SettingsSuggestRoundedIcon color={card.id === 'developer' ? 'secondary' : 'success'} />
+                  </Stack>
+                </CardActionArea>
+              </Card>
             )
           })}
-        </Grid>
+        </Stack>
       </Stack>
-
-      {selected && (
-        <Box
-          sx={{
-            position: 'fixed',
-            inset: 0,
-            pointerEvents: 'none',
-            background: 'radial-gradient(circle at center, rgba(0,0,0,0.04), transparent 50%)',
-            animation: 'fadeOut 320ms ease forwards',
-            '@keyframes fadeOut': { to: { opacity: 0 } },
-          }}
-        />
-      )}
     </Box>
   )
 }

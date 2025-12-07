@@ -1,173 +1,302 @@
-import MenuIcon from '@mui/icons-material/Menu'
-import ShieldMoonIcon from '@mui/icons-material/ShieldMoon'
-import { AppBar, Avatar, Box, Divider, Drawer, IconButton, List, ListItemButton, ListItemIcon, ListItemText, Toolbar, Tooltip, Typography, useMediaQuery } from '@mui/material'
-import { useEffect, useMemo, useState } from 'react'
-import { Link as RouterLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
+import AutoGraphRoundedIcon from '@mui/icons-material/AutoGraphRounded'
+import BlurOnRoundedIcon from '@mui/icons-material/BlurOnRounded'
+import SecurityRoundedIcon from '@mui/icons-material/SecurityRounded'
+import SettingsEthernetRoundedIcon from '@mui/icons-material/SettingsEthernetRounded'
+import ToggleOffRoundedIcon from '@mui/icons-material/ToggleOffRounded'
+import TuneRoundedIcon from '@mui/icons-material/TuneRounded'
+import { AppBar, Avatar, Box, Card, CardContent, Chip, Container, IconButton, Stack, Switch, Tooltip, Typography } from '@mui/material'
+import { useMemo, useState } from 'react'
 import PortalSwitcher from '../components/PortalSwitcher'
+import ClientLayout from '../components/ClientLayout'
+import DeveloperLayout from '../components/DeveloperLayout'
 import { usePortal } from './PortalContext'
-
-const navMap = {
-  client: [
-    { label: 'Dashboard', path: '/client', icon: '📊' },
-    { label: 'Projects', path: '/client/projects', icon: '🛠️' },
-    { label: 'Actions', path: '/client/actions', icon: '⚡' },
-    { label: 'Profile', path: '/client/profile', icon: '🙂' },
-  ],
-  developer: [
-    { label: 'Dashboard', path: '/developer', icon: '🧭' },
-    { label: 'Projects', path: '/developer/projects', icon: '📁' },
-    { label: 'Request Queue', path: '/developer/queue', icon: '📥' },
-    { label: 'Guardrails', path: '/developer/guardrails', icon: '🛡️' },
-    { label: 'Profile', path: '/developer/profile', icon: '👤' },
-  ],
-}
+import { clientActions, clientProjects } from '../data/mockClientData'
+import { developerProjects, guardrails, requestQueue } from '../data/mockDeveloperData'
 
 function AppShell() {
-  const { portalMode, setPortalMode, lastVisited, setLastVisited } = usePortal()
-  const [mobileOpen, setMobileOpen] = useState(false)
-  const location = useLocation()
-  const navigate = useNavigate()
-  const isMdUp = useMediaQuery((theme) => theme.breakpoints.up('md'))
+  const { portalMode, setPortalMode } = usePortal()
+  const [flowGuarded, setFlowGuarded] = useState(true)
 
-  useEffect(() => {
-    if (location.pathname.startsWith('/client')) {
-      setPortalMode('client')
-    } else if (location.pathname.startsWith('/developer')) {
-      setPortalMode('developer')
-    }
-  }, [location.pathname, setPortalMode])
-
-  useEffect(() => {
-    if (!portalMode) return
-    const prefix = `/${portalMode}`
-    if (location.pathname.startsWith(prefix)) {
-      setLastVisited((prev) => (prev[portalMode] === location.pathname ? prev : { ...prev, [portalMode]: location.pathname }))
-    }
-  }, [location.pathname, portalMode, setLastVisited])
-
-  const navItems = useMemo(() => navMap[portalMode] || [], [portalMode])
-
-  const currentLabel = useMemo(() => {
-    const flat = Object.values(navMap).flat()
-    return flat.find((item) => item.path === location.pathname)?.label || 'Workspace'
-  }, [location.pathname])
+  const accent = useMemo(
+    () =>
+      portalMode === 'developer'
+        ? 'linear-gradient(135deg, rgba(103, 58, 183, 0.08), rgba(63, 81, 181, 0.04))'
+        : 'linear-gradient(135deg, rgba(56, 142, 60, 0.08), rgba(129, 199, 132, 0.05))',
+    [portalMode]
+  )
 
   const handleSwitch = (mode) => {
     if (!mode || mode === portalMode) return
     setPortalMode(mode)
-    const target = lastVisited[mode] || `/${mode}`
-    navigate(target)
   }
 
-  const drawerContent = (
-    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-      <Box sx={{ px: 3, py: 3, display: 'flex', alignItems: 'center', gap: 1 }}>
-        <ShieldMoonIcon color="primary" />
-        <Box>
-          <Typography variant="h6" fontWeight={700}>
-            Agent Portals
-          </Typography>
-          <Typography variant="caption" color="text.secondary">
-            Calm + reversible
-          </Typography>
-        </Box>
-      </Box>
-      <Divider />
-      <Box sx={{ px: 3, py: 2 }}>
-        <PortalSwitcher value={portalMode || 'client'} onChange={handleSwitch} size="small" condensed />
-      </Box>
-      <Divider />
-      <Box sx={{ flex: 1, overflowY: 'auto' }}>
-        {navItems.length > 0 && (
-          <List disablePadding>
-            {navItems.map((item) => (
-              <ListItemButton
-                key={item.path}
-                component={RouterLink}
-                to={item.path}
-                selected={location.pathname === item.path}
-                sx={{ borderRadius: 2, mx: 2, my: 0.5 }}
-                onClick={() => setMobileOpen(false)}
-              >
-                <ListItemIcon sx={{ minWidth: 36 }}>{item.icon}</ListItemIcon>
-                <ListItemText primary={item.label} />
-              </ListItemButton>
-            ))}
-          </List>
-        )}
-      </Box>
-      <Divider />
-      <Box sx={{ px: 3, py: 2 }}>
-        <Tooltip title="Agents keep production steady while you experiment.">
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Avatar sx={{ bgcolor: 'primary.main', color: 'primary.contrastText', width: 36, height: 36 }}>A</Avatar>
-            <Box>
-              <Typography variant="body2" fontWeight={600}>
-                Agent Runner
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                Always-on safety net
-              </Typography>
-            </Box>
-          </Box>
-        </Tooltip>
-      </Box>
-    </Box>
+  const clientContent = (
+    <ClientLayout subtitle="Guided actions with reversible changes">
+      <Stack spacing={2.5} sx={{ animation: 'fadeIn 300ms ease' }}>
+        <Card elevation={0} sx={{ borderRadius: 3 }}>
+          <CardContent>
+            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems="center" justifyContent="space-between">
+              <Stack spacing={0.5}>
+                <Typography variant="subtitle1" fontWeight={800}>
+                  Calm overview
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Agents keep previews safe while you approve.
+                </Typography>
+              </Stack>
+              <Stack direction="row" spacing={1}>
+                <Chip label="Preview ready" color="success" variant="outlined" />
+                <Chip label="Rollback on" color="primary" variant="outlined" />
+              </Stack>
+            </Stack>
+          </CardContent>
+        </Card>
+
+        <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
+          <Card elevation={0} sx={{ flex: 1, borderRadius: 3 }}>
+            <CardContent>
+              <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1 }}>
+                <BlurOnRoundedIcon color="success" />
+                <Typography variant="subtitle1" fontWeight={800}>
+                  Quick actions
+                </Typography>
+              </Stack>
+              <Stack spacing={1.25}>
+                {clientActions.slice(0, 3).map((action) => (
+                  <Card
+                    key={action.id}
+                    variant="outlined"
+                    sx={{ borderRadius: 2, p: 1.5, background: 'linear-gradient(120deg, rgba(129,199,132,0.08), rgba(255,255,255,0.9))' }}
+                  >
+                    <Typography variant="subtitle1" fontWeight={700}>
+                      {action.title}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {action.summary}
+                    </Typography>
+                    <Stack direction="row" spacing={1} mt={1}>
+                      <Chip label="Dry run" size="small" color="success" variant="outlined" />
+                      <Chip label="Safe by default" size="small" variant="outlined" />
+                    </Stack>
+                  </Card>
+                ))}
+              </Stack>
+            </CardContent>
+          </Card>
+
+          <Card elevation={0} sx={{ flex: 1, borderRadius: 3 }}>
+            <CardContent>
+              <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1 }}>
+                <SecurityRoundedIcon color="success" />
+                <Typography variant="subtitle1" fontWeight={800}>
+                  Guarded projects
+                </Typography>
+              </Stack>
+              <Stack spacing={1.25}>
+                {clientProjects.slice(0, 3).map((project) => (
+                  <Stack key={project.name} spacing={0.5} sx={{ border: 1, borderColor: 'divider', borderRadius: 2, p: 1.25 }}>
+                    <Stack direction="row" alignItems="center" spacing={1}>
+                      <Avatar sx={{ width: 32, height: 32, bgcolor: 'success.light', color: 'success.dark', fontWeight: 700 }}>
+                        {project.name.charAt(0)}
+                      </Avatar>
+                      <Typography variant="subtitle2" fontWeight={700}>
+                        {project.name}
+                      </Typography>
+                    </Stack>
+                    <Typography variant="body2" color="text.secondary">
+                      {project.guardrails}
+                    </Typography>
+                    <Stack direction="row" spacing={1}>
+                      <Chip label={project.status} size="small" color="success" variant="outlined" />
+                      <Chip label={`Last deployed ${project.lastDeployed}`} size="small" variant="outlined" />
+                    </Stack>
+                  </Stack>
+                ))}
+              </Stack>
+            </CardContent>
+          </Card>
+        </Stack>
+      </Stack>
+    </ClientLayout>
+  )
+
+  const developerContent = (
+    <DeveloperLayout subtitle="Controls, guardrails, and live queues">
+      <Stack spacing={2.5} sx={{ animation: 'fadeIn 300ms ease' }}>
+        <Card elevation={0} sx={{ borderRadius: 3 }}>
+          <CardContent>
+            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems="center" justifyContent="space-between">
+              <Stack spacing={0.5}>
+                <Typography variant="subtitle1" fontWeight={800}>
+                  Deployment posture
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Switch contexts without losing queues.
+                </Typography>
+              </Stack>
+              <Stack direction="row" alignItems="center" spacing={1.5}>
+                <Typography variant="body2" color="text.secondary">
+                  Guarded flows
+                </Typography>
+                <Switch checked={flowGuarded} onChange={(e) => setFlowGuarded(e.target.checked)} color="secondary" />
+                <Chip label={flowGuarded ? 'Locks on' : 'Locks off'} size="small" color={flowGuarded ? 'secondary' : 'default'} />
+              </Stack>
+            </Stack>
+          </CardContent>
+        </Card>
+
+        <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
+          <Card elevation={0} sx={{ flex: 1, borderRadius: 3 }}>
+            <CardContent>
+              <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1 }}>
+                <TuneRoundedIcon color="secondary" />
+                <Typography variant="subtitle1" fontWeight={800}>
+                  Guardrails
+                </Typography>
+              </Stack>
+              <Stack spacing={1}>
+                {guardrails.slice(0, 4).map((rule) => (
+                  <Stack
+                    key={rule.id}
+                    direction="row"
+                    alignItems="center"
+                    spacing={1.5}
+                    sx={{ border: 1, borderColor: 'divider', borderRadius: 2, p: 1.25, bgcolor: rule.active ? 'secondary.50' : 'background.paper' }}
+                  >
+                    <ToggleOffRoundedIcon color={rule.active ? 'secondary' : 'disabled'} />
+                    <Box sx={{ flex: 1 }}>
+                      <Typography variant="subtitle2" fontWeight={700}>
+                        {rule.name}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {rule.detail}
+                      </Typography>
+                    </Box>
+                    <Chip label={rule.active ? 'Active' : 'Paused'} size="small" color={rule.active ? 'secondary' : 'default'} variant="outlined" />
+                  </Stack>
+                ))}
+              </Stack>
+            </CardContent>
+          </Card>
+
+          <Card elevation={0} sx={{ flex: 1, borderRadius: 3 }}>
+            <CardContent>
+              <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1 }}>
+                <SettingsEthernetRoundedIcon color="secondary" />
+                <Typography variant="subtitle1" fontWeight={800}>
+                  Request queue
+                </Typography>
+              </Stack>
+              <Stack spacing={1.25}>
+                {requestQueue.map((item) => (
+                  <Stack key={item.id} spacing={0.5} sx={{ border: 1, borderColor: 'divider', borderRadius: 2, p: 1.25 }}>
+                    <Stack direction="row" justifyContent="space-between" alignItems="center">
+                      <Typography variant="subtitle2" fontWeight={700}>
+                        {item.client}
+                      </Typography>
+                      <Chip label={item.risk} size="small" color={item.risk === 'Low' ? 'success' : 'warning'} variant="outlined" />
+                    </Stack>
+                    <Typography variant="body2" color="text.secondary">
+                      {item.request}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      {item.eta}
+                    </Typography>
+                  </Stack>
+                ))}
+              </Stack>
+            </CardContent>
+          </Card>
+        </Stack>
+
+        <Card elevation={0} sx={{ borderRadius: 3 }}>
+          <CardContent>
+            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems="center" justifyContent="space-between">
+              <Stack direction="row" alignItems="center" spacing={1}>
+                <AutoGraphRoundedIcon color="secondary" />
+                <Typography variant="subtitle1" fontWeight={800}>
+                  Active projects
+                </Typography>
+              </Stack>
+              <Stack direction="row" spacing={1}>
+                <Chip label="Canary" size="small" variant="outlined" color="secondary" />
+                <Chip label="Approvals" size="small" variant="outlined" color="secondary" />
+              </Stack>
+            </Stack>
+
+            <Stack direction={{ xs: 'column', md: 'row' }} spacing={1.25} sx={{ mt: 2 }}>
+              {developerProjects.map((project) => (
+                <Card key={project.name} variant="outlined" sx={{ flex: 1, borderRadius: 2, p: 1.5 }}>
+                  <Stack spacing={0.5}>
+                    <Typography variant="subtitle1" fontWeight={800}>
+                      {project.name}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {project.approval}
+                    </Typography>
+                    <Stack direction="row" spacing={1}>
+                      <Chip label={project.status} size="small" color="secondary" variant="outlined" />
+                      <Chip label={project.access} size="small" variant="outlined" />
+                    </Stack>
+                  </Stack>
+                </Card>
+              ))}
+            </Stack>
+          </CardContent>
+        </Card>
+      </Stack>
+    </DeveloperLayout>
   )
 
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'background.default' }}>
+    <Box
+      className="app-shell"
+      sx={{
+        minHeight: '100vh',
+        backgroundImage: accent,
+        transition: 'background-image 240ms ease',
+      }}
+    >
       <AppBar
-        position="fixed"
+        position="sticky"
         color="transparent"
         elevation={0}
-        sx={{ borderBottom: 1, borderColor: 'divider', backdropFilter: 'blur(8px)', backgroundColor: 'rgba(255,255,255,0.8)' }}
+        sx={{ borderBottom: 1, borderColor: 'divider', backdropFilter: 'blur(10px)', backgroundColor: 'rgba(255,255,255,0.85)' }}
       >
-        <Toolbar sx={{ gap: 2 }}>
-          {!isMdUp && (
-            <IconButton edge="start" color="inherit" onClick={() => setMobileOpen((prev) => !prev)} sx={{ mr: 1 }}>
-              <MenuIcon />
-            </IconButton>
-          )}
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexGrow: 1 }}>
-            <Stack spacing={0.5}>
-              <Typography variant="overline" color="text.secondary" sx={{ letterSpacing: 1 }}>
-                {portalMode ? `${portalMode === 'client' ? 'Client' : 'Developer'} portal` : 'Portal'}
-              </Typography>
-              <Typography variant="h6" sx={{ fontWeight: 800 }}>
-                {currentLabel}
-              </Typography>
+        <Container maxWidth="lg">
+          <Stack direction="row" alignItems="center" spacing={2} py={1.5}>
+            <Stack direction="row" spacing={1} alignItems="center" sx={{ flex: 1 }}>
+              <IconButton size="small" sx={{ bgcolor: 'background.paper', border: 1, borderColor: 'divider' }}>
+                <SecurityRoundedIcon color={portalMode === 'developer' ? 'secondary' : 'success'} fontSize="small" />
+              </IconButton>
+              <Stack spacing={0}>
+                <Typography variant="caption" color="text.secondary">
+                  Agent portals
+                </Typography>
+                <Typography variant="subtitle1" fontWeight={800}>
+                  {portalMode === 'developer' ? 'Developer' : 'Client'} mode
+                </Typography>
+              </Stack>
             </Stack>
-          </Box>
-          <PortalSwitcher value={portalMode || 'client'} onChange={handleSwitch} size="small" />
-          <Tooltip title="Profile + context">
-            <Avatar src="https://avatars.githubusercontent.com/u/7892489?v=4" alt="Netlify" sx={{ border: 1, borderColor: 'divider' }} />
-          </Tooltip>
-        </Toolbar>
+            <PortalSwitcher value={portalMode} onChange={handleSwitch} />
+            <Tooltip title="Profile">
+              <Avatar src="https://avatars.githubusercontent.com/u/7892489?v=4" alt="Netlify" sx={{ border: 1, borderColor: 'divider' }} />
+            </Tooltip>
+          </Stack>
+        </Container>
       </AppBar>
 
-      <Box component="nav" sx={{ width: { md: 260 }, flexShrink: { md: 0 } }} aria-label="navigation">
-        <Drawer
-          variant={isMdUp ? 'permanent' : 'temporary'}
-          open={isMdUp ? true : mobileOpen}
-          onClose={() => setMobileOpen(false)}
-          ModalProps={{ keepMounted: true }}
-          sx={{
-            '& .MuiDrawer-paper': {
-              width: 260,
-              borderRight: 1,
-              borderColor: 'divider',
-              backdropFilter: 'blur(6px)',
-            },
-          }}
-        >
-          {drawerContent}
-        </Drawer>
-      </Box>
+      <Container maxWidth="lg" sx={{ py: { xs: 3, md: 4 } }}>
+        {portalMode === 'client' && clientContent}
+        {portalMode === 'developer' && developerContent}
+      </Container>
 
-      <Box component="main" sx={{ flexGrow: 1, p: { xs: 2, md: 4 }, mt: 8 }}>
-        <Outlet />
-      </Box>
+      <style>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(6px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
     </Box>
   )
 }
