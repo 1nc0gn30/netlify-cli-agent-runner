@@ -47,7 +47,14 @@ function GuidedActions({ actions, onLog }) {
         ))}
       </Stack>
 
-      <ActionDrawer open={open} action={selected} onClose={() => setOpen(false)} onConfirm={handleConfirm} onRoute={handleRoute} />
+      <ActionDrawer
+        key={`${selected?.id ?? 'none'}-${open ? 'open' : 'closed'}`}
+        open={open}
+        action={selected}
+        onClose={() => setOpen(false)}
+        onConfirm={handleConfirm}
+        onRoute={handleRoute}
+      />
 
       <Snackbar
         open={Boolean(snackbar)}

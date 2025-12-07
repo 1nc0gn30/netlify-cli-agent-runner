@@ -1,17 +1,13 @@
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded'
 import DryCleaningRoundedIcon from '@mui/icons-material/DryCleaningRounded'
 import ShieldRoundedIcon from '@mui/icons-material/ShieldRounded'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Box, Button, Chip, Divider, Drawer, Stack, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material'
 
 function ActionDrawer({ open, action, onClose, onConfirm, onRoute }) {
-  if (!action) return null
-
   const [mode, setMode] = useState('dry')
 
-  useEffect(() => {
-    setMode('dry')
-  }, [action])
+  if (!action) return null
 
   return (
     <Drawer anchor="right" open={open} onClose={onClose} PaperProps={{ sx: { width: { xs: '100%', sm: 420 } } }}>
