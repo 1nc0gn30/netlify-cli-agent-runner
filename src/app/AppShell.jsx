@@ -1,12 +1,28 @@
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded'
 import AutoGraphRoundedIcon from '@mui/icons-material/AutoGraphRounded'
 import BlurOnRoundedIcon from '@mui/icons-material/BlurOnRounded'
+import GridViewRoundedIcon from '@mui/icons-material/GridViewRounded'
 import LanguageRoundedIcon from '@mui/icons-material/LanguageRounded'
+import PersonRoundedIcon from '@mui/icons-material/PersonRounded'
 import SecurityRoundedIcon from '@mui/icons-material/SecurityRounded'
 import SettingsEthernetRoundedIcon from '@mui/icons-material/SettingsEthernetRounded'
 import ToggleOffRoundedIcon from '@mui/icons-material/ToggleOffRounded'
 import TuneRoundedIcon from '@mui/icons-material/TuneRounded'
-import { AppBar, Avatar, Box, Button, Card, CardContent, Chip, Container, IconButton, Stack, Switch, Tooltip, Typography } from '@mui/material'
+import {
+  AppBar,
+  Avatar,
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Chip,
+  Container,
+  IconButton,
+  Stack,
+  Switch,
+  Tooltip,
+  Typography,
+} from '@mui/material'
 import { useMemo, useState } from 'react'
 import PortalSwitcher from '../components/PortalSwitcher'
 import ClientLayout from '../components/ClientLayout'
@@ -23,8 +39,8 @@ import {
 } from '../data/mockClientData'
 import { developerProjects, guardrails, requestQueue } from '../data/mockDeveloperData'
 import AgentLookup from '../components/AgentLookup'
-import ClientProfileCard from '../components/ClientProfileCard'
-import TemplateGallery from '../components/TemplateGallery'
+import ClientProfilePage from '../components/ClientProfilePage'
+import ClientTemplateLibrary from '../components/ClientTemplateLibrary'
 import GuidedActions from '../components/GuidedActions'
 import ActivityFeed from '../components/ActivityFeed'
 import ActionDrawer from '../components/drawers/ActionDrawer'
@@ -86,6 +102,23 @@ function AppShell() {
       return <ClientWebsites websites={clientWebsites} onBack={() => setClientView('home')} />
     }
 
+    if (clientView === 'templates') {
+      return <ClientTemplateLibrary templates={projectTemplates} onBack={() => setClientView('home')} />
+    }
+
+    if (clientView === 'profile') {
+      return (
+        <ClientProfilePage
+          profile={profile}
+          onUpdate={(next) => {
+            setProfile(next)
+            handleActionLog('Profile preferences updated')
+          }}
+          onBack={() => setClientView('home')}
+        />
+      )
+    }
+
     return (
       <ClientLayout subtitle="Guided actions with reversible changes">
         <Stack spacing={2.5} sx={{ animation: 'fadeIn 300ms ease' }}>
@@ -137,14 +170,88 @@ function AppShell() {
             </CardContent>
           </Card>
 
-          <ClientProfileCard profile={profile} onUpdate={setProfile} />
-
           <Stack direction={{ xs: 'column', lg: 'row' }} spacing={2}>
+            <Card
+              elevation={0}
+              sx={{
+                flex: 1,
+                borderRadius: 3,
+                background: 'linear-gradient(135deg, rgba(49,196,141,0.14), rgba(49,196,141,0.04))',
+              }}
+            >
+              <CardContent>
+                <Stack spacing={1.5}>
+                  <Stack direction="row" spacing={1} alignItems="center">
+                    <Avatar sx={{ bgcolor: 'success.dark', color: 'common.white' }}>
+                      <GridViewRoundedIcon />
+                    </Avatar>
+                    <Stack spacing={0.25}>
+                      <Typography variant="subtitle1" fontWeight={800}>
+                        Project templates
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Curated starters tuned by the agent for your brand and tone.
+                      </Typography>
+                    </Stack>
+                  </Stack>
+                  <Stack direction="row" spacing={1}>
+                    <Chip label="Agent-tuned" size="small" color="success" variant="outlined" />
+                    <Chip label="Quick start" size="small" variant="outlined" />
+                  </Stack>
+                  <Button
+                    variant="contained"
+                    endIcon={<ArrowForwardRoundedIcon />}
+                    onClick={() => setClientView('templates')}
+                    sx={{ borderRadius: 2, alignSelf: 'flex-start' }}
+                  >
+                    Browse templates
+                  </Button>
+                </Stack>
+              </CardContent>
+            </Card>
+
+            <Card
+              elevation={0}
+              sx={{
+                flex: 1,
+                borderRadius: 3,
+                background: 'linear-gradient(135deg, rgba(25,118,210,0.12), rgba(25,118,210,0.04))',
+              }}
+            >
+              <CardContent>
+                <Stack spacing={1.5}>
+                  <Stack direction="row" spacing={1} alignItems="center">
+                    <Avatar sx={{ bgcolor: 'primary.main', color: 'primary.contrastText' }}>
+                      <PersonRoundedIcon />
+                    </Avatar>
+                    <Stack spacing={0.25}>
+                      <Typography variant="subtitle1" fontWeight={800}>
+                        Client profile
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Edit brand voice, approvals, and alerts that guide every agent action.
+                      </Typography>
+                    </Stack>
+                  </Stack>
+                  <Stack direction="row" spacing={1}>
+                    <Chip label="Tone & preferences" size="small" variant="outlined" color="primary" />
+                    <Chip label="Ready to edit" size="small" variant="outlined" />
+                  </Stack>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    endIcon={<ArrowForwardRoundedIcon />}
+                    onClick={() => setClientView('profile')}
+                    sx={{ borderRadius: 2, alignSelf: 'flex-start' }}
+                  >
+                    Edit profile
+                  </Button>
+                </Stack>
+              </CardContent>
+            </Card>
+
             <Box sx={{ flex: 1 }}>
               <AgentLookup agents={agentDirectory} />
-            </Box>
-            <Box sx={{ flex: 1 }}>
-              <TemplateGallery templates={projectTemplates} />
             </Box>
           </Stack>
 
