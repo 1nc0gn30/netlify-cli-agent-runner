@@ -10,12 +10,28 @@ import PortalSwitcher from '../components/PortalSwitcher'
 import ClientLayout from '../components/ClientLayout'
 import DeveloperLayout from '../components/DeveloperLayout'
 import { usePortal } from './PortalContext'
-import { clientActions, clientProjects } from '../data/mockClientData'
-import { developerProjects, guardrails, requestQueue } from '../data/mockDeveloperData'
+import {
+  agentDirectory,
+  clientActivity,
+  clientProfile as profileDefaults,
+  clientProjects,
+  guidedActions,
+  projectTemplates,
+} from '../data/mockClientData'
+import ClientProfileCard from '../components/ClientProfileCard'
+import AgentLookup from '../components/AgentLookup'
+import TemplateGallery from '../components/TemplateGallery'
+import GuidedActions from '../components/GuidedActions'
+import ActivityFeed from '../components/ActivityFeed'
+import ActionDrawer from '../components/drawers/ActionDrawer'
 
 function AppShell() {
   const { portalMode, setPortalMode } = usePortal()
   const [flowGuarded, setFlowGuarded] = useState(true)
+  const [profile, setProfile] = useState(profileDefaults)
+  const [activity, setActivity] = useState(clientActivity)
+  const [selectedAction, setSelectedAction] = useState(null)
+  const [actionDrawerOpen, setActionDrawerOpen] = useState(false)
 
   const accent = useMemo(
     () =>
@@ -28,6 +44,35 @@ function AppShell() {
   const handleSwitch = (mode) => {
     if (!mode || mode === portalMode) return
     setPortalMode(mode)
+  }
+
+  const handleActionLog = (action) => {
+    setActivity((prev) => [
+      {
+        id: `log-${Date.now()}`,
+        actor: 'Agent Runner',
+        action,
+        status: 'Stable',
+        timestamp: 'Just now',
+        detail: `${profile.businessName} preferences applied automatically`,
+      },
+      ...prev,
+    ])
+  }
+
+  const handleQuickAction = (action) => {
+    setSelectedAction(action)
+    setActionDrawerOpen(true)
+  }
+
+  const handleQuickConfirm = (mode) => {
+    setActionDrawerOpen(false)
+    handleActionLog(`${mode === 'dry' ? 'Dry run —' : 'Started —'} ${selectedAction?.title}`)
+  }
+
+  const handleQuickRoute = () => {
+    setActionDrawerOpen(false)
+    handleActionLog(`Routed — ${selectedAction?.title}`)
   }
 
   const clientContent = (
@@ -52,21 +97,38 @@ function AppShell() {
           </CardContent>
         </Card>
 
+        <ClientProfileCard profile={profile} onUpdate={setProfile} />
+
+        <Stack direction={{ xs: 'column', lg: 'row' }} spacing={2}>
+          <Box sx={{ flex: 1 }}>
+            <AgentLookup agents={agentDirectory} />
+          </Box>
+          <Box sx={{ flex: 1 }}>
+            <TemplateGallery templates={projectTemplates} />
+          </Box>
+        </Stack>
+
         <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
           <Card elevation={0} sx={{ flex: 1, borderRadius: 3 }}>
             <CardContent>
               <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1 }}>
                 <BlurOnRoundedIcon color="success" />
                 <Typography variant="subtitle1" fontWeight={800}>
-                  Quick actions
+                  Quick handoffs
                 </Typography>
               </Stack>
               <Stack spacing={1.25}>
-                {clientActions.slice(0, 3).map((action) => (
+                {guidedActions.slice(0, 3).map((action) => (
                   <Card
                     key={action.id}
                     variant="outlined"
-                    sx={{ borderRadius: 2, p: 1.5, background: 'linear-gradient(120deg, rgba(129,199,132,0.08), rgba(255,255,255,0.9))' }}
+                    sx={{
+                      borderRadius: 2,
+                      p: 1.5,
+                      background: 'linear-gradient(120deg, rgba(129,199,132,0.08), rgba(255,255,255,0.9))',
+                      cursor: 'pointer',
+                    }}
+                    onClick={() => handleQuickAction(action)}
                   >
                     <Typography variant="subtitle1" fontWeight={700}>
                       {action.title}
@@ -116,6 +178,18 @@ function AppShell() {
             </CardContent>
           </Card>
         </Stack>
+
+        <GuidedActions actions={guidedActions} onLog={handleActionLog} />
+
+        <ActivityFeed activity={activity} />
+
+        <ActionDrawer
+          open={actionDrawerOpen}
+          action={selectedAction}
+          onClose={() => setActionDrawerOpen(false)}
+          onConfirm={handleQuickConfirm}
+          onRoute={handleQuickRoute}
+        />
       </Stack>
     </ClientLayout>
   )
