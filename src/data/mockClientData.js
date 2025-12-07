@@ -19,6 +19,33 @@ export const clientProjects = [
   },
 ]
 
+export const clientWebsites = [
+  {
+    name: 'Willow & Pine Café',
+    domain: 'willowpinecafe.com',
+    environment: 'Production',
+    status: 'Healthy',
+    lastUpdated: '2h ago',
+    guardrails: 'Agent blocks deploys during events and protects DNS',
+  },
+  {
+    name: 'Seasonal Menu Preview',
+    domain: 'preview.willowpinecafe.com',
+    environment: 'Preview',
+    status: 'Preview only',
+    lastUpdated: '45m ago',
+    guardrails: 'Menu edits require approval; rollbacks ready',
+  },
+  {
+    name: 'Events Landing',
+    domain: 'events.willowpinecafe.com',
+    environment: 'Staging',
+    status: 'In flight',
+    lastUpdated: 'Today, 10:12',
+    guardrails: 'Edge routing locked; experiments gated',
+  },
+]
+
 export const clientProfile = {
   businessName: 'Willow & Pine Café',
   industry: 'Restaurant / Café',
