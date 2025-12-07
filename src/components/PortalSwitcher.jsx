@@ -11,15 +11,25 @@ function PortalSwitcher({ value, onChange }) {
       color="primary"
       aria-label="Portal switcher"
       sx={{
-        backgroundColor: 'background.paper',
+        backgroundColor: 'rgba(255,255,255,0.08)',
         borderRadius: 99,
-        boxShadow: 3,
+        boxShadow: '0 10px 30px rgba(0,0,0,0.25)',
+        border: '1px solid rgba(255,255,255,0.14)',
         '& .MuiToggleButton-root': {
           border: 'none',
           textTransform: 'none',
-          px: 2,
+          px: 2.5,
+          py: 1,
           gap: 0.75,
           borderRadius: 99,
+          color: 'common.white',
+          '&.Mui-selected': {
+            backgroundColor: 'rgba(49,196,141,0.2)',
+            color: 'common.white',
+          },
+          '&:hover': {
+            backgroundColor: 'rgba(255,255,255,0.08)',
+          },
         },
       }}
     >
