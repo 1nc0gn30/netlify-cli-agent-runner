@@ -7,7 +7,7 @@ function ClientLayout({ title = 'Client Portal', subtitle, children }) {
       <Card
         elevation={0}
         sx={{
-          background: 'linear-gradient(120deg, rgba(56, 142, 60, 0.08), rgba(99, 167, 123, 0.04))',
+          background: 'linear-gradient(135deg, rgba(49, 196, 141, 0.12), rgba(49, 196, 141, 0.03))',
           borderRadius: 3,
         }}
       >
@@ -32,7 +32,7 @@ function ClientLayout({ title = 'Client Portal', subtitle, children }) {
             <Stack direction="row" spacing={1} alignItems="center">
               <AutoAwesomeRoundedIcon color="success" />
               <Typography variant="body2" color="text.secondary">
-                No raw CLI. Agents mediate every step.
+                Calm, agent-guarded workspace.
               </Typography>
             </Stack>
           </Stack>

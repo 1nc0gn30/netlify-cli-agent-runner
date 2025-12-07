@@ -14,6 +14,7 @@ export function PortalProvider({ children }) {
   return <PortalContext.Provider value={value}>{children}</PortalContext.Provider>
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function usePortal() {
   return useContext(PortalContext)
 }
