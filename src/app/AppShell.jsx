@@ -18,6 +18,7 @@ import {
   guidedActions,
   projectTemplates,
 } from '../data/mockClientData'
+import { developerProjects, guardrails, requestQueue } from '../data/mockDeveloperData'
 import ClientProfileCard from '../components/ClientProfileCard'
 import AgentLookup from '../components/AgentLookup'
 import TemplateGallery from '../components/TemplateGallery'
