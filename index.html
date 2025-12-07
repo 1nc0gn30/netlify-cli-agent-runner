@@ -1,1005 +1,735 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Netlify Agent Runner Portals</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-    rel="stylesheet"
-  />
-  <style>
-    :root {
-      --bg: #06070d;
-      --surface: rgba(255, 255, 255, 0.03);
-      --surface-strong: rgba(255, 255, 255, 0.06);
-      --surface-hover: rgba(255, 255, 255, 0.09);
-      --text: #e8eef9;
-      --muted: #9ca8c7;
-      --accent: #1ce6b6;
-      --accent-2: #42b8ff;
-      --warning: #f7c65f;
-      --danger: #ff7d7d;
-      --border: rgba(255, 255, 255, 0.08);
-      --radius: 14px;
-      --shadow: 0 30px 90px rgba(0, 0, 0, 0.4);
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: "Inter", system-ui, -apple-system, sans-serif;
-    }
-
-    body {
-      background: radial-gradient(circle at 16% 10%, rgba(28, 230, 182, 0.08), transparent 36%),
-        radial-gradient(circle at 78% 8%, rgba(66, 184, 255, 0.12), transparent 30%),
-        linear-gradient(180deg, #05060b, #04060a);
-      color: var(--text);
-      min-height: 100vh;
-      padding: 28px 24px 48px;
-      letter-spacing: -0.01em;
-    }
-
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-      margin-bottom: 18px;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .logo {
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #1ce6b6, #42b8ff);
-      display: grid;
-      place-items: center;
-      color: #05121d;
-      font-weight: 800;
-      box-shadow: var(--shadow);
-      letter-spacing: 0.04em;
-    }
-
-    nav {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    nav a {
-      color: var(--muted);
-      text-decoration: none;
-      font-weight: 600;
-      padding: 10px 12px;
-      border-radius: 10px;
-      transition: all 0.2s ease;
-      border: 1px solid transparent;
-    }
-
-    nav a:hover {
-      color: var(--text);
-      background: var(--surface-strong);
-      border-color: var(--border);
-    }
-
-    .hero {
-      display: grid;
-      grid-template-columns: 1.4fr 1fr;
-      gap: 16px;
-      margin-bottom: 16px;
-    }
-
-    .panel {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 18px 20px;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(8px);
-      transition: border 0.2s ease, transform 0.15s ease, background 0.2s ease;
-    }
-
-    .panel:hover {
-      border-color: rgba(28, 230, 182, 0.4);
-      transform: translateY(-1px);
-      background: var(--surface-strong);
-    }
-
-    .hero-text h1 {
-      font-size: clamp(2.3rem, 4vw, 3.1rem);
-      line-height: 1.05;
-      margin-bottom: 12px;
-    }
-
-    .hero-text p {
-      color: var(--muted);
-      max-width: 920px;
-      line-height: 1.6;
-      font-weight: 500;
-    }
-
-    .tagline {
-      color: var(--muted);
-      font-weight: 600;
-      letter-spacing: 0.02em;
-      margin-bottom: 8px;
-    }
-
-    .pill-row {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 14px;
-    }
-
-    .pill {
-      background: var(--surface-strong);
-      color: var(--text);
-      padding: 8px 12px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      font-size: 0.9rem;
-      display: inline-flex;
-      gap: 6px;
-      align-items: center;
-      line-height: 1.2;
-    }
-
-    .pill.success { background: rgba(28, 230, 182, 0.12); color: #9ef3d8; border-color: rgba(28,230,182,0.3); }
-    .pill.warning { background: rgba(247, 198, 95, 0.12); color: #ffdca1; border-color: rgba(247,198,95,0.4); }
-    .pill.danger { background: rgba(255, 125, 125, 0.12); color: #ffc2c2; border-color: rgba(255,125,125,0.3); }
-    .pill.info { background: rgba(66, 184, 255, 0.14); color: #a4d8ff; border-color: rgba(66,184,255,0.35); }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 14px;
-    }
-
-    .section-title {
-      font-size: 1.15rem;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .section-title span {
-      color: var(--muted);
-      font-size: 0.95rem;
-      font-weight: 600;
-    }
-
-    .subtext { color: var(--muted); font-size: 0.95rem; line-height: 1.5; }
-
-    .portal-selector {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 12px;
-      margin-top: 12px;
-    }
-
-    .portal-card {
-      background: var(--surface-strong);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 14px;
-      display: grid;
-      gap: 10px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .portal-card:hover { border-color: rgba(66, 184, 255, 0.5); transform: translateY(-1px); }
-    .portal-card.active { border-color: var(--accent); box-shadow: 0 14px 60px rgba(28, 230, 182, 0.18); }
-
-    .portal-card .avatar {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      background: var(--surface);
-      display: grid;
-      place-items: center;
-      font-weight: 800;
-      color: var(--accent);
-      border: 1px solid var(--border);
-    }
-
-    .list-item {
-      background: var(--surface-strong);
-      border-radius: 12px;
-      padding: 12px 12px;
-      border: 1px solid var(--border);
-      display: grid;
-      gap: 8px;
-      transition: background 0.2s ease, border 0.2s ease;
-    }
-
-    .list-item:hover { background: var(--surface-hover); border-color: rgba(66, 184, 255, 0.35); }
-
-    .meta-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
-
-    .hint {
-      color: var(--muted);
-      font-size: 0.95rem;
-      line-height: 1.55;
-    }
-
-    .actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
-
-    .action-option {
-      background: var(--surface-strong);
-      padding: 12px 12px;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      text-align: left;
-      color: var(--text);
-      cursor: pointer;
-      transition: all 0.2s ease;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .action-option:hover { border-color: rgba(28, 230, 182, 0.35); background: var(--surface-hover); transform: translateY(-1px); }
-    .action-option.active { border-color: rgba(66, 184, 255, 0.8); box-shadow: 0 10px 40px rgba(66, 184, 255, 0.18); }
-
-    .two-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
-
-    .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-top: 12px; }
-
-    .summary-card { background: var(--surface-strong); border: 1px solid var(--border); border-radius: 12px; padding: 12px; }
-
-    .summary-card strong { font-size: 1.2rem; }
-
-    label { font-size: 0.92rem; color: var(--muted); display: block; margin-bottom: 4px; }
-    input { width: 100%; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--border); background: rgba(255,255,255,0.04); color: var(--text); outline: none; margin-bottom: 10px; }
-    input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(28, 230, 182, 0.16); }
-
-    button { padding: 12px 16px; border-radius: 10px; border: none; font-weight: 700; cursor: pointer; transition: transform 0.15s ease, box-shadow 0.2s ease, filter 0.2s ease; }
-    button.primary { background: linear-gradient(135deg, #1ce6b6, #42b8ff); color: #031017; box-shadow: 0 12px 40px rgba(28, 230, 182, 0.26); }
-    button.primary:hover { filter: brightness(1.05); transform: translateY(-1px); }
-    button.secondary { background: transparent; color: var(--text); border: 1px solid var(--border); }
-    button.secondary:hover { border-color: var(--accent); color: var(--accent); }
-
-    .terminal { background: #04050a; border-radius: var(--radius); border: 1px solid var(--border); padding: 14px; height: 260px; overflow-y: auto; font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; font-size: 0.95rem; box-shadow: var(--shadow); }
-    .terminal .line { margin-bottom: 10px; color: #c3d4ff; }
-    .terminal .meta { color: #86c7ff; }
-
-    .badge { background: rgba(66, 184, 255, 0.14); color: #9dd9ff; padding: 4px 8px; border-radius: 8px; font-weight: 700; font-size: 0.78rem; letter-spacing: 0.4px; }
-
-    .status-dot { width: 10px; height: 10px; border-radius: 999px; display: inline-block; margin-right: 6px; }
-    .dot-healthy { background: #2cf0c7; box-shadow: 0 0 0 4px rgba(44, 240, 199, 0.14); }
-    .dot-building { background: #f7c65f; box-shadow: 0 0 0 4px rgba(247, 198, 95, 0.18); }
-    .dot-failed { background: #ff7d7d; box-shadow: 0 0 0 4px rgba(255, 125, 125, 0.16); }
-    .dot-watching { background: #7bbcff; box-shadow: 0 0 0 4px rgba(123, 188, 255, 0.16); }
-
-    .profile-card { background: var(--surface-strong); border: 1px solid var(--border); border-radius: 12px; padding: 12px; }
-
-    .stack { display: grid; gap: 10px; }
-
-    .guidance-drawer {
-      background: linear-gradient(145deg, rgba(66, 184, 255, 0.07), rgba(28, 230, 182, 0.06));
-      border: 1px solid rgba(66, 184, 255, 0.24);
-      padding: 14px;
-      border-radius: 12px;
-      box-shadow: 0 10px 50px rgba(0, 0, 0, 0.35);
-    }
-
-    .step-label { color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.75rem; }
-    .step-title { font-size: 1.02rem; font-weight: 700; margin-top: 4px; }
-    .drawer-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 12px; align-items: start; }
-    .drawer-grid .panel { box-shadow: none; border-color: rgba(255,255,255,0.08); background: rgba(255,255,255,0.03); }
-
-    .reasoning-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 8px; }
-    .reasoning-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 10px; }
-
-    .segmented {
-      display: inline-grid;
-      grid-template-columns: repeat(2, minmax(110px, 1fr));
-      background: rgba(255,255,255,0.06);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-    }
-    .segmented button {
-      border: none;
-      background: transparent;
-      padding: 10px 12px;
-      color: var(--text);
-      font-weight: 700;
-    }
-    .segmented button.active { background: linear-gradient(120deg, rgba(28,230,182,0.16), rgba(66,184,255,0.18)); color: #e6fff9; }
-
-    .inline-toggle {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      background: var(--surface-strong);
-    }
-
-    .toggle-switch {
-      width: 46px;
-      height: 26px;
-      background: rgba(255,255,255,0.08);
-      border-radius: 999px;
-      position: relative;
-      border: 1px solid var(--border);
-      transition: background 0.2s ease;
-    }
-    .toggle-switch::after {
-      content: '';
-      position: absolute;
-      top: 3px;
-      left: 3px;
-      width: 18px;
-      height: 18px;
-      background: #fff;
-      border-radius: 50%;
-      transition: transform 0.2s ease;
-    }
-    .toggle-switch.on { background: rgba(28, 230, 182, 0.18); border-color: rgba(28,230,182,0.6); }
-    .toggle-switch.on::after { transform: translateX(18px); background: #031017; }
-
-    .callout {
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 12px;
-      padding: 12px;
-      background: rgba(255,255,255,0.03);
-    }
-
-    footer { text-align: center; margin-top: 30px; color: var(--muted); font-size: 0.95rem; }
-
-    .hidden { display: none; }
-  </style>
-</head>
-<body>
-  <header>
-    <div class="brand">
-      <div class="logo">NL</div>
-      <div>
-        <strong>Netlify Agent Runners</strong><br />
-        <small style="color: var(--muted)">Client + Developer portals on governed automation rails.</small>
-      </div>
-    </div>
-    <nav>
-      <a href="#">Portal Concept</a>
-      <a href="#">Platform Docs</a>
-      <a href="#">Security Notes</a>
-    </nav>
-  </header>
-
-  <section class="hero">
-    <div class="panel hero-text">
-      <div class="tagline">Dual portal, single source of trust</div>
-      <h1>Modern Netlify surfaces for clients and developers — safer than sharing the CLI.</h1>
-      <p>
-        Each action is mediated by an Agent Runner, keeping Netlify CLI server-side while applying policy, approvals, and context.
-        Clients ship confidently, developers stay in control. This is Netlify vNext: calm, clear, and ready for production.
-      </p>
-      <div class="pill-row">
-        <div class="pill success">🔒 Scoped identities per portal</div>
-        <div class="pill info">🤖 AI & human runners with receipts</div>
-        <div class="pill">📈 Deploy previews routed automatically</div>
-        <div class="pill warning">🛡️ Guardrails before any CLI call</div>
-      </div>
-      <div class="summary-grid">
-        <div class="summary-card">
-          <div class="meta-row">
-            <span class="pill success">Live</span>
-            <span class="badge">Agent Runner</span>
-          </div>
-          <strong id="live-active-count">--</strong>
-          <div class="subtext">Active client requests</div>
-        </div>
-        <div class="summary-card">
-          <div class="meta-row">
-            <span class="pill info">Preview ready</span>
-            <span class="badge">Deploys</span>
-          </div>
-          <strong id="live-deploy-count">--</strong>
-          <div class="subtext">Deploys today (prod + previews)</div>
-        </div>
-        <div class="summary-card">
-          <div class="meta-row">
-            <span class="pill">Trust</span>
-            <span class="badge">Audit</span>
-          </div>
-          <strong>100%</strong>
-          <div class="subtext">CLI kept server-side. Every action logged.</div>
-        </div>
-      </div>
-    </div>
-    <div class="panel" style="position: relative; overflow: hidden;">
-      <div class="tagline">Sign-in (concept)</div>
-      <h3 style="margin-bottom: 8px;">Identity binds to runner policies</h3>
-      <div class="subtext" style="margin-bottom: 12px;">SSO or team login determines which portal opens and what presets are visible.</div>
-      <label for="email">Work email</label>
-      <input type="email" id="email" placeholder="user@team.com" />
-      <label for="password">Password</label>
-      <input type="password" id="password" placeholder="••••••••" />
-      <div style="display: flex; gap: 10px; align-items: center; margin-top: 4px;">
-        <button class="primary" id="simulate-login">Sign in</button>
-        <button class="secondary" id="simulate-logout">Logout</button>
-      </div>
-      <div class="hint" style="margin-top: 10px;">Portal selection happens post-auth. Agent Runners enforce role separation and prevent raw CLI exposure.</div>
-    </div>
-  </section>
-
-  <section class="panel" id="portal-selection">
-    <div class="section-title">Choose your workspace <span>Client or Developer view</span></div>
-    <div class="portal-selector" id="portal-selector">
-      <div class="portal-card" data-portal="client" tabindex="0">
-        <div class="meta-row">
-          <div class="avatar">C</div>
-          <div>
-            <strong>Client Portal</strong>
-            <div class="subtext">Trigger safe presets, view previews, request help.</div>
-          </div>
-          <span class="pill info">Guided</span>
-        </div>
-        <div class="subtext">AI and pre-approved macros execute via Agent Runners. No CLI tokens ever leave the server.</div>
-      </div>
-      <div class="portal-card" data-portal="developer" tabindex="0">
-        <div class="meta-row">
-          <div class="avatar" style="color: var(--accent-2);">D</div>
-          <div>
-            <strong>Developer Portal</strong>
-            <div class="subtext">Approve, configure, and monitor every request.</div>
-          </div>
-          <span class="pill warning">Governed</span>
-        </div>
-        <div class="subtext">Publish presets, set approvals, and watch Agent Runner activity without juggling terminals.</div>
-      </div>
-    </div>
-    <div class="hint" style="margin-top: 8px;">Tip: choose Developer when logged in to view editable controls. Clients see curated tasks only.</div>
-  </section>
-
-  <section class="portal hidden" id="client-portal" aria-label="Client Portal">
-    <div class="topline" style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
-      <span class="badge">Client Portal</span>
-      <span class="pill success">Safe presets</span>
-      <span class="hint">Non-technical view for content and site owners.</span>
-    </div>
-    <div class="grid">
-      <div class="panel">
-        <div class="section-title">Projects <span>Connected Netlify sites</span></div>
-        <div class="hint" style="margin-bottom: 8px;">Status badges track live deploy health. Previews link back to the right branch.</div>
-        <div id="client-projects" class="grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px;"></div>
-      </div>
-
-      <div class="panel">
-        <div class="section-title">Client Requests <span>AI + human tasks</span></div>
-        <div class="hint" style="margin-bottom: 8px;">Requests are executed by Agent Runners with approvals baked in.</div>
-        <div id="client-requests" class="grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px;"></div>
-      </div>
-
-      <div class="panel">
-        <div class="section-title">Guided Actions <span>Trust-first flow</span></div>
-        <div class="stack">
-          <div class="hint">Step 1 — Pick a preset, Step 2 — Agent explains scope, Step 3 — You confirm or route to a human.</div>
-          <div class="actions" id="client-action-options"></div>
-          <div class="guidance-drawer" id="client-guidance">
-            <div class="step-label">Awaiting selection</div>
-            <div class="step-title">Choose an action to see the plan</div>
-            <div class="hint">Agent Runners narrate intent before touching anything. Safety defaults keep clients from breaking prod.</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="panel">
-        <div class="section-title">Profile Snapshot <span>Routes requests to the right runner</span></div>
-        <div class="two-col">
-          <div class="profile-card" id="client-profile"></div>
-          <div class="profile-card">
-            <div class="section-title" style="margin-bottom: 4px;">Access guardrails <span>Safety story</span></div>
-            <div class="hint">Clients never receive CLI credentials. Every run is signed, logged, and scoped. Developers gate risky presets and monitor deviations.</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="panel">
-        <div class="section-title">Agent Runner Activity <span>Live feed</span></div>
-        <div class="terminal" id="client-terminal"></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="portal hidden" id="developer-portal" aria-label="Developer Portal">
-    <div class="topline" style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
-      <span class="badge" style="background: rgba(28,230,182,0.16); color: #a4f5df;">Developer Portal</span>
-      <span class="pill warning">Approvals required</span>
-      <span class="hint">Configure governance, manage queues, and publish presets.</span>
-    </div>
-    <div class="grid">
-      <div class="panel">
-        <div class="section-title">Projects <span>Environment health</span></div>
-        <div id="developer-projects" class="grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px;"></div>
-      </div>
-
-      <div class="panel">
-        <div class="section-title">Queues <span>Client + AI requests</span></div>
-        <div id="developer-queue" class="grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px;"></div>
-      </div>
-
-      <div class="panel">
-        <div class="section-title">Guardrails <span>Developer control center</span></div>
-        <div class="stack" id="developer-guardrails"></div>
-        <div class="callout" style="margin-top: 10px;">Approvals, rollout scopes, and environment protections apply before Agent Runners invoke Netlify CLI. You set the blast radius.</div>
-      </div>
-
-      <div class="panel">
-        <div class="section-title">Developer Profile <span>Routing</span></div>
-        <div class="two-col">
-          <div class="profile-card" id="developer-profile"></div>
-          <div class="profile-card">
-            <div class="section-title" style="margin-bottom: 4px;">Collaboration <span>Why two portals</span></div>
-            <div class="hint">Clients see the actions they should. Developers expand capability with safety nets and can jump in when AI asks for help.</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="panel">
-        <div class="section-title">Activity Stream <span>Runner + CLI logs</span></div>
-        <div class="terminal" id="developer-terminal"></div>
-      </div>
-    </div>
-  </section>
-
-  <footer>
-    Concept portal — imagine this inside the Netlify Dashboard: calm, governed, and ready for Agent Runner automation.
-  </footer>
-
-  <script>
-    const portalSelection = document.getElementById('portal-selection');
-    const clientPortal = document.getElementById('client-portal');
-    const developerPortal = document.getElementById('developer-portal');
-    const loginButton = document.getElementById('simulate-login');
-    const logoutButton = document.getElementById('simulate-logout');
-    const selectorCards = document.querySelectorAll('[data-portal]');
-    let isAuthenticated = false;
-    let selectedAction = null;
-    let runMode = 'dry';
-
-    const projectsData = [
-      { name: 'brightside-marketing', env: 'Production', status: 'Healthy', desc: 'Static marketing site with A/B routing.', branch: 'main', lastDeploy: '14m ago', owner: 'Marketing Ops' },
-      { name: 'feature-preview', env: 'Preview', status: 'Building', desc: 'PR-driven previews with AI summaries.', branch: 'feature/mercury', lastDeploy: '4m ago', owner: 'Product QA' },
-      { name: 'launchpad-app', env: 'Production', status: 'Failed', desc: 'Next.js storefront with scheduled drops.', branch: 'main', lastDeploy: '32m ago', owner: 'Ecomm' },
-      { name: 'docs-hub', env: 'Preview', status: 'Watching', desc: 'Docs hub with AI support macros.', branch: 'docs/revamp', lastDeploy: 'Just now', owner: 'DevRel' }
-    ];
-
-    const clientTasks = [
-      { title: 'Regenerate homepage copy', project: 'brightside-marketing', status: 'Completed', actor: 'AI Runner', time: '09:15', detail: 'Synced tone with brand guidelines.' },
-      { title: 'Ship hero fix to preview', project: 'feature-preview', status: 'Running', actor: 'AI Runner', time: '09:11', detail: 'Deploying preview with lint fixes.' },
-      { title: 'Request rollback', project: 'launchpad-app', status: 'Pending', actor: 'Client', time: '08:58', detail: 'Rollback last drop until payment issue resolved.' },
-      { title: 'Uptime sweep', project: 'docs-hub', status: 'Completed', actor: 'AI Runner', time: '08:47', detail: 'Verified edge functions and redirects.' }
-    ];
-
-    const developerQueue = [
-      { title: 'Approve rollback', project: 'launchpad-app', status: 'Awaiting approval', type: 'Human', time: '2m ago', detail: 'AI suggested rollback after failing health checks.' },
-      { title: 'Promote preview to prod', project: 'feature-preview', status: 'Running', type: 'AI', time: '6m ago', detail: 'Deploying preview with tests enforced.' },
-      { title: 'Content refresh', project: 'brightside-marketing', status: 'Completed', type: 'AI', time: '18m ago', detail: 'Published new CMS entries and purged cache.' },
-      { title: 'Diagnostics report', project: 'docs-hub', status: 'Pending', type: 'AI', time: '29m ago', detail: 'Awaiting dev review for edge latency spikes.' }
-    ];
-
-    const agentRuns = [
-      '[09:15] client-lp → AI updated hero copy → netlify deploy --prod approved',
-      '[09:12] feature-preview → Running: netlify status (pre-flight checks)',
-      '[09:10] docs-hub → Preview generated → netlify open --url preview',
-      '[08:55] launchpad-app → Failed deploy → reverted via preset, awaiting human review',
-      '[08:40] feature-preview → Status check → netlify status ok'
-    ];
-
-    const liveCounts = { active: 0, deploys: 0 };
-
-    const clientProfile = {
-      name: 'Jordan Client',
-      company: 'Brightside Co.',
-      role: 'Marketing lead',
-      contact: 'jordan@brightside.co',
-      linkedSites: ['brightside-marketing', 'feature-preview'],
-      access: 'Client presets only • Requires approval for rollbacks'
-    };
-
-    const developerProfile = {
-      name: 'Avery Dev',
-      role: 'Senior Engineer',
-      skills: 'Next.js, Astro, API performance, Netlify Edge',
-      availability: 'Weekdays 9–5 PST',
-      linkedProjects: ['brightside-marketing', 'feature-preview', 'launchpad-app'],
-      clients: ['Brightside Co.', 'Future Foods', 'Nova Labs']
-    };
-
-    const quickActions = [
-      {
-        id: 'prod-deploy',
-        label: 'Deploy to production',
-        detail: 'Runner executes build + tests before promoting.',
-        command: 'netlify deploy --prod',
-        target: 'Production',
-        plan: 'Agent will build, test, and promote the current main branch. If any checks fail, the deploy is halted.',
-        changes: 'Only promotes /dist assets and serverless functions from main.',
-        boundaries: 'Will not alter DNS, environment variables, or secrets.',
-        safety: 'Uses signed runner identity and preserves current prod snapshot until verification passes.',
-        rollback: 'If metrics regress, agent reverts to prior deploy and notifies developer queue.',
-        scope: 'Prod guarded • Requires approval or dry run first.'
-      },
-      {
-        id: 'preview',
-        label: 'Generate preview',
-        detail: 'Safe preview with AI summary for stakeholders.',
-        command: 'netlify open --url preview',
-        target: 'Preview',
-        plan: 'Agent builds from feature branch, generates preview link, and drafts a changelog.',
-        changes: 'Creates preview artifact and summary only.',
-        boundaries: 'No production routing or DNS updates.',
-        safety: 'Runs in isolated preview runner with read-only env vars.',
-        rollback: 'Simply expires preview; prod remains untouched.',
-        scope: 'Preview-only • Can auto-expire in 24h.'
-      },
-      {
-        id: 'diagnostics',
-        label: 'Run diagnostics',
-        detail: 'Health sweep before anyone ships.',
-        command: 'netlify status',
-        target: 'Observability',
-        plan: 'Agent checks build logs, edge functions, and CDN latency then suggests remediation.',
-        changes: 'Read-only checks; no deploys triggered.',
-        boundaries: 'Will not mutate configs or repos.',
-        safety: 'Executes in monitoring scope with throttled permissions.',
-        rollback: 'No rollback needed; results shared to developer stream.',
-        scope: 'Read-only • Ideal before approvals.'
-      }
-    ];
-
-    const guardrails = [
-      {
-        id: 'prod-access',
-        title: 'Prod vs preview access',
-        detail: 'Restrict client presets to preview environments unless explicitly approved.',
-        status: true,
-        note: 'Prod locked unless developer adds an approver.'
-      },
-      {
-        id: 'human-approval',
-        title: 'Require human approval',
-        detail: 'Prod deploys and rollbacks require a named reviewer in the runner queue.',
-        status: true,
-        note: 'AI can stage changes but waits for a human signature.'
-      },
-      {
-        id: 'deploy-locks',
-        title: 'Lock deploys by time/environment',
-        detail: 'Freeze production after 5pm PT and during incident modes.',
-        status: false,
-        note: 'Preview deploys stay open for experimentation.'
-      }
-    ];
-
-    function statusClass(status) {
-      const normalized = status.toLowerCase();
-      if (normalized.includes('healthy') || normalized.includes('completed')) return 'success';
-      if (normalized.includes('pending') || normalized.includes('awaiting')) return 'warning';
-      if (normalized.includes('running') || normalized.includes('building')) return 'info';
-      if (normalized.includes('failed')) return 'danger';
-      return '';
-    }
-
-    function statusDot(status) {
-      const normalized = status.toLowerCase();
-      if (normalized.includes('healthy')) return 'dot-healthy';
-      if (normalized.includes('building') || normalized.includes('running')) return 'dot-building';
-      if (normalized.includes('failed')) return 'dot-failed';
-      return 'dot-watching';
-    }
-
-    function renderProjects(containerId, data) {
-      const container = document.getElementById(containerId);
-      container.innerHTML = '';
-      data.forEach((project) => {
-        const card = document.createElement('div');
-        card.className = 'list-item';
-        card.innerHTML = `
-          <div class="meta-row">
-            <div>
-              <strong>${project.name}</strong>
-              <div class="hint">${project.desc}</div>
-            </div>
-            <span class="pill ${statusClass(project.status)}"><span class="status-dot ${statusDot(project.status)}"></span>${project.status}</span>
-          </div>
-          <div class="meta-row">
-            <div class="subtext">Env: ${project.env} • Branch: ${project.branch}</div>
-            <div class="subtext">Last deploy: ${project.lastDeploy}</div>
-          </div>
-          <div class="subtext">Owner: ${project.owner}</div>
-        `;
-        container.appendChild(card);
-      });
-    }
-
-    function renderTasks(containerId, data) {
-      const container = document.getElementById(containerId);
-      container.innerHTML = '';
-      data.forEach((task) => {
-        const card = document.createElement('div');
-        card.className = 'list-item';
-        card.innerHTML = `
-          <div class="meta-row">
-            <div>
-              <strong>${task.title}</strong>
-              <div class="hint">${task.detail}</div>
-            </div>
-            <span class="pill ${statusClass(task.status)}">${task.status}</span>
-          </div>
-          <div class="meta-row">
-            <div class="subtext">Project: ${task.project}</div>
-            <div class="subtext">${task.actor} • ${task.time}</div>
-          </div>
-        `;
-        container.appendChild(card);
-      });
-    }
-
-    function renderClientActions(actions) {
-      const container = document.getElementById('client-action-options');
-      container.innerHTML = '';
-      actions.forEach((action) => {
-        const btn = document.createElement('button');
-        btn.className = 'action-option';
-        btn.setAttribute('data-action', action.id);
-        btn.innerHTML = `
-          <div class="meta-row">
-            <div>
-              <strong>${action.label}</strong>
-              <div class="hint">${action.detail}</div>
-            </div>
-            <span class="pill info">${action.target}</span>
-          </div>
-          <div class="subtext">${action.command}</div>
-        `;
-        btn.addEventListener('click', () => selectAction(action.id));
-        container.appendChild(btn);
-      });
-    }
-
-    function renderGuardrails() {
-      const container = document.getElementById('developer-guardrails');
-      container.innerHTML = '';
-      guardrails.forEach((rule) => {
-        const row = document.createElement('div');
-        row.className = 'inline-toggle';
-        row.innerHTML = `
-          <div>
-            <strong>${rule.title}</strong>
-            <div class="hint">${rule.detail}</div>
-            <div class="subtext">${rule.note}</div>
-          </div>
-          <div class="toggle-switch ${rule.status ? 'on' : ''}" role="switch" aria-checked="${rule.status}" data-guardrail="${rule.id}"></div>
-        `;
-        row.querySelector('.toggle-switch').addEventListener('click', () => toggleGuardrail(rule.id));
-        container.appendChild(row);
-      });
-    }
-
-    function renderProfile(containerId, profile, extras = []) {
-      const container = document.getElementById(containerId);
-      container.innerHTML = `
-        <div class="meta-row" style="margin-bottom: 6px;">
-          <div>
-            <div class="pill info">Live profile</div>
-            <strong style="display:block; margin-top:4px;">${profile.name}</strong>
-          </div>
-          <div class="badge">${profile.role}</div>
-        </div>
-        ${profile.company ? `<div class="subtext">${profile.company}</div>` : ''}
-        ${profile.skills ? `<div class="subtext">${profile.skills}</div>` : ''}
-        <div class="subtext">${profile.availability ? profile.availability : profile.contact}</div>
-        <div class="pill-row" style="margin-top:8px;">
-          ${extras.map((item) => `<span class="pill">${item}</span>`).join('')}
-        </div>
-      `;
-      if (profile.linkedSites) {
-        container.innerHTML += `<div class="hint" style="margin-top: 8px;">Linked: ${profile.linkedSites.join(', ')}</div>`;
-      }
-      if (profile.access) {
-        container.innerHTML += `<div class="hint">Access: ${profile.access}</div>`;
-      }
-      if (profile.clients) {
-        container.innerHTML += `<div class="hint" style="margin-top: 6px;">Clients: ${profile.clients.join(', ')}</div>`;
-      }
-    }
-
-    function renderTerminal(containerId, logs) {
-      const terminal = document.getElementById(containerId);
-      terminal.innerHTML = '';
-      logs.forEach((line) => {
-        const entry = document.createElement('div');
-        entry.className = 'line';
-        const [timestamp, rest] = line.split('] ');
-        entry.innerHTML = `[${timestamp.replace('[', '')}] <span class="meta">${rest}</span>`;
-        terminal.appendChild(entry);
-      });
-      terminal.scrollTop = terminal.scrollHeight;
-    }
-
-    function selectAction(id) {
-      selectedAction = quickActions.find((item) => item.id === id);
-      document.querySelectorAll('[data-action]').forEach((btn) => {
-        btn.classList.toggle('active', btn.getAttribute('data-action') === id);
-      });
-      updateGuidance();
-    }
-
-    function updateGuidance() {
-      const drawer = document.getElementById('client-guidance');
-      if (!selectedAction) {
-        drawer.innerHTML = `
-          <div class="step-label">Awaiting selection</div>
-          <div class="step-title">Choose an action to see the plan</div>
-          <div class="hint">Agent Runners narrate intent before touching anything. Safety defaults keep clients from breaking prod.</div>
-        `;
-        return;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Netlify Runner — Concept</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: dark;
       }
 
-      drawer.innerHTML = `
-        <div class="drawer-grid">
-          <div>
-            <div class="step-label">Step 2 · Agent explains</div>
-            <div class="step-title">${selectedAction.label}</div>
-            <div class="hint" style="margin-top:6px;">${selectedAction.plan}</div>
-            <div class="reasoning-grid">
-              <div class="reasoning-card"><strong>What I will change</strong><div class="subtext">${selectedAction.changes}</div></div>
-              <div class="reasoning-card"><strong>What I will not touch</strong><div class="subtext">${selectedAction.boundaries}</div></div>
-              <div class="reasoning-card"><strong>Why this is safe</strong><div class="subtext">${selectedAction.safety}</div></div>
-              <div class="reasoning-card"><strong>Rollback plan</strong><div class="subtext">${selectedAction.rollback}</div></div>
-            </div>
-          </div>
-          <div class="panel">
-            <div class="step-label">Step 3 · Confidence check</div>
-            <div class="step-title">Confirm or ask for a human</div>
-            <div class="hint" style="margin: 6px 0;">Signature choice: Dry run vs Real run. Clients see impact, developers control blast radius.</div>
-            <div class="segmented" aria-label="Run mode">
-              <button data-mode="dry" class="${runMode === 'dry' ? 'active' : ''}">Dry run</button>
-              <button data-mode="real" class="${runMode === 'real' ? 'active' : ''}">Real run</button>
-            </div>
-            <div class="pill-row" style="margin: 10px 0;">
-              <span class="pill success">${selectedAction.scope}</span>
-              <span class="pill info">${selectedAction.command}</span>
-            </div>
-            <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
-              <button class="primary" id="confirm-action">${runMode === 'dry' ? 'Simulate safely' : 'Run with runner'}</button>
-              <button class="secondary" id="human-action">Request human help</button>
-            </div>
-            <div class="hint" style="margin-top: 8px;">AI explains every step and attaches logs to the activity stream.</div>
-          </div>
-        </div>
-      `;
+      * {
+        box-sizing: border-box;
+      }
 
-      drawer.querySelectorAll('[data-mode]').forEach((btn) => {
-        btn.addEventListener('click', () => {
-          runMode = btn.dataset.mode;
-          updateGuidance();
-        });
+      body {
+        margin: 0;
+        font-family: "Inter", system-ui, -apple-system, sans-serif;
+        background: radial-gradient(circle at 10% 0%, rgba(66, 184, 255, 0.07), transparent 36%),
+          radial-gradient(circle at 82% 8%, rgba(28, 230, 182, 0.08), transparent 40%),
+          #02060c;
+      }
+
+      #root {
+        min-height: 100vh;
+      }
+
+      ::-webkit-scrollbar {
+        width: 10px;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 999px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script type="module">
+      import React, { useMemo, useState } from "https://esm.sh/react@18.2.0";
+      import { createRoot } from "https://esm.sh/react-dom@18.2.0/client";
+      import {
+        AppBar,
+        Avatar,
+        Badge,
+        Box,
+        Button,
+        Card,
+        CardActions,
+        CardContent,
+        Chip,
+        CssBaseline,
+        Divider,
+        Drawer,
+        Grid,
+        IconButton,
+        LinearProgress,
+        List,
+        ListItemButton,
+        ListItemIcon,
+        ListItemText,
+        Stack,
+        ThemeProvider,
+        Toolbar,
+        Tooltip,
+        Typography,
+        createTheme,
+        ToggleButtonGroup,
+        ToggleButton,
+        Tabs,
+        Tab,
+        Paper,
+        alpha,
+      } from "https://esm.sh/@mui/material@5.15.14";
+      import { styled } from "https://esm.sh/@mui/material@5.15.14/styles";
+      import RocketLaunchIcon from "https://esm.sh/@mui/icons-material@5.15.14/RocketLaunch";
+      import DashboardIcon from "https://esm.sh/@mui/icons-material@5.15.14/Dashboard";
+      import PeopleAltIcon from "https://esm.sh/@mui/icons-material@5.15.14/PeopleAlt";
+      import CodeIcon from "https://esm.sh/@mui/icons-material@5.15.14/Code";
+      import PlayArrowIcon from "https://esm.sh/@mui/icons-material@5.15.14/PlayArrow";
+      import SecurityIcon from "https://esm.sh/@mui/icons-material@5.15.14/Security";
+      import CheckCircleIcon from "https://esm.sh/@mui/icons-material@5.15.14/CheckCircle";
+      import BlurOnIcon from "https://esm.sh/@mui/icons-material@5.15.14/BlurOn";
+      import InsightsIcon from "https://esm.sh/@mui/icons-material@5.15.14/Insights";
+      import LaunchIcon from "https://esm.sh/@mui/icons-material@5.15.14/Launch";
+      import ChatIcon from "https://esm.sh/@mui/icons-material@5.15.14/Chat";
+      import SwapHorizIcon from "https://esm.sh/@mui/icons-material@5.15.14/SwapHoriz";
+      import PersonOutlineIcon from "https://esm.sh/@mui/icons-material@5.15.14/PersonOutline";
+      import DoneAllIcon from "https://esm.sh/@mui/icons-material@5.15.14/DoneAll";
+
+      const drawerWidth = 248;
+
+      const glass = (theme) => ({
+        background: alpha(theme.palette.background.paper, 0.7),
+        border: `1px solid ${alpha(theme.palette.divider, 0.6)}`,
+        boxShadow: "0 20px 80px rgba(0,0,0,0.35)",
+        backdropFilter: "blur(16px)",
       });
 
-      drawer.querySelector('#confirm-action').addEventListener('click', () => simulateAction(selectedAction, runMode));
-      drawer.querySelector('#human-action').addEventListener('click', () => routeToHuman(selectedAction));
-    }
+      const Pulse = styled(Box)(({ theme }) => ({
+        width: 10,
+        height: 10,
+        borderRadius: "50%",
+        background: theme.palette.success.main,
+        boxShadow: `0 0 0 10px ${alpha(theme.palette.success.main, 0.04)}`,
+      }));
 
-    function toggleGuardrail(id) {
-      const guardrail = guardrails.find((rule) => rule.id === id);
-      guardrail.status = !guardrail.status;
-      renderGuardrails();
-      simulateQueueAction({ label: guardrail.title });
-    }
+      const SparkleCard = styled(Card)(({ theme }) => ({
+        ...glass(theme),
+        borderRadius: 16,
+        transition: "transform 0.2s ease, border 0.2s ease",
+        '&:hover': {
+          transform: "translateY(-2px)",
+          borderColor: alpha(theme.palette.primary.main, 0.6),
+        },
+      }));
 
-    function simulateAction(action, mode = 'dry') {
-      const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      const prefix = mode === 'dry' ? 'Dry run scheduled' : 'Executing via runner';
-      agentRuns.unshift(`[${timestamp}] ${action.label} → ${prefix} (${action.command})`);
-      renderTerminal('client-terminal', agentRuns.slice(0, 12));
-      renderTerminal('developer-terminal', agentRuns.slice(0, 12));
+      const Pill = styled(Chip)(({ theme }) => ({
+        background: alpha(theme.palette.common.white, 0.06),
+        borderColor: alpha(theme.palette.common.white, 0.08),
+      }));
 
-      if (mode === 'real') {
-        liveCounts.active += 1;
-        liveCounts.deploys += action.command.includes('deploy') ? 1 : 0;
-        updateLiveCounts();
-      }
+      const stats = [
+        {
+          label: "Live sessions",
+          value: "12",
+          hint: "Stable",
+          icon: <BlurOnIcon fontSize="small" />,
+        },
+        {
+          label: "Deploys today",
+          value: "6",
+          hint: "+2 planned",
+          icon: <LaunchIcon fontSize="small" />,
+        },
+        {
+          label: "Guardrails",
+          value: "18",
+          hint: "all green",
+          icon: <SecurityIcon fontSize="small" />,
+        },
+      ];
 
-      setTimeout(() => {
-        const doneStamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        const outcome = mode === 'dry' ? 'Dry run report ready' : 'Completed';
-        agentRuns.unshift(`[${doneStamp}] ${action.label} → ${outcome}`);
-        renderTerminal('client-terminal', agentRuns.slice(0, 12));
-        renderTerminal('developer-terminal', agentRuns.slice(0, 12));
-        liveCounts.active = Math.max(liveCounts.active - 1, 0);
-        updateLiveCounts();
-      }, 1600 + Math.random() * 1200);
-    }
+      const actionOptions = [
+        { id: "preview", title: "Generate preview", meta: "site-wide", eta: "1m" },
+        { id: "deploy", title: "Promote to production", meta: "main branch", eta: "2m" },
+        { id: "roll-back", title: "Roll back", meta: "last stable", eta: "50s" },
+      ];
 
-    function routeToHuman(action) {
-      const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      agentRuns.unshift(`[${timestamp}] ${action.label} → Routed to human reviewer`);
-      renderTerminal('client-terminal', agentRuns.slice(0, 12));
-      renderTerminal('developer-terminal', agentRuns.slice(0, 12));
-    }
+      const queue = [
+        { id: 1, title: "Rebuild marketing", owner: "Mina", mode: "dry" },
+        { id: 2, title: "Rotate API keys", owner: "Alex", mode: "real" },
+        { id: 3, title: "Sync env vars", owner: "Riley", mode: "dry" },
+      ];
 
-    function simulateQueueAction(action) {
-      const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      agentRuns.unshift(`[${timestamp}] ${action.label} policy updated`);
-      renderTerminal('developer-terminal', agentRuns.slice(0, 12));
-    }
+      const guardrails = [
+        {
+          id: "blast",
+          label: "Blast radius",
+          detail: "Auto-scope changes to safe projects",
+          status: "active",
+        },
+        {
+          id: "approvals",
+          label: "Human approvals",
+          detail: "Escalate risky actions to reviewers",
+          status: "active",
+        },
+        {
+          id: "records",
+          label: "Ledger",
+          detail: "Attach artifacts to compliance log",
+          status: "active",
+        },
+      ];
 
-    function updateLiveCounts() {
-      document.getElementById('live-active-count').textContent = `${liveCounts.active + clientTasks.filter(t => ['Running', 'Pending'].includes(t.status)).length}`;
-      document.getElementById('live-deploy-count').textContent = `${liveCounts.deploys + 6}`;
-    }
+      const theme = createTheme({
+        palette: {
+          mode: "dark",
+          primary: {
+            main: "#1ce6b6",
+          },
+          background: {
+            default: "#02060c",
+            paper: "#0c121a",
+          },
+          text: {
+            primary: "#f8fbff",
+            secondary: "#c5d0dd",
+          },
+        },
+        shape: {
+          borderRadius: 14,
+        },
+        typography: {
+          fontFamily: "Inter, system-ui, -apple-system, sans-serif",
+        },
+      });
 
-    loginButton.addEventListener('click', () => {
-      isAuthenticated = true;
-      agentRuns.unshift(`[${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}] ✔ Authenticated → select a portal`);
-      renderTerminal('client-terminal', agentRuns.slice(0, 12));
-      renderTerminal('developer-terminal', agentRuns.slice(0, 12));
-      portalSelection.scrollIntoView({ behavior: 'smooth' });
-    });
+      const NavIcon = ({ icon }) => (
+        <ListItemIcon sx={{ minWidth: 34, color: "text.secondary" }}>{icon}</ListItemIcon>
+      );
 
-    logoutButton.addEventListener('click', () => {
-      isAuthenticated = false;
-      showPortal(null);
-      agentRuns.unshift(`[${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}] Session ended → runner actions locked`);
-      renderTerminal('client-terminal', agentRuns.slice(0, 12));
-      renderTerminal('developer-terminal', agentRuns.slice(0, 12));
-    });
+      const PageHeader = ({ title, secondary }) => (
+        <Stack direction="row" alignItems="center" spacing={1.5} mb={2.5}>
+          <Pulse />
+          <Typography variant="h5" fontWeight={700} letterSpacing={-0.4}>
+            {title}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            {secondary}
+          </Typography>
+        </Stack>
+      );
 
-    selectorCards.forEach((card) => {
-      card.addEventListener('click', () => selectPortal(card.dataset.portal));
-      card.addEventListener('keypress', (e) => { if (e.key === 'Enter') selectPortal(card.dataset.portal); });
-    });
+      const MinimalCard = ({ title, caption, action, icon }) => (
+        <SparkleCard variant="outlined">
+          <CardContent>
+            <Stack direction="row" spacing={1.2} alignItems="center" mb={1}>
+              <Box
+                sx={(theme) => ({
+                  width: 36,
+                  height: 36,
+                  borderRadius: 2,
+                  display: "grid",
+                  placeItems: "center",
+                  background: alpha(theme.palette.primary.main, 0.12),
+                  color: theme.palette.primary.main,
+                })}
+              >
+                {icon}
+              </Box>
+              <Typography fontWeight={700}>{title}</Typography>
+            </Stack>
+            <Typography variant="body2" color="text.secondary">
+              {caption}
+            </Typography>
+          </CardContent>
+          {action && <CardActions sx={{ pt: 0, pb: 2, px: 2 }}>{action}</CardActions>}
+        </SparkleCard>
+      );
 
-    function selectPortal(type) {
-      selectorCards.forEach((card) => card.classList.toggle('active', card.dataset.portal === type));
-      if (!isAuthenticated) {
-        agentRuns.unshift(`[${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}] Read-only preview → login to execute actions`);
-        renderTerminal('client-terminal', agentRuns.slice(0, 12));
-      }
-      showPortal(type);
-      agentRuns.unshift(`[${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}] Portal selected: ${type} → runner policies refreshed`);
-      renderTerminal('developer-terminal', agentRuns.slice(0, 12));
-    }
+      const Shell = ({ route, onRouteChange, children }) => (
+        <Box sx={{ display: "flex" }}>
+          <CssBaseline />
+          <AppBar
+            position="fixed"
+            elevation={0}
+            color="transparent"
+            sx={(theme) => ({
+              borderBottom: `1px solid ${alpha(theme.palette.divider, 0.5)}`,
+              backdropFilter: "blur(12px)",
+              background: alpha(theme.palette.background.paper, 0.7),
+              ml: `${drawerWidth}px`,
+              width: { sm: `calc(100% - ${drawerWidth}px)` },
+            })}
+          >
+            <Toolbar sx={{ minHeight: 68, px: 3 }}>
+              <Stack direction="row" spacing={2} alignItems="center" sx={{ flexGrow: 1 }}>
+                <Box
+                  sx={{
+                    width: 42,
+                    height: 42,
+                    borderRadius: 2,
+                    display: "grid",
+                    placeItems: "center",
+                    fontWeight: 800,
+                    letterSpacing: 0.2,
+                    background: "linear-gradient(135deg, #1ce6b6, #42b8ff)",
+                    color: "#05121d",
+                  }}
+                >
+                  NL
+                </Box>
+                <Divider orientation="vertical" flexItem sx={{ borderColor: "divider" }} />
+                <Stack spacing={0.2}>
+                  <Typography variant="subtitle2" fontWeight={700} letterSpacing={-0.2}>
+                    Netlify Runner
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Calm, confident automation
+                  </Typography>
+                </Stack>
+              </Stack>
+              <Stack direction="row" spacing={1.2} alignItems="center">
+                <Tooltip title="All clear">
+                  <Badge color="success" variant="dot" overlap="circular">
+                    <Avatar sx={{ width: 36, height: 36, bgcolor: "primary.main" }}>A</Avatar>
+                  </Badge>
+                </Tooltip>
+              </Stack>
+            </Toolbar>
+          </AppBar>
 
-    function showPortal(type) {
-      clientPortal.classList.toggle('hidden', type !== 'client');
-      developerPortal.classList.toggle('hidden', type !== 'developer');
-    }
+          <Drawer
+            variant="permanent"
+            sx={{
+              width: drawerWidth,
+              flexShrink: 0,
+              [`& .MuiDrawer-paper`]: {
+                width: drawerWidth,
+                boxSizing: "border-box",
+                pt: 2.5,
+                px: 2,
+                gap: 1,
+                borderRight: (theme) => `1px solid ${alpha(theme.palette.divider, 0.5)}`,
+                background: (theme) => alpha(theme.palette.background.paper, 0.85),
+                backdropFilter: "blur(16px)",
+              },
+            }}
+          >
+            <Toolbar />
+            <List>
+              {[
+                { label: "Overview", value: "overview", icon: <DashboardIcon /> },
+                { label: "Client Portal", value: "client", icon: <PeopleAltIcon /> },
+                { label: "Developer Portal", value: "developer", icon: <CodeIcon /> },
+              ].map((item) => (
+                <ListItemButton
+                  key={item.value}
+                  selected={route === item.value}
+                  onClick={() => onRouteChange(item.value)}
+                  sx={{
+                    my: 0.3,
+                    borderRadius: 12,
+                    '&.Mui-selected': {
+                      background: (theme) => alpha(theme.palette.primary.main, 0.14),
+                      color: "primary.main",
+                    },
+                  }}
+                >
+                  <NavIcon icon={item.icon} />
+                  <ListItemText primary={item.label} />
+                </ListItemButton>
+              ))}
+            </List>
+            <Divider sx={{ my: 1.5 }} />
+            <Box px={1.5} pb={3}>
+              <MinimalCard
+                title="Guardrail posture"
+                caption="All controls engaged"
+                icon={<SecurityIcon fontSize="small" />}
+                action={<Button size="small" endIcon={<LaunchIcon />} sx={{ textTransform: "none" }}>View log</Button>}
+              />
+            </Box>
+          </Drawer>
 
-    renderProjects('client-projects', projectsData);
-    renderProjects('developer-projects', projectsData);
-    renderTasks('client-requests', clientTasks);
-    renderTasks('developer-queue', developerQueue);
-    renderClientActions(quickActions);
-    renderGuardrails();
-    renderProfile('client-profile', clientProfile, ['Owner', 'Trusted']);
-    renderProfile('developer-profile', developerProfile, ['Approver', 'Reviewer']);
-    renderTerminal('client-terminal', agentRuns);
-    renderTerminal('developer-terminal', agentRuns);
-    updateGuidance();
-    updateLiveCounts();
-    showPortal(null);
-  </script>
-</body>
+          <Box component="main" sx={{ flexGrow: 1, p: 3, ml: `${drawerWidth}px` }}>
+            <Toolbar />
+            {children}
+          </Box>
+        </Box>
+      );
+
+      const Overview = ({ onRouteChange }) => (
+        <Stack spacing={3}>
+          <PageHeader title="Home" secondary="Netlify runner status" />
+          <Grid container spacing={2.2}>
+            {stats.map((stat) => (
+              <Grid item xs={12} md={4} key={stat.label}>
+                <SparkleCard>
+                  <CardContent>
+                    <Stack direction="row" alignItems="center" spacing={1.2}>
+                      <Box
+                        sx={(theme) => ({
+                          width: 40,
+                          height: 40,
+                          borderRadius: 2,
+                          display: "grid",
+                          placeItems: "center",
+                          background: alpha(theme.palette.primary.main, 0.12),
+                          color: theme.palette.primary.main,
+                        })}
+                      >
+                        {stat.icon}
+                      </Box>
+                      <Stack>
+                        <Typography variant="body2" color="text.secondary">
+                          {stat.label}
+                        </Typography>
+                        <Typography variant="h5" fontWeight={800} letterSpacing={-0.5}>
+                          {stat.value}
+                        </Typography>
+                      </Stack>
+                      <Chip label={stat.hint} size="small" sx={{ ml: "auto" }} />
+                    </Stack>
+                  </CardContent>
+                </SparkleCard>
+              </Grid>
+            ))}
+          </Grid>
+          <Grid container spacing={2.2}>
+            <Grid item xs={12} md={6}>
+              <MinimalCard
+                title="Client portal"
+                caption="Fast approvals, guided by the agent"
+                icon={<PeopleAltIcon />}
+                action={
+                  <Button
+                    variant="contained"
+                    endIcon={<LaunchIcon />}
+                    onClick={() => onRouteChange("client")}
+                    sx={{ textTransform: "none", fontWeight: 700 }}
+                  >
+                    Open client
+                  </Button>
+                }
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <MinimalCard
+                title="Developer portal"
+                caption="Policy tuning and live queue"
+                icon={<CodeIcon />}
+                action={
+                  <Button
+                    variant="outlined"
+                    endIcon={<LaunchIcon />}
+                    onClick={() => onRouteChange("developer")}
+                    sx={{ textTransform: "none", fontWeight: 700 }}
+                  >
+                    Open developer
+                  </Button>
+                }
+              />
+            </Grid>
+          </Grid>
+        </Stack>
+      );
+
+      const ClientPortal = ({ onRun }) => (
+        <Stack spacing={3}>
+          <PageHeader title="Client" secondary="Ready to approve" />
+          <Grid container spacing={2.2}>
+            <Grid item xs={12} md={8}>
+              <SparkleCard>
+                <CardContent>
+                  <Stack direction="row" spacing={1.5} alignItems="center" mb={1}>
+                    <Typography variant="h6" fontWeight={800} letterSpacing={-0.5}>
+                      Run an action
+                    </Typography>
+                    <Pill label="Agent guided" size="small" />
+                  </Stack>
+                  <Typography variant="body2" color="text.secondary" mb={2}>
+                    Minimal prompt. The agent handles context and safety.
+                  </Typography>
+                  <Grid container spacing={1.4}>
+                    {actionOptions.map((action) => (
+                      <Grid item xs={12} sm={6} md={4} key={action.id}>
+                        <Paper
+                          variant="outlined"
+                          sx={(theme) => ({
+                            ...glass(theme),
+                            borderRadius: 12,
+                            p: 1.4,
+                          })}
+                        >
+                          <Stack spacing={0.4}>
+                            <Stack direction="row" spacing={1} alignItems="center">
+                              <PlayArrowIcon fontSize="small" color="primary" />
+                              <Typography fontWeight={700}>{action.title}</Typography>
+                            </Stack>
+                            <Typography variant="body2" color="text.secondary">
+                              {action.meta}
+                            </Typography>
+                            <Chip label={`~${action.eta}`} size="small" sx={{ width: "fit-content" }} />
+                            <Button
+                              variant="contained"
+                              fullWidth
+                              endIcon={<RocketLaunchIcon />}
+                              sx={{ textTransform: "none", mt: 0.6 }}
+                              onClick={() => onRun(action)}
+                            >
+                              Stage
+                            </Button>
+                          </Stack>
+                        </Paper>
+                      </Grid>
+                    ))}
+                  </Grid>
+                </CardContent>
+              </SparkleCard>
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <SparkleCard>
+                <CardContent>
+                  <Stack direction="row" spacing={1.5} alignItems="center" mb={1}>
+                    <ChatIcon color="primary" />
+                    <Typography fontWeight={700}>Agent brief</Typography>
+                  </Stack>
+                  <Typography variant="body2" color="text.secondary">
+                    The assistant keeps the experience quiet until you engage. Open a run to see the rationale and the safety checks it will apply.
+                  </Typography>
+                  <Divider sx={{ my: 2 }} />
+                  <Stack spacing={1}>
+                    <Stack direction="row" spacing={1} alignItems="center">
+                      <SecurityIcon color="success" fontSize="small" />
+                      <Typography variant="body2">Guardrails pre-flight</Typography>
+                    </Stack>
+                    <Stack direction="row" spacing={1} alignItems="center">
+                      <InsightsIcon color="primary" fontSize="small" />
+                      <Typography variant="body2">Dry runs narrate the plan</Typography>
+                    </Stack>
+                    <Stack direction="row" spacing={1} alignItems="center">
+                      <CheckCircleIcon color="primary" fontSize="small" />
+                      <Typography variant="body2">Artifacts pinned to the ledger</Typography>
+                    </Stack>
+                  </Stack>
+                </CardContent>
+              </SparkleCard>
+            </Grid>
+          </Grid>
+        </Stack>
+      );
+
+      const DeveloperPortal = () => (
+        <Stack spacing={3}>
+          <PageHeader title="Developer" secondary="Tuning + oversight" />
+          <Grid container spacing={2.2}>
+            <Grid item xs={12} md={7}>
+              <SparkleCard>
+                <CardContent>
+                  <Stack direction="row" justifyContent="space-between" alignItems="center" mb={1}>
+                    <Typography variant="h6" fontWeight={800} letterSpacing={-0.5}>
+                      Guardrails
+                    </Typography>
+                    <Pill label="Live" size="small" icon={<Pulse />} />
+                  </Stack>
+                  <Stack spacing={1.2}>
+                    {guardrails.map((rule) => (
+                      <Paper
+                        key={rule.id}
+                        variant="outlined"
+                        sx={(theme) => ({
+                          ...glass(theme),
+                          p: 1.2,
+                          borderRadius: 12,
+                        })}
+                      >
+                        <Stack direction="row" alignItems="center" spacing={1.5}>
+                          <SecurityIcon color="primary" />
+                          <Stack>
+                            <Typography fontWeight={700}>{rule.label}</Typography>
+                            <Typography variant="body2" color="text.secondary">
+                              {rule.detail}
+                            </Typography>
+                          </Stack>
+                          <Chip
+                            label={rule.status}
+                            color="success"
+                            size="small"
+                            sx={{ ml: "auto", textTransform: "capitalize" }}
+                          />
+                        </Stack>
+                      </Paper>
+                    ))}
+                  </Stack>
+                </CardContent>
+              </SparkleCard>
+            </Grid>
+            <Grid item xs={12} md={5}>
+              <SparkleCard>
+                <CardContent>
+                  <Stack direction="row" spacing={1.2} alignItems="center" mb={1.5}>
+                    <InsightsIcon color="primary" />
+                    <Typography fontWeight={700}>Live queue</Typography>
+                  </Stack>
+                  <Stack spacing={1}>
+                    {queue.map((item) => (
+                      <Paper
+                        key={item.id}
+                        variant="outlined"
+                        sx={(theme) => ({ ...glass(theme), p: 1.1, borderRadius: 11 })}
+                      >
+                        <Stack direction="row" spacing={1} alignItems="center">
+                          <Avatar sx={{ width: 34, height: 34, bgcolor: "primary.main" }}>
+                            {item.owner[0]}
+                          </Avatar>
+                          <Stack spacing={0}>
+                            <Typography fontWeight={700}>{item.title}</Typography>
+                            <Typography variant="body2" color="text.secondary">
+                              {item.owner} · {item.mode === "dry" ? "Dry run" : "Real run"}
+                            </Typography>
+                          </Stack>
+                          <SwapHorizIcon sx={{ ml: "auto", color: "text.secondary" }} />
+                        </Stack>
+                      </Paper>
+                    ))}
+                  </Stack>
+                </CardContent>
+              </SparkleCard>
+            </Grid>
+          </Grid>
+        </Stack>
+      );
+
+      const RunDrawer = ({ open, onClose, action }) => {
+        const [mode, setMode] = useState("dry");
+        const [tab, setTab] = useState("context");
+
+        const summaries = {
+          context: "Agent assembles deploy context, branch status, and safety rails before touching infra.",
+          plan: "Dry run narrates the deployment plan and asks for a final yes/no before applying.",
+          human: "Escalate to a reviewer when scope changes, secrets rotate, or production blast radius grows.",
+        };
+
+        return (
+          <Drawer
+            anchor="right"
+            open={open}
+            onClose={onClose}
+            PaperProps={{
+              sx: (theme) => ({
+                width: 420,
+                borderLeft: `1px solid ${alpha(theme.palette.divider, 0.5)}`,
+                background: alpha(theme.palette.background.paper, 0.9),
+                backdropFilter: "blur(18px)",
+              }),
+            }}
+          >
+            <Box sx={{ p: 3, pt: 4 }}>
+              <Stack direction="row" spacing={1.5} alignItems="center" mb={1}>
+                <Avatar sx={{ bgcolor: "primary.main" }}>
+                  <PlayArrowIcon />
+                </Avatar>
+                <Stack>
+                  <Typography fontWeight={800}>{action?.title || "Pick an action"}</Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {action?.meta || "Select a card to see the plan"}
+                  </Typography>
+                </Stack>
+              </Stack>
+              <ToggleButtonGroup
+                value={mode}
+                exclusive
+                onChange={(_, val) => val && setMode(val)}
+                fullWidth
+                size="small"
+                sx={{ my: 2 }}
+              >
+                <ToggleButton value="dry">Dry run</ToggleButton>
+                <ToggleButton value="real">Real run</ToggleButton>
+              </ToggleButtonGroup>
+              <Stack spacing={1} mb={2}>
+                <Stack direction="row" spacing={1} alignItems="center">
+                  <SecurityIcon color="success" fontSize="small" />
+                  <Typography variant="body2">Agent explanation</Typography>
+                </Stack>
+                <Typography variant="body2" color="text.secondary">
+                  {mode === "dry"
+                    ? "The agent narrates the steps, checks guardrails, and holds for your go-ahead."
+                    : "Applying with existing guardrails. Artifacts will be attached to the ledger."}
+                </Typography>
+              </Stack>
+              <Tabs value={tab} onChange={(_, value) => setTab(value)} sx={{ mb: 2 }}>
+                <Tab value="context" label="Context" />
+                <Tab value="plan" label="Plan" />
+                <Tab value="human" label="Human" />
+              </Tabs>
+              <Typography variant="body2" color="text.secondary" mb={2}>
+                {summaries[tab]}
+              </Typography>
+              <Paper
+                variant="outlined"
+                sx={(theme) => ({ ...glass(theme), p: 1.5, borderRadius: 12, mb: 2 })}
+              >
+                <Stack spacing={0.8}>
+                  <Stack direction="row" spacing={1} alignItems="center">
+                    <CheckCircleIcon color="primary" fontSize="small" />
+                    <Typography variant="body2">Ready for {mode === "dry" ? "simulation" : "apply"}</Typography>
+                  </Stack>
+                  <LinearProgress variant="determinate" value={mode === "dry" ? 60 : 40} />
+                  <Typography variant="caption" color="text.secondary">
+                    Guardrails are locked in before the agent proceeds.
+                  </Typography>
+                </Stack>
+              </Paper>
+              <Stack direction="row" spacing={1}>
+                <Button
+                  fullWidth
+                  variant="contained"
+                  sx={{ textTransform: "none", fontWeight: 700 }}
+                  endIcon={<DoneAllIcon />}
+                >
+                  {mode === "dry" ? "Confirm dry run" : "Authorize run"}
+                </Button>
+                <Button
+                  fullWidth
+                  variant="outlined"
+                  sx={{ textTransform: "none" }}
+                  endIcon={<PersonOutlineIcon />}
+                >
+                  Route to human
+                </Button>
+              </Stack>
+            </Box>
+          </Drawer>
+        );
+      };
+
+      const App = () => {
+        const [route, setRoute] = useState("overview");
+        const [drawer, setDrawer] = useState({ open: false, action: null });
+
+        const handleRun = (action) => setDrawer({ open: true, action });
+
+        return (
+          <ThemeProvider theme={theme}>
+            <Shell route={route} onRouteChange={setRoute}>
+              {route === "overview" && <Overview onRouteChange={setRoute} />}
+              {route === "client" && <ClientPortal onRun={handleRun} />}
+              {route === "developer" && <DeveloperPortal />}
+            </Shell>
+            <RunDrawer
+              open={drawer.open}
+              action={drawer.action}
+              onClose={() => setDrawer((d) => ({ ...d, open: false }))}
+            />
+          </ThemeProvider>
+        );
+      };
+
+      const root = createRoot(document.getElementById("root"));
+      root.render(<App />);
+    </script>
+  </body>
 </html>
