@@ -1,8 +1,11 @@
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded'
 import AutoGraphRoundedIcon from '@mui/icons-material/AutoGraphRounded'
+import CameraEnhanceRoundedIcon from '@mui/icons-material/CameraEnhanceRounded'
 import BlurOnRoundedIcon from '@mui/icons-material/BlurOnRounded'
 import GridViewRoundedIcon from '@mui/icons-material/GridViewRounded'
 import LanguageRoundedIcon from '@mui/icons-material/LanguageRounded'
+import NoteAltRoundedIcon from '@mui/icons-material/NoteAltRounded'
+import PersonSearchRoundedIcon from '@mui/icons-material/PersonSearchRounded'
 import PersonRoundedIcon from '@mui/icons-material/PersonRounded'
 import SecurityRoundedIcon from '@mui/icons-material/SecurityRounded'
 import SettingsEthernetRoundedIcon from '@mui/icons-material/SettingsEthernetRounded'
@@ -14,6 +17,7 @@ import {
   Box,
   Button,
   Card,
+  CardActionArea,
   CardContent,
   Chip,
   Container,
@@ -23,6 +27,7 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material'
+import Grid from '@mui/material/Grid'
 import { useMemo, useState } from 'react'
 import PortalSwitcher from '../components/PortalSwitcher'
 import ClientLayout from '../components/ClientLayout'
@@ -38,13 +43,16 @@ import {
   projectTemplates,
 } from '../data/mockClientData'
 import { developerProjects, guardrails, requestQueue } from '../data/mockDeveloperData'
-import AgentLookup from '../components/AgentLookup'
 import ClientProfilePage from '../components/ClientProfilePage'
 import ClientTemplateLibrary from '../components/ClientTemplateLibrary'
+import DeveloperLookupPage from '../components/DeveloperLookupPage'
 import GuidedActions from '../components/GuidedActions'
 import ActivityFeed from '../components/ActivityFeed'
 import ActionDrawer from '../components/drawers/ActionDrawer'
 import ClientWebsites from '../components/ClientWebsites'
+import DomainPortfolio from '../components/DomainPortfolio'
+import MediaPortfolio from '../components/MediaPortfolio'
+import NotesWorkbench from '../components/NotesWorkbench'
 
 function AppShell() {
   const { portalMode, setPortalMode } = usePortal()
@@ -98,6 +106,37 @@ function AppShell() {
   }
 
   const renderClientContent = () => {
+    const clientApps = [
+      {
+        id: 'lookup',
+        title: 'Developer / AI desk',
+        description: 'Fast routing to human or AI help with availability signals.',
+        icon: <PersonSearchRoundedIcon />,
+        accent: 'linear-gradient(135deg, rgba(49,196,141,0.18), rgba(49,196,141,0.04))',
+      },
+      {
+        id: 'domains',
+        title: 'Domain portfolio',
+        description: 'DNS, SSL, and routing protections across every environment.',
+        icon: <LanguageRoundedIcon />,
+        accent: 'linear-gradient(135deg, rgba(33,150,243,0.16), rgba(33,150,243,0.05))',
+      },
+      {
+        id: 'media',
+        title: 'Media portfolio',
+        description: 'Auto-collected hero shots and previews from live URLs.',
+        icon: <CameraEnhanceRoundedIcon />,
+        accent: 'linear-gradient(135deg, rgba(156,39,176,0.16), rgba(156,39,176,0.05))',
+      },
+      {
+        id: 'notes',
+        title: 'Notes & guidance',
+        description: 'Give the agent context, tone, and guardrails to respect.',
+        icon: <NoteAltRoundedIcon />,
+        accent: 'linear-gradient(135deg, rgba(5,10,18,0.12), rgba(49,196,141,0.05))',
+      },
+    ]
+
     if (clientView === 'websites') {
       return <ClientWebsites websites={clientWebsites} onBack={() => setClientView('home')} />
     }
@@ -117,6 +156,22 @@ function AppShell() {
           onBack={() => setClientView('home')}
         />
       )
+    }
+
+    if (clientView === 'lookup') {
+      return <DeveloperLookupPage agents={agentDirectory} onBack={() => setClientView('home')} />
+    }
+
+    if (clientView === 'domains') {
+      return <DomainPortfolio websites={clientWebsites} onBack={() => setClientView('home')} />
+    }
+
+    if (clientView === 'media') {
+      return <MediaPortfolio websites={clientWebsites} onBack={() => setClientView('home')} />
+    }
+
+    if (clientView === 'notes') {
+      return <NotesWorkbench onBack={() => setClientView('home')} />
     }
 
     return (
@@ -249,10 +304,66 @@ function AppShell() {
                 </Stack>
               </CardContent>
             </Card>
+          </Stack>
 
-            <Box sx={{ flex: 1 }}>
-              <AgentLookup agents={agentDirectory} />
-            </Box>
+          <Stack spacing={1.25}>
+            <Stack direction="row" alignItems="center" justifyContent="space-between">
+              <Stack spacing={0.25}>
+                <Typography variant="subtitle1" fontWeight={900}>
+                  Workspace apps
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Tap a card to open a dedicated space, just like launching an app on your phone.
+                </Typography>
+              </Stack>
+              <Chip label="New" color="success" variant="outlined" />
+            </Stack>
+            <Grid container spacing={1.5} columns={{ xs: 1, md: 12 }}>
+              {clientApps.map((app) => (
+                <Grid key={app.id} size={{ xs: 12, md: 3 }}>
+                  <Card
+                    variant="outlined"
+                    sx={{
+                      borderRadius: 3,
+                      height: '100%',
+                      boxShadow: '0 12px 28px rgba(5,10,18,0.08)',
+                      background: app.accent,
+                      backdropFilter: 'blur(8px)',
+                      transition: 'transform 180ms ease, box-shadow 180ms ease',
+                      '&:hover': { transform: 'translateY(-3px)', boxShadow: '0 16px 40px rgba(5,10,18,0.16)' },
+                    }}
+                  >
+                    <CardActionArea onClick={() => setClientView(app.id)} sx={{ p: 2, height: '100%' }}>
+                      <Stack spacing={1.25} alignItems="flex-start">
+                        <Avatar
+                          sx={{
+                            bgcolor: 'common.white',
+                            color: 'success.dark',
+                            border: 1,
+                            borderColor: 'divider',
+                            boxShadow: 1,
+                          }}
+                        >
+                          {app.icon}
+                        </Avatar>
+                        <Stack spacing={0.25}>
+                          <Typography variant="subtitle1" fontWeight={800} sx={{ letterSpacing: 0 }}>
+                            {app.title}
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            {app.description}
+                          </Typography>
+                        </Stack>
+                        <Stack direction="row" spacing={1}>
+                          <Chip label="Opens workspace" size="small" variant="outlined" />
+                          <Chip label="Touch-friendly" size="small" color="success" variant="outlined" />
+                        </Stack>
+                      </Stack>
+                    </CardActionArea>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
           </Stack>
 
           <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
@@ -481,29 +592,65 @@ function AppShell() {
     >
       <AppBar
         position="sticky"
-        color="transparent"
         elevation={0}
-        sx={{ borderBottom: 1, borderColor: 'divider', backdropFilter: 'blur(10px)', backgroundColor: 'rgba(255,255,255,0.85)' }}
+        sx={{
+          borderBottom: '1px solid rgba(255,255,255,0.08)',
+          backdropFilter: 'blur(12px)',
+          background: 'radial-gradient(circle at 20% 20%, rgba(49,196,141,0.28), transparent 28%), rgba(5,10,18,0.94)',
+          boxShadow: '0 18px 60px rgba(0,0,0,0.45)',
+          color: 'common.white',
+        }}
       >
         <Container maxWidth="lg">
           <Stack direction="row" alignItems="center" spacing={2} py={1.5}>
-            <Stack direction="row" spacing={1} alignItems="center" sx={{ flex: 1 }}>
-              <IconButton size="small" sx={{ bgcolor: 'background.paper', border: 1, borderColor: 'divider' }}>
+            <Stack direction="row" spacing={1.5} alignItems="center" sx={{ flex: 1 }}>
+              <IconButton
+                size="small"
+                sx={{
+                  bgcolor: 'rgba(255,255,255,0.06)',
+                  border: '1px solid rgba(255,255,255,0.12)',
+                  color: 'inherit',
+                  boxShadow: '0 8px 24px rgba(0,0,0,0.35)',
+                }}
+              >
                 <SecurityRoundedIcon color={portalMode === 'developer' ? 'secondary' : 'success'} fontSize="small" />
               </IconButton>
-              <Stack spacing={0}>
-                <Typography variant="caption" color="text.secondary">
+              <Stack spacing={0.25}>
+                <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.7)' }}>
                   Agent portals
                 </Typography>
-                <Typography variant="subtitle1" fontWeight={800}>
+                <Typography variant="subtitle1" fontWeight={800} sx={{ letterSpacing: 0 }}>
                   {portalMode === 'developer' ? 'Developer' : 'Client'} mode
                 </Typography>
               </Stack>
             </Stack>
-            <PortalSwitcher value={portalMode} onChange={handleSwitch} />
-            <Tooltip title="Profile">
-              <Avatar src="https://avatars.githubusercontent.com/u/7892489?v=4" alt="Netlify" sx={{ border: 1, borderColor: 'divider' }} />
-            </Tooltip>
+            <Stack direction="row" spacing={1} alignItems="center">
+              <Chip
+                label="Realtime safe"
+                size="small"
+                sx={{
+                  color: 'common.white',
+                  borderColor: 'rgba(255,255,255,0.18)',
+                  backgroundColor: 'rgba(255,255,255,0.06)',
+                }}
+                variant="outlined"
+              />
+              <Chip
+                label={portalMode === 'developer' ? 'Build posture' : 'Client workspace'}
+                size="small"
+                color={portalMode === 'developer' ? 'secondary' : 'success'}
+                variant="outlined"
+                sx={{ borderRadius: 2 }}
+              />
+              <PortalSwitcher value={portalMode} onChange={handleSwitch} />
+              <Tooltip title="Profile">
+                <Avatar
+                  src="https://avatars.githubusercontent.com/u/7892489?v=4"
+                  alt="Netlify"
+                  sx={{ border: '1px solid rgba(255,255,255,0.14)', boxShadow: '0 8px 24px rgba(0,0,0,0.35)' }}
+                />
+              </Tooltip>
+            </Stack>
           </Stack>
         </Container>
       </AppBar>
