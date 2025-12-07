@@ -75,6 +75,32 @@ function ClientTemplateLibrary({ templates, onBack }) {
           </CardContent>
         </Card>
 
+        <Card elevation={0} variant="outlined" sx={{ borderRadius: 3 }}>
+          <CardContent>
+            <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} alignItems={{ xs: 'flex-start', md: 'center' }} justifyContent="space-between">
+              <Stack spacing={1}>
+                <Stack direction="row" spacing={1} alignItems="center">
+                  <GridViewRoundedIcon color="success" />
+                  <Typography variant="subtitle1" fontWeight={800}>
+                    Client-ready options
+                  </Typography>
+                </Stack>
+                <Stack direction="row" spacing={1} flexWrap="wrap">
+                  <Chip label="Accessibility-first" size="small" color="success" variant="outlined" />
+                  <Chip label="Reservations CTA" size="small" variant="outlined" />
+                  <Chip label="No live deploys" size="small" />
+                </Stack>
+                <Typography variant="body2" color="text.secondary">
+                  Toggle these options and the agent will wire them into your selected starter before creating a preview.
+                </Typography>
+              </Stack>
+              <Button variant="contained" color="success" startIcon={<AutoAwesomeRoundedIcon />} sx={{ borderRadius: 2 }}>
+                Ask the template bot
+              </Button>
+            </Stack>
+          </CardContent>
+        </Card>
+
         <Box>
           <TemplateGallery templates={templates} />
         </Box>
