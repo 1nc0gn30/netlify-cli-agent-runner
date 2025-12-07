@@ -1,10 +1,12 @@
+import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded'
 import AutoGraphRoundedIcon from '@mui/icons-material/AutoGraphRounded'
 import BlurOnRoundedIcon from '@mui/icons-material/BlurOnRounded'
+import LanguageRoundedIcon from '@mui/icons-material/LanguageRounded'
 import SecurityRoundedIcon from '@mui/icons-material/SecurityRounded'
 import SettingsEthernetRoundedIcon from '@mui/icons-material/SettingsEthernetRounded'
 import ToggleOffRoundedIcon from '@mui/icons-material/ToggleOffRounded'
 import TuneRoundedIcon from '@mui/icons-material/TuneRounded'
-import { AppBar, Avatar, Box, Card, CardContent, Chip, Container, IconButton, Stack, Switch, Tooltip, Typography } from '@mui/material'
+import { AppBar, Avatar, Box, Button, Card, CardContent, Chip, Container, IconButton, Stack, Switch, Tooltip, Typography } from '@mui/material'
 import { useMemo, useState } from 'react'
 import PortalSwitcher from '../components/PortalSwitcher'
 import ClientLayout from '../components/ClientLayout'
@@ -15,16 +17,18 @@ import {
   clientActivity,
   clientProfile as profileDefaults,
   clientProjects,
+  clientWebsites,
   guidedActions,
   projectTemplates,
 } from '../data/mockClientData'
 import { developerProjects, guardrails, requestQueue } from '../data/mockDeveloperData'
-import ClientProfileCard from '../components/ClientProfileCard'
 import AgentLookup from '../components/AgentLookup'
+import ClientProfileCard from '../components/ClientProfileCard'
 import TemplateGallery from '../components/TemplateGallery'
 import GuidedActions from '../components/GuidedActions'
 import ActivityFeed from '../components/ActivityFeed'
 import ActionDrawer from '../components/drawers/ActionDrawer'
+import ClientWebsites from '../components/ClientWebsites'
 
 function AppShell() {
   const { portalMode, setPortalMode } = usePortal()
@@ -33,6 +37,7 @@ function AppShell() {
   const [activity, setActivity] = useState(clientActivity)
   const [selectedAction, setSelectedAction] = useState(null)
   const [actionDrawerOpen, setActionDrawerOpen] = useState(false)
+  const [clientView, setClientView] = useState('home')
 
   const accent = useMemo(
     () =>
@@ -76,124 +81,159 @@ function AppShell() {
     handleActionLog(`Routed — ${selectedAction?.title}`)
   }
 
-  const clientContent = (
-    <ClientLayout subtitle="Guided actions with reversible changes">
-      <Stack spacing={2.5} sx={{ animation: 'fadeIn 300ms ease' }}>
-        <Card elevation={0} sx={{ borderRadius: 3 }}>
-          <CardContent>
-            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems="center" justifyContent="space-between">
-              <Stack spacing={0.5}>
-                <Typography variant="subtitle1" fontWeight={800}>
-                  Calm overview
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Agents keep previews safe while you approve.
-                </Typography>
-              </Stack>
-              <Stack direction="row" spacing={1}>
-                <Chip label="Preview ready" color="success" variant="outlined" />
-                <Chip label="Rollback on" color="primary" variant="outlined" />
-              </Stack>
-            </Stack>
-          </CardContent>
-        </Card>
+  const renderClientContent = () => {
+    if (clientView === 'websites') {
+      return <ClientWebsites websites={clientWebsites} onBack={() => setClientView('home')} />
+    }
 
-        <ClientProfileCard profile={profile} onUpdate={setProfile} />
-
-        <Stack direction={{ xs: 'column', lg: 'row' }} spacing={2}>
-          <Box sx={{ flex: 1 }}>
-            <AgentLookup agents={agentDirectory} />
-          </Box>
-          <Box sx={{ flex: 1 }}>
-            <TemplateGallery templates={projectTemplates} />
-          </Box>
-        </Stack>
-
-        <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
-          <Card elevation={0} sx={{ flex: 1, borderRadius: 3 }}>
+    return (
+      <ClientLayout subtitle="Guided actions with reversible changes">
+        <Stack spacing={2.5} sx={{ animation: 'fadeIn 300ms ease' }}>
+          <Card elevation={0} sx={{ borderRadius: 3 }}>
             <CardContent>
-              <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1 }}>
-                <BlurOnRoundedIcon color="success" />
-                <Typography variant="subtitle1" fontWeight={800}>
-                  Quick handoffs
-                </Typography>
-              </Stack>
-              <Stack spacing={1.25}>
-                {guidedActions.slice(0, 3).map((action) => (
-                  <Card
-                    key={action.id}
-                    variant="outlined"
-                    sx={{
-                      borderRadius: 2,
-                      p: 1.5,
-                      background: 'linear-gradient(120deg, rgba(129,199,132,0.08), rgba(255,255,255,0.9))',
-                      cursor: 'pointer',
-                    }}
-                    onClick={() => handleQuickAction(action)}
-                  >
-                    <Typography variant="subtitle1" fontWeight={700}>
-                      {action.title}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {action.summary}
-                    </Typography>
-                    <Stack direction="row" spacing={1} mt={1}>
-                      <Chip label="Dry run" size="small" color="success" variant="outlined" />
-                      <Chip label="Safe by default" size="small" variant="outlined" />
-                    </Stack>
-                  </Card>
-                ))}
+              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems="center" justifyContent="space-between">
+                <Stack spacing={0.5}>
+                  <Typography variant="subtitle1" fontWeight={800}>
+                    Calm overview
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Agents keep previews safe while you approve.
+                  </Typography>
+                </Stack>
+                <Stack direction="row" spacing={1}>
+                  <Chip label="Preview ready" color="success" variant="outlined" />
+                  <Chip label="Rollback on" color="primary" variant="outlined" />
+                </Stack>
               </Stack>
             </CardContent>
           </Card>
 
-          <Card elevation={0} sx={{ flex: 1, borderRadius: 3 }}>
+          <Card elevation={0} sx={{ borderRadius: 3 }}>
             <CardContent>
-              <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1 }}>
-                <SecurityRoundedIcon color="success" />
-                <Typography variant="subtitle1" fontWeight={800}>
-                  Guarded projects
-                </Typography>
-              </Stack>
-              <Stack spacing={1.25}>
-                {clientProjects.slice(0, 3).map((project) => (
-                  <Stack key={project.name} spacing={0.5} sx={{ border: 1, borderColor: 'divider', borderRadius: 2, p: 1.25 }}>
-                    <Stack direction="row" alignItems="center" spacing={1}>
-                      <Avatar sx={{ width: 32, height: 32, bgcolor: 'success.light', color: 'success.dark', fontWeight: 700 }}>
-                        {project.name.charAt(0)}
-                      </Avatar>
-                      <Typography variant="subtitle2" fontWeight={700}>
-                        {project.name}
-                      </Typography>
-                    </Stack>
-                    <Typography variant="body2" color="text.secondary">
-                      {project.guardrails}
+              <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} alignItems={{ xs: 'flex-start', md: 'center' }} justifyContent="space-between">
+                <Stack direction="row" spacing={1.25} alignItems="center">
+                  <LanguageRoundedIcon color="success" />
+                  <Stack spacing={0.5}>
+                    <Typography variant="subtitle1" fontWeight={800}>
+                      Websites
                     </Typography>
-                    <Stack direction="row" spacing={1}>
-                      <Chip label={project.status} size="small" color="success" variant="outlined" />
-                      <Chip label={`Last deployed ${project.lastDeployed}`} size="small" variant="outlined" />
-                    </Stack>
+                    <Typography variant="body2" color="text.secondary">
+                      Open live sites, previews, and spin up a new experience in one place.
+                    </Typography>
                   </Stack>
-                ))}
+                </Stack>
+                <Stack direction="row" spacing={1} alignItems="center">
+                  <Chip label="Live + preview" size="small" variant="outlined" color="success" />
+                  <Button
+                    variant="contained"
+                    endIcon={<ArrowForwardRoundedIcon />}
+                    onClick={() => setClientView('websites')}
+                    sx={{ borderRadius: 2 }}
+                  >
+                    Open websites
+                  </Button>
+                </Stack>
               </Stack>
             </CardContent>
           </Card>
+
+          <ClientProfileCard profile={profile} onUpdate={setProfile} />
+
+          <Stack direction={{ xs: 'column', lg: 'row' }} spacing={2}>
+            <Box sx={{ flex: 1 }}>
+              <AgentLookup agents={agentDirectory} />
+            </Box>
+            <Box sx={{ flex: 1 }}>
+              <TemplateGallery templates={projectTemplates} />
+            </Box>
+          </Stack>
+
+          <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
+            <Card elevation={0} sx={{ flex: 1, borderRadius: 3 }}>
+              <CardContent>
+                <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1 }}>
+                  <BlurOnRoundedIcon color="success" />
+                  <Typography variant="subtitle1" fontWeight={800}>
+                    Quick handoffs
+                  </Typography>
+                </Stack>
+                <Stack spacing={1.25}>
+                  {guidedActions.slice(0, 3).map((action) => (
+                    <Card
+                      key={action.id}
+                      variant="outlined"
+                      sx={{
+                        borderRadius: 2,
+                        p: 1.5,
+                        background: 'linear-gradient(120deg, rgba(129,199,132,0.08), rgba(255,255,255,0.9))',
+                        cursor: 'pointer',
+                      }}
+                      onClick={() => handleQuickAction(action)}
+                    >
+                      <Typography variant="subtitle1" fontWeight={700}>
+                        {action.title}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {action.summary}
+                      </Typography>
+                      <Stack direction="row" spacing={1} mt={1}>
+                        <Chip label="Dry run" size="small" color="success" variant="outlined" />
+                        <Chip label="Safe by default" size="small" variant="outlined" />
+                      </Stack>
+                    </Card>
+                  ))}
+                </Stack>
+              </CardContent>
+            </Card>
+
+            <Card elevation={0} sx={{ flex: 1, borderRadius: 3 }}>
+              <CardContent>
+                <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1 }}>
+                  <SecurityRoundedIcon color="success" />
+                  <Typography variant="subtitle1" fontWeight={800}>
+                    Guarded projects
+                  </Typography>
+                </Stack>
+                <Stack spacing={1.25}>
+                  {clientProjects.slice(0, 3).map((project) => (
+                    <Stack key={project.name} spacing={0.5} sx={{ border: 1, borderColor: 'divider', borderRadius: 2, p: 1.25 }}>
+                      <Stack direction="row" alignItems="center" spacing={1}>
+                        <Avatar sx={{ width: 32, height: 32, bgcolor: 'success.light', color: 'success.dark', fontWeight: 700 }}>
+                          {project.name.charAt(0)}
+                        </Avatar>
+                        <Typography variant="subtitle2" fontWeight={700}>
+                          {project.name}
+                        </Typography>
+                      </Stack>
+                      <Typography variant="body2" color="text.secondary">
+                        {project.guardrails}
+                      </Typography>
+                      <Stack direction="row" spacing={1}>
+                        <Chip label={project.status} size="small" color="success" variant="outlined" />
+                        <Chip label={`Last deployed ${project.lastDeployed}`} size="small" variant="outlined" />
+                      </Stack>
+                    </Stack>
+                  ))}
+                </Stack>
+              </CardContent>
+            </Card>
+          </Stack>
+
+          <GuidedActions actions={guidedActions} onLog={handleActionLog} />
+
+          <ActivityFeed activity={activity} />
+
+          <ActionDrawer
+            open={actionDrawerOpen}
+            action={selectedAction}
+            onClose={() => setActionDrawerOpen(false)}
+            onConfirm={handleQuickConfirm}
+            onRoute={handleQuickRoute}
+          />
         </Stack>
-
-        <GuidedActions actions={guidedActions} onLog={handleActionLog} />
-
-        <ActivityFeed activity={activity} />
-
-        <ActionDrawer
-          open={actionDrawerOpen}
-          action={selectedAction}
-          onClose={() => setActionDrawerOpen(false)}
-          onConfirm={handleQuickConfirm}
-          onRoute={handleQuickRoute}
-        />
-      </Stack>
-    </ClientLayout>
-  )
+      </ClientLayout>
+    )
+  }
 
   const developerContent = (
     <DeveloperLayout subtitle="Controls, guardrails, and live queues">
@@ -362,7 +402,7 @@ function AppShell() {
       </AppBar>
 
       <Container maxWidth="lg" sx={{ py: { xs: 3, md: 4 } }}>
-        {portalMode === 'client' && clientContent}
+        {portalMode === 'client' && renderClientContent()}
         {portalMode === 'developer' && developerContent}
       </Container>
 
