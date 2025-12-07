@@ -6,6 +6,7 @@ import Grid from '@mui/material/Grid'
 import { useMemo, useState } from 'react'
 import ActionCard from '../components/cards/ActionCard'
 import ActionDrawer from '../components/drawers/ActionDrawer'
+import ClientLayout from '../components/ClientLayout'
 import { clientActions, clientActivity, clientProjects } from '../data/mockClientData'
 
 const metricCards = [
@@ -76,10 +77,11 @@ function ClientDashboard() {
   }
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-      <Grid container spacing={2} columns={{ xs: 1, md: 12 }}>
-        {[0, 1, 2].map((index) => {
-          const metric = metricCards[index]
+    <ClientLayout subtitle="Guided paths for stakeholders. Agents keep changes reversible.">
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+        <Grid container spacing={2} columns={{ xs: 1, md: 12 }}>
+          {[0, 1, 2].map((index) => {
+            const metric = metricCards[index]
           return (
             <Grid key={metric.title} size={{ xs: 12, md: 4 }}>
               <Card elevation={0}>
@@ -208,7 +210,8 @@ function ClientDashboard() {
         onConfirm={handleConfirm}
         onRoute={handleRouteToHuman}
       />
-    </Box>
+      </Box>
+    </ClientLayout>
   )
 }
 
