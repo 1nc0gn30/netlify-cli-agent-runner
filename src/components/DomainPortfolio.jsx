@@ -3,6 +3,7 @@ import LinkRoundedIcon from '@mui/icons-material/LinkRounded'
 import LockRoundedIcon from '@mui/icons-material/LockRounded'
 import PublicRoundedIcon from '@mui/icons-material/PublicRounded'
 import ShieldRoundedIcon from '@mui/icons-material/ShieldRounded'
+import ShoppingCartRoundedIcon from '@mui/icons-material/ShoppingCartRounded'
 import VerifiedRoundedIcon from '@mui/icons-material/VerifiedRounded'
 import WifiRoundedIcon from '@mui/icons-material/WifiRounded'
 import {
@@ -15,12 +16,13 @@ import {
   Divider,
   Grid,
   LinearProgress,
+  Paper,
   Stack,
   Typography,
 } from '@mui/material'
 import ClientLayout from './ClientLayout'
 
-function DomainPortfolio({ websites = [], onBack }) {
+function DomainPortfolio({ websites = [], suggestions = [], onBack }) {
   const signals = [
     {
       title: 'DNS protection',
@@ -58,7 +60,7 @@ function DomainPortfolio({ websites = [], onBack }) {
           </Stack>
         </Stack>
 
-        <Card elevation={0} sx={{ borderRadius: 3, background: 'linear-gradient(135deg, rgba(49,196,141,0.14), rgba(49,196,141,0.04))' }}>
+          <Card elevation={0} sx={{ borderRadius: 3, background: 'linear-gradient(135deg, rgba(49,196,141,0.14), rgba(49,196,141,0.04))' }}>
           <CardContent>
             <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} alignItems={{ xs: 'flex-start', md: 'center' }} justifyContent="space-between">
               <Stack direction="row" spacing={1.25} alignItems="center">
@@ -86,6 +88,67 @@ function DomainPortfolio({ websites = [], onBack }) {
             </Stack>
           </CardContent>
         </Card>
+
+        <Paper
+          elevation={0}
+          sx={{
+            borderRadius: 3,
+            p: 2,
+            border: '1px solid',
+            borderColor: 'divider',
+            background: 'linear-gradient(135deg, rgba(33,150,243,0.08), rgba(5,10,18,0.02))',
+          }}
+        >
+          <Stack spacing={1.5}>
+            <Stack direction={{ xs: 'column', md: 'row' }} spacing={1} alignItems={{ xs: 'flex-start', md: 'center' }}>
+              <Stack direction="row" spacing={1} alignItems="center" sx={{ flex: 1 }}>
+                <ShoppingCartRoundedIcon color="primary" />
+                <Box>
+                  <Typography variant="subtitle1" fontWeight={800}>
+                    Buy a brand-fit domain
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    The agent checks availability, sets DNS safely, and keeps SSL healthy automatically.
+                  </Typography>
+                </Box>
+              </Stack>
+              <Button variant="contained" color="primary" startIcon={<ShoppingCartRoundedIcon />} sx={{ borderRadius: 2 }}>
+                Checkout selected
+              </Button>
+            </Stack>
+
+            <Grid container spacing={1.5} columns={{ xs: 1, sm: 12 }}>
+              {suggestions.map((option) => (
+                <Grid key={option.domain} size={{ xs: 12, sm: 6, md: 3 }}>
+                  <Card variant="outlined" sx={{ borderRadius: 2, height: '100%' }}>
+                    <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                      <Stack direction="row" alignItems="center" spacing={1}>
+                        <Avatar sx={{ bgcolor: 'primary.main', color: 'primary.contrastText' }}>
+                          {option.domain.slice(0, 2).toUpperCase()}
+                        </Avatar>
+                        <Box sx={{ flex: 1 }}>
+                          <Typography variant="subtitle2" fontWeight={800}>
+                            {option.domain}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {option.match}
+                          </Typography>
+                        </Box>
+                        <Chip label={option.status} size="small" color={option.status === 'Available' ? 'success' : 'default'} variant="outlined" />
+                      </Stack>
+                      <Stack direction="row" spacing={1} alignItems="center" justifyContent="space-between">
+                        <Chip label={option.price} size="small" variant="outlined" />
+                        <Button size="small" variant="contained" color="success" disabled={option.status !== 'Available'}>
+                          Hold & buy
+                        </Button>
+                      </Stack>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+          </Stack>
+        </Paper>
 
         <Grid container spacing={1.5} columns={{ xs: 1, md: 12 }}>
           {websites.map((site) => (

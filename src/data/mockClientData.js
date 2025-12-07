@@ -224,3 +224,57 @@ export const clientActivity = [
     detail: 'Report pinned in Activity with no prod impact',
   },
 ]
+
+export const domainSuggestions = [
+  {
+    domain: 'willowpine.ai',
+    status: 'Available',
+    price: '$14/yr',
+    match: 'Brand name + AI concierge',
+  },
+  {
+    domain: 'pineandwillow.com',
+    status: 'Available',
+    price: '$12/yr',
+    match: 'Shortened pair for merch and menus',
+  },
+  {
+    domain: 'willowpinecafe.app',
+    status: 'Available',
+    price: '$20/yr',
+    match: 'Great for mobile ordering and loyalty',
+  },
+  {
+    domain: 'willowpinecafe.net',
+    status: 'Taken',
+    price: '—',
+    match: 'Owner verified, connected to preview',
+  },
+]
+
+export const gigBoardListings = [
+  {
+    id: 'gig-1',
+    title: 'Seasonal menu landing page',
+    budget: '$600',
+    urgency: 'This week',
+    summary: 'Design-forward landing with hero video slot and weekly specials feed.',
+    tags: ['Design polish', 'Copy refresh', 'Preview only'],
+  },
+  {
+    id: 'gig-2',
+    title: 'Setup SMS reservation reminders',
+    budget: '$450',
+    urgency: 'Within 3 days',
+    summary: 'Connect booking form to SMS reminders with friendly tone templates.',
+    tags: ['Integrations', 'Forms', 'Guardrails'],
+  },
+  {
+    id: 'gig-3',
+    title: 'Accessibility and performance sweep',
+    budget: '$520',
+    urgency: 'Next week',
+    summary: 'Audit lighthouse + ARIA labels, handoff findings with safe fixes.',
+    tags: ['QA', 'Accessibility', 'Performance'],
+  },
+]

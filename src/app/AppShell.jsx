@@ -10,6 +10,7 @@ import PersonRoundedIcon from '@mui/icons-material/PersonRounded'
 import SecurityRoundedIcon from '@mui/icons-material/SecurityRounded'
 import SettingsEthernetRoundedIcon from '@mui/icons-material/SettingsEthernetRounded'
 import ToggleOffRoundedIcon from '@mui/icons-material/ToggleOffRounded'
+import WorkHistoryRoundedIcon from '@mui/icons-material/WorkHistoryRounded'
 import TuneRoundedIcon from '@mui/icons-material/TuneRounded'
 import {
   AppBar,
@@ -39,7 +40,9 @@ import {
   clientProfile as profileDefaults,
   clientProjects,
   clientWebsites,
+  domainSuggestions,
   guidedActions,
+  gigBoardListings,
   projectTemplates,
 } from '../data/mockClientData'
 import { developerProjects, guardrails, requestQueue } from '../data/mockDeveloperData'
@@ -53,6 +56,7 @@ import ClientWebsites from '../components/ClientWebsites'
 import DomainPortfolio from '../components/DomainPortfolio'
 import MediaPortfolio from '../components/MediaPortfolio'
 import NotesWorkbench from '../components/NotesWorkbench'
+import ClientGigsBoard from '../components/ClientGigsBoard'
 
 function AppShell() {
   const { portalMode, setPortalMode } = usePortal()
@@ -115,6 +119,13 @@ function AppShell() {
         accent: 'linear-gradient(135deg, rgba(49,196,141,0.18), rgba(49,196,141,0.04))',
       },
       {
+        id: 'gigs',
+        title: 'Post website work',
+        description: 'Share scoped Netlify projects for trusted developers.',
+        icon: <WorkHistoryRoundedIcon />,
+        accent: 'linear-gradient(135deg, rgba(103,58,183,0.12), rgba(49,196,141,0.04))',
+      },
+      {
         id: 'domains',
         title: 'Domain portfolio',
         description: 'DNS, SSL, and routing protections across every environment.',
@@ -163,7 +174,13 @@ function AppShell() {
     }
 
     if (clientView === 'domains') {
-      return <DomainPortfolio websites={clientWebsites} onBack={() => setClientView('home')} />
+      return (
+        <DomainPortfolio
+          websites={clientWebsites}
+          suggestions={domainSuggestions}
+          onBack={() => setClientView('home')}
+        />
+      )
     }
 
     if (clientView === 'media') {
@@ -172,6 +189,10 @@ function AppShell() {
 
     if (clientView === 'notes') {
       return <NotesWorkbench onBack={() => setClientView('home')} />
+    }
+
+    if (clientView === 'gigs') {
+      return <ClientGigsBoard listings={gigBoardListings} onBack={() => setClientView('home')} />
     }
 
     return (
@@ -602,7 +623,13 @@ function AppShell() {
         }}
       >
         <Container maxWidth="lg">
-          <Stack direction="row" alignItems="center" spacing={2} py={1.5}>
+          <Stack
+            direction={{ xs: 'column', sm: 'row' }}
+            alignItems={{ xs: 'flex-start', sm: 'center' }}
+            spacing={1.25}
+            py={1.25}
+            justifyContent="space-between"
+          >
             <Stack direction="row" spacing={1.5} alignItems="center" sx={{ flex: 1 }}>
               <IconButton
                 size="small"
@@ -624,7 +651,13 @@ function AppShell() {
                 </Typography>
               </Stack>
             </Stack>
-            <Stack direction="row" spacing={1} alignItems="center">
+            <Stack
+              direction="row"
+              spacing={1}
+              alignItems="center"
+              justifyContent={{ xs: 'flex-start', sm: 'flex-end' }}
+              sx={{ width: '100%', flexWrap: 'wrap', rowGap: 0.75 }}
+            >
               <Chip
                 label="Realtime safe"
                 size="small"
@@ -632,6 +665,7 @@ function AppShell() {
                   color: 'common.white',
                   borderColor: 'rgba(255,255,255,0.18)',
                   backgroundColor: 'rgba(255,255,255,0.06)',
+                  display: { xs: 'none', sm: 'inline-flex' },
                 }}
                 variant="outlined"
               />
@@ -640,14 +674,19 @@ function AppShell() {
                 size="small"
                 color={portalMode === 'developer' ? 'secondary' : 'success'}
                 variant="outlined"
-                sx={{ borderRadius: 2 }}
+                sx={{ borderRadius: 2, display: { xs: 'none', sm: 'inline-flex' } }}
               />
               <PortalSwitcher value={portalMode} onChange={handleSwitch} />
               <Tooltip title="Profile">
                 <Avatar
                   src="https://avatars.githubusercontent.com/u/7892489?v=4"
                   alt="Netlify"
-                  sx={{ border: '1px solid rgba(255,255,255,0.14)', boxShadow: '0 8px 24px rgba(0,0,0,0.35)' }}
+                  sx={{
+                    width: 34,
+                    height: 34,
+                    border: '1px solid rgba(255,255,255,0.14)',
+                    boxShadow: '0 8px 24px rgba(0,0,0,0.35)',
+                  }}
                 />
               </Tooltip>
             </Stack>
